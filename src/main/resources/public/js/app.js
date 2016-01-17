@@ -69,7 +69,8 @@ var App = {
     
     init: function () {
         this.initTemplates({
-            specsBrowser: "tpl-specs-browser"
+            specsBrowser: "tpl-specs-browser",
+            testResults: "tpl-test-results"
         });
 
         this.templates.specsBrowser.renderTo("#specs-browser", {files: Data.specFiles});
@@ -80,24 +81,37 @@ var App = {
                 App.waitForTestResults();
             });
         });
+
+        App.updateTestResults();
     },
 
 
     _waitForTestResultsTimer: null,
     waitForTestResults: function () {
         this._waitForTestResultsTimer = setInterval(function () {
-            getJSON("api/tester/results", function (data) {
-                if (data.status === "completed") {
-                    App.showResults(data.results);
-                    clearInterval(App._waitForTestResultsTimer);
-                    console.log("got results, cleared interval");
-                }
-            });
+            App.updateTestResults();
         }, 1000);
     },
 
+    updateTestResults: function () {
+        getJSON("api/tester/results", function (data) {
+            App.showResults(data);
+
+            var amountOfFinished = 0;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].status === "finished") {
+                    amountOfFinished += 1;
+                }
+            }
+
+            if (amountOfFinished > 0 && amountOfFinished === data.length) {
+                clearInterval(App._waitForTestResultsTimer);
+            }
+        });
+    },
     showResults: function (results) {
-        console.log("showResults", results);
+        console.log("rendering results",  results);
+        this.templates.testResults.renderTo("#test-results", {tests: results});
     }
 };
 

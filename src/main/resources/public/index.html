@@ -16,7 +16,7 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <script src="js/handlebars-v2.0.0.js"></script>
+        <script src="js/handlebars-v4.0.5.js"></script>
     </head>
     </head>
     <body>
@@ -30,11 +30,71 @@
 
         <div id="">
             <div id="specs-browser"></div>
+            <div id="test-results"></div>
         </div>
 
+        <script id="tpl-test-results" type="text/x-handlebars-template">
+            <h3>Test Results</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Device</th>
+                        <th>Size</th>
+                        <th>Details</th>
+                        <th>Report</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each tests}}
+                    <tr>
+                        <td>
+                            {{#if testResult}}
+                                <span class="test-status-{{testResult/status}}">
+                                    {{testResult/status}}
+                                </span>
+                            {{else}}
+                                <span class="test-status-{{status}}">{{status}}</span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{name}}
+                        </td>
+                        <td>
+                            {{size}}
+                        </td>
+                        <td>
+                            {{#if testResult}}
+                                {{#with testResult}}
+                                    <span class="test-status-{{status}}">
+                                        {{errors}} errors, {{warnings}} warnings
+                                    </span>
+                                    <ul class="error-messages">
+                                        {{#each errorMessages}}
+                                        <li>
+                                            {{this}}
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                {{/with}}
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if testResult}}
+                                {{#with testResult}}
+                                    {{#if externalReport}}
+                                        <a href="file://{{externalReport}}">Report</a>
+                                    {{/if}}
+                                {{/with}}
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </script>
         
         <script id="tpl-specs-browser" type="text/x-handlebars-template">
-
             <div class="panel panel-default">
                 <div class="panel-body">
                     <table class="table table-striped">

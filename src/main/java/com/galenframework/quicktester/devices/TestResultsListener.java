@@ -1,7 +1,5 @@
 package com.galenframework.quicktester.devices;
 
-import java.util.List;
-
 public interface TestResultsListener {
-    void onTestResults(List<TestResult> testResults);
+    void onTestResult(String testUniqueId, TestResult testResult);
 }

@@ -49,8 +49,8 @@ public class Device extends Thread {
         sendCommand(new DeviceInjectSourceCommand(originSource));
     }
 
-    public void checkLayout(String spec, TestResultsListener testResultsListener) {
-        sendCommand(new DeviceCheckLayoutCommand(spec, testResultsListener));
+    public void checkLayout(String uniqueId, String spec, TestResultsListener testResultsListener) {
+        sendCommand(new DeviceCheckLayoutCommand(uniqueId, spec, testResultsListener));
     }
 
     public List<String> getTags() {
@@ -66,4 +66,11 @@ public class Device extends Thread {
     }
 
 
+    public List<Dimension> getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(List<Dimension> sizes) {
+        this.sizes = sizes;
+    }
 }

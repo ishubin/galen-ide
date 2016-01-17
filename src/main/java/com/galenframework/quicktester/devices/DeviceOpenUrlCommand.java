@@ -11,6 +11,7 @@ public class DeviceOpenUrlCommand extends DeviceCommand {
 
     @Override
     public void execute(Device device, WebDriver driver) {
+        System.out.println("Opening " + url);
         driver.get(url);
     }
 }
