@@ -159,7 +159,42 @@ var App = {
     },
     showResults: function (results) {
         console.log("rendering results",  results);
-        this.templates.testResults.renderTo("#test-results", {tests: results});
+        this.templates.testResults.renderTo("#test-results", {
+            tests: results,
+            overview: this._createTestsOverview(results)
+        });
+    },
+    _createTestsOverview: function (results) {
+        var firstTimestamp = -1;
+        var lastTimestamp = -1;
+
+        var allTestsAreFinished = true;
+
+        for (var i = 0; i < results.length; i++) {
+            if (results[i].status === "finished" && results[i].testResult !== null && results[i].testResult !== undefined) {
+                if (firstTimestamp < 0 || firstTimestamp > results[i].testResult.startedAt) {
+                    firstTimestamp = results[i].testResult.startedAt;
+                }
+
+                if (lastTimestamp < 0 || lastTimestamp < results[i].testResult.endedAt) {
+                    lastTimestamp = results[i].testResult.endedAt;
+                }
+
+            } else {
+                allTestsAreFinished = false;
+            }
+        }
+
+        var totalDuration = null;
+        if (firstTimestamp > 0 && lastTimestamp > 0 && allTestsAreFinished) {
+            totalDuration = lastTimestamp - firstTimestamp;
+        }
+
+        return {
+            totalDuration: totalDuration,
+            startedAt: firstTimestamp,
+            endedAt: firstTimestamp
+        };
     }
 };
 

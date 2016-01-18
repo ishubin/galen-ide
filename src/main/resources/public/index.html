@@ -34,7 +34,8 @@
         </div>
 
         <script id="tpl-test-results" type="text/x-handlebars-template">
-            <h3>Test Results</h3>
+            <h3>Test Results{{#if overview/totalDuration}}, total duration:  {{formatDurationHumanReadable overview/totalDuration}}{{/if}}</h3>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
