@@ -1,3 +1,51 @@
+Handlebars.registerHelper("formatDurationHumanReadable", function (durationInMillis) {
+    var durationInSeconds = Math.floor(durationInMillis / 1000);
+    if (durationInSeconds > 0) {
+        var hours = Math.floor(durationInSeconds / 3600);
+        var minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
+        var seconds = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
+
+        var text = "";
+        if (hours > 0) {
+            text += hours + "h";
+        }
+
+        if (minutes > 0 || hours > 0) {
+            if (hours > 0) {
+                text += " ";
+            }
+            text += minutes;
+            text += "m";
+        }
+
+        if (seconds > 0) {
+            if (hours > 0 || minutes > 0) {
+                text += " ";
+            }
+            text += seconds;
+            text += "s";
+        }
+
+        return text;
+    }
+
+    else return "0";
+});
+
+Handlebars.registerHelper("formatReportTime", function (time) {
+    if (time !== null && time !== undefined) {
+        var date = new Date(time);
+        var hh = date.getHours();
+        var mm = date.getMinutes();
+        var ss = date.getSeconds();
+        if (hh < 10) {hh = "0"+hh;}
+        if (mm < 10) {mm = "0"+mm;}
+        if (ss < 10) {ss = "0"+ss;}
+        return hh + ":" + mm + ":" + ss;
+    }
+    return "";
+});
+
 Handlebars.registerHelper('shortText', function(text) {
     text = Handlebars.Utils.escapeExpression(text);
     

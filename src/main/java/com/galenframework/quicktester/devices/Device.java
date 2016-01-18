@@ -16,6 +16,7 @@ public class Device extends Thread {
 
     private final BlockingQueue<DeviceCommand> commands = new ArrayBlockingQueue<>(100);
 
+
     public Device(WebDriver driver, List<String> tags, List<Dimension> sizes) {
         this.driver = driver;
         this.sizes = sizes;
@@ -49,8 +50,12 @@ public class Device extends Thread {
         sendCommand(new DeviceInjectSourceCommand(originSource));
     }
 
-    public void checkLayout(String uniqueId, String spec, TestResultsListener testResultsListener) {
-        sendCommand(new DeviceCheckLayoutCommand(uniqueId, spec, testResultsListener));
+    public void checkLayout(String uniqueId, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+        sendCommand(new DeviceCheckLayoutCommand(uniqueId, spec, testResultsListener, reportStoragePath));
+    }
+
+    public void resize(Dimension size) {
+        sendCommand(new DeviceResizeCommand(size));
     }
 
     public List<String> getTags() {
@@ -73,4 +78,5 @@ public class Device extends Thread {
     public void setSizes(List<Dimension> sizes) {
         this.sizes = sizes;
     }
+
 }

@@ -21,17 +21,17 @@ public class TesterService implements TestResultsListener {
 
     public TesterService() {
         masterDriver = createDriver();
-        devices.add(new Device(createDriver(), asList("mobile"), asList(size(450, 600))));
-        devices.add(new Device(createDriver(), asList("tablet"), asList(size(600, 600))));
+        devices.add(new Device(createDriver(), asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600))));
+        /*devices.add(new Device(createDriver(), asList("tablet"), asList(size(600, 600))));
         devices.add(new Device(createDriver(), asList("desktop"), asList(size(1024, 768))));
-
+*/
         devices.forEach((device -> device.start()));
         System.out.println("Started all devices");
     }
 
     private WebDriver createDriver() {
         WebDriver driver = new FirefoxDriver();
-        driver.get("http://testapp.galenframework.com");
+        driver.get("http://localhost:8080");
         return driver;
     }
 
@@ -42,19 +42,22 @@ public class TesterService implements TestResultsListener {
         devices.forEach((device) -> device.injectSource(url, originSource));
     }
 
-    public void testAllBrowsers(String spec) {
+    public void testAllBrowsers(String spec, String reportStoragePath) {
         this.testResults.clear();
-        devices.forEach((device) -> {
-            TestResultContainer testResultContainer = registerNewTestResultContainer(device);
-            device.checkLayout(testResultContainer.getUniqueId(), spec, this);
-        });
+        devices.forEach((device) ->
+            device.getSizes().forEach( size -> {
+                TestResultContainer testResultContainer = registerNewTestResultContainer(device, size);
+                device.resize(size);
+                device.checkLayout(testResultContainer.getUniqueId(), spec, this, reportStoragePath);
+            })
+        );
     }
 
-    private TestResultContainer registerNewTestResultContainer(Device device) {
+    private TestResultContainer registerNewTestResultContainer(Device device, Dimension size) {
         TestResultContainer testResultContainer = new TestResultContainer(
                 "Firefox " + device.getTags().get(0),
                 device.getTags(),
-                device.getSizes().get(0)
+                size
         );
         testResults.add(testResultContainer);
         return testResultContainer;

@@ -6,6 +6,7 @@ import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.validation.ValidationResult;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class TestResult {
     private String status = RUNNING;
     private TestResultException exception;
     private String externalReport;
+    private Date startedAt;
+    private Date endedAt;
+    private long duration;
 
     public TestResult(LayoutReport layoutReport) {
         this.layoutReport = layoutReport;
@@ -145,5 +149,29 @@ public class TestResult {
 
     public String getExternalReport() {
         return externalReport;
+    }
+
+    public void setStartedAt(Date startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public Date getStartedAt() {
+        return startedAt;
+    }
+
+    public void setEndedAt(Date endedAt) {
+        this.endedAt = endedAt;
+    }
+
+    public Date getEndedAt() {
+        return endedAt;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 }

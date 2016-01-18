@@ -6,6 +6,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
+import java.util.Date;
+
 public class DeviceInjectSourceCommand extends DeviceCommand {
     private final String originSource;
 
@@ -15,8 +17,8 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
 
     @Override
     public void execute(Device device, WebDriver driver) {
+
         String encodedBody = base64encode(originSource);
-        System.out.println("Injecting\n" + originSource + "\n\n");
         ((JavascriptExecutor)driver).executeScript("var source = arguments[0]; function injectBody() {document.write(atob(source))}; setTimeout(injectBody, 100);", encodedBody);
         try {
             Thread.sleep(2000);

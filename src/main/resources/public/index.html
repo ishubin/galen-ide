@@ -41,6 +41,7 @@
                         <th>Status</th>
                         <th>Device</th>
                         <th>Size</th>
+                        <th>Duration</th>
                         <th>Details</th>
                         <th>Report</th>
                     </tr>
@@ -65,6 +66,11 @@
                         </td>
                         <td>
                             {{#if testResult}}
+                                {{formatDurationHumanReadable testResult/duration}}
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if testResult}}
                                 {{#with testResult}}
                                     <span class="test-status-{{status}}">
                                         {{errors}} errors, {{warnings}} warnings
@@ -83,7 +89,7 @@
                             {{#if testResult}}
                                 {{#with testResult}}
                                     {{#if externalReport}}
-                                        <a href="file://{{externalReport}}">Report</a>
+                                        <a href="/reports/{{externalReport}}">Report</a>
                                     {{/if}}
                                 {{/with}}
                             {{/if}}

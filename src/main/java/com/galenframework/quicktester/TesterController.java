@@ -8,15 +8,22 @@ import static spark.Spark.*;
 
 public class TesterController {
     private static final String APPLICATION_JSON = "application/json";
+    private final String reportStoragePath;
     private TesterService testerService = new TesterService();
     ObjectMapper mapper = new ObjectMapper();
 
 
-    public TesterController() {
+    public TesterController(String reportStoragePath) {
+        this.reportStoragePath = reportStoragePath;
+
+        initRoutes();
+    }
+
+    private void initRoutes() {
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
             testerService.syncAllBrowsers();
-            testerService.testAllBrowsers(testCommand.getSpec());
+            testerService.testAllBrowsers(testCommand.getSpec(), reportStoragePath);
             return "Started testing: " + testCommand.getSpec();
         });
 
@@ -25,4 +32,5 @@ public class TesterController {
             return testerService.getTestResults();
         }, toJson());
     }
+
 }
