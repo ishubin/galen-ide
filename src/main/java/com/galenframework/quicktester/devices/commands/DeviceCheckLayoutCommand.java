@@ -8,6 +8,7 @@ import com.galenframework.quicktester.devices.TestResultsListener;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -15,15 +16,19 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class DeviceCheckLayoutCommand extends DeviceCommand {
     public static final String REPORT_HTML = "report.html";
     private final String spec;
     private final TestResultsListener testResultsListener;
     private final String uniqueId;
     private final String reportStoragePath;
+    private final Dimension size;
 
-    public DeviceCheckLayoutCommand(String uniqueId, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+    public DeviceCheckLayoutCommand(String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
         this.uniqueId = uniqueId;
+        this.size = size;
         this.spec = spec;
         this.testResultsListener = testResultsListener;
         this.reportStoragePath = reportStoragePath;
@@ -41,7 +46,7 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             HtmlReportBuilder reportBuilder = new HtmlReportBuilder();
             String reportDir = uniqueId + "-" + new Date().getTime();
             String reportDirPath = reportStoragePath + File.separator + reportDir;
-            reportBuilder.build(createTestInfo(spec, layoutReport), reportDirPath);
+            reportBuilder.build(createTestInfo(spec, size, layoutReport), reportDirPath);
 
             testResult.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
 
@@ -71,9 +76,9 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         return REPORT_HTML;
     }
 
-    private List<GalenTestInfo> createTestInfo(String spec, LayoutReport layoutReport) {
+    private List<GalenTestInfo> createTestInfo(String spec, Dimension size, LayoutReport layoutReport) {
         List<GalenTestInfo> testInfos = new LinkedList<>();
-        GalenTestInfo testInfo = new GalenTestInfo(spec, null);
+        GalenTestInfo testInfo = new GalenTestInfo(spec + format(", size %dx%d", size.width, size.height), null);
         testInfo.getReport().layout(layoutReport, spec);
         testInfos.add(testInfo);
         return testInfos;

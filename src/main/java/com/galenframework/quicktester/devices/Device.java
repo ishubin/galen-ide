@@ -50,8 +50,8 @@ public class Device extends Thread {
         sendCommand(new DeviceInjectSourceCommand(originSource));
     }
 
-    public void checkLayout(String uniqueId, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
-        sendCommand(new DeviceCheckLayoutCommand(uniqueId, spec, testResultsListener, reportStoragePath));
+    public void checkLayout(String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+        sendCommand(new DeviceCheckLayoutCommand(uniqueId, size, spec, testResultsListener, reportStoragePath));
     }
 
     public void resize(Dimension size) {
