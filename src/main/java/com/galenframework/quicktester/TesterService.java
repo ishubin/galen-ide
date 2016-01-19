@@ -1,6 +1,7 @@
 package com.galenframework.quicktester;
 
 import com.galenframework.quicktester.devices.Device;
+import com.galenframework.quicktester.devices.DeviceThread;
 import com.galenframework.quicktester.devices.TestResult;
 import com.galenframework.quicktester.devices.TestResultsListener;
 import org.openqa.selenium.Dimension;
@@ -11,31 +12,29 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
 public class TesterService implements TestResultsListener {
     private WebDriver masterDriver;
-    private List<Device> devices = new LinkedList<>();
+    private List<DeviceThread> devices = new LinkedList<>();
     private List<TestResultContainer> testResults = Collections.synchronizedList(new LinkedList<>());
 
     public TesterService() {
-        //masterDriver = createDriver();
-        //masterDriver.manage().window().maximize();
+        masterDriver = new FirefoxDriver();
+        masterDriver.get("http://localhost:8080");
+        masterDriver.manage().window().maximize();
 
-        /*devices.add(new Device(createDriver(), asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600))));
-        devices.add(new Device(createDriver(), asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600))));
-        devices.add(new Device(createDriver(), asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768))));
-        */
+        devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600)))));
+        devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));
+        devices.add(new DeviceThread(new Device("Firefox desktop", "chrome", asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768)))));
 
-
-        devices.forEach((device -> device.start()));
-    }
-
-    private WebDriver createDriver() {
-        WebDriver driver = new FirefoxDriver();
-        driver.get("http://localhost:8080");
-        return driver;
+        devices.forEach((device -> {
+            device.start();
+            device.createDriverFromClass(FirefoxDriver.class);
+            device.openUrl("http://localhost:8080");
+        }));
     }
 
     public void syncAllBrowsers() {
@@ -48,7 +47,7 @@ public class TesterService implements TestResultsListener {
     public void testAllBrowsers(String spec, String reportStoragePath) {
         this.testResults.clear();
         devices.forEach((device) ->
-            device.getSizes().forEach( size -> {
+            device.getSizes().forEach(size -> {
                 TestResultContainer testResultContainer = registerNewTestResultContainer(device, size);
                 device.resize(size);
                 device.checkLayout(testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
@@ -56,10 +55,10 @@ public class TesterService implements TestResultsListener {
         );
     }
 
-    private TestResultContainer registerNewTestResultContainer(Device device, Dimension size) {
+    private TestResultContainer registerNewTestResultContainer(DeviceThread deviceThread, Dimension size) {
         TestResultContainer testResultContainer = new TestResultContainer(
-                "Firefox " + device.getTags().get(0),
-                device.getTags(),
+                deviceThread.getDevice().getName(),
+                deviceThread.getTags(),
                 size
         );
         testResults.add(testResultContainer);
@@ -81,5 +80,9 @@ public class TesterService implements TestResultsListener {
 
     public List<TestResultContainer> getTestResults() {
         return testResults;
+    }
+
+    public List<Device> getAllDevices() {
+        return devices.stream().map(d -> d.getDevice()).collect(Collectors.toList());
     }
 }

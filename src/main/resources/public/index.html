@@ -48,6 +48,49 @@
             <div id="test-results"></div>
         </div>
 
+        <script id="tpl-devices" type="text/x-handlebars-template">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Tags</th>
+                        <th>Sizes</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each devices}}
+                    <tr>
+                        <td><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"</div> {{name}}</td>
+                        <td>
+                            <ul class="device-tags">
+                                {{#each tags}}
+                                <li>
+                                    {{this}}
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="device-sizes">
+                                {{#each sizes}}
+                                <li>
+                                <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-default action-edit-device">
+                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </script>
+
         <script id="tpl-test-results" type="text/x-handlebars-template">
             <h3>Test Results{{#if overview/totalDuration}}, total duration:  {{formatDurationHumanReadable overview/totalDuration}}{{/if}}</h3>
             </div>

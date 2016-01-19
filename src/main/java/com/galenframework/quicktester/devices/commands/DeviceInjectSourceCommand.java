@@ -1,12 +1,9 @@
 package com.galenframework.quicktester.devices.commands;
 
 import com.galenframework.quicktester.devices.Device;
-import com.galenframework.quicktester.devices.DeviceCommand;
+import com.galenframework.quicktester.devices.DeviceThread;
 import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-
-import java.util.Date;
 
 public class DeviceInjectSourceCommand extends DeviceCommand {
     private final String originSource;
@@ -16,10 +13,10 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
     }
 
     @Override
-    public void execute(Device device, WebDriver driver) {
+    public void execute(Device device, DeviceThread deviceThread) {
 
         String encodedBody = base64encode(originSource);
-        ((JavascriptExecutor)driver).executeScript("var source = arguments[0]; function injectBody() {document.write(atob(source))}; setTimeout(injectBody, 100);", encodedBody);
+        ((JavascriptExecutor)device.getDriver()).executeScript("var source = arguments[0]; function injectBody() {document.write(atob(source))}; setTimeout(injectBody, 100);", encodedBody);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

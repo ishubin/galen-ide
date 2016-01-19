@@ -2,8 +2,6 @@ package com.galenframework.quicktester;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
-
 import static com.galenframework.quicktester.JsonTransformer.toJson;
 import static spark.Spark.*;
 
@@ -38,6 +36,9 @@ public class TesterController {
         get("/api/specs", (req, res) -> {
             return specsBrowserService.getFiles();
         }, toJson());
+
+
+        get("api/devices", (request, response) -> testerService.getAllDevices(), toJson());
     }
 
 }

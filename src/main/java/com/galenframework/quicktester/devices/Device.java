@@ -1,75 +1,61 @@
 package com.galenframework.quicktester.devices;
 
-import com.galenframework.quicktester.devices.commands.DeviceCheckLayoutCommand;
-import com.galenframework.quicktester.devices.commands.DeviceInjectSourceCommand;
-import org.openqa.selenium.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebDriver;
 
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
-public class Device extends Thread {
-    private final List<String> tags;
+public class Device {
+    private List<String> tags;
+    private String name;
+    private String icon;
+
+    @JsonIgnore
     private WebDriver driver;
     private List<Dimension> sizes;
     private boolean isActive = true;
 
-    private final BlockingQueue<DeviceCommand> commands = new ArrayBlockingQueue<>(100);
+    private DeviceStatus status = DeviceStatus.STARTING;
 
-
-    public Device(WebDriver driver, List<String> tags, List<Dimension> sizes) {
-        this.driver = driver;
+    public Device(String name, String icon, List<String> tags, List<Dimension> sizes) {
+        this.name = name;
         this.sizes = sizes;
         this.tags = tags;
-        if (sizes.size() > 0) {
-            driver.manage().window().setSize(sizes.get(0));
-        } else {
-            throw new RuntimeException("Should have at least one size");
-        }
-    }
-
-    @Override
-    public void run() {
-        while(isActive) {
-            if (!commands.isEmpty()) {
-                try {
-                    DeviceCommand command = commands.take();
-                    if (command != null) {
-                        System.out.println("Executing command " + command.toString());
-                        command.execute(this, driver);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public void injectSource(String url, String originSource) {
-        sendCommand(new DeviceOpenUrlCommand(url));
-        sendCommand(new DeviceInjectSourceCommand(originSource));
-    }
-
-    public void checkLayout(String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
-        sendCommand(new DeviceCheckLayoutCommand(uniqueId, size, spec, testResultsListener, reportStoragePath));
-    }
-
-    public void resize(Dimension size) {
-        sendCommand(new DeviceResizeCommand(size));
+        this.icon = icon;
     }
 
     public List<String> getTags() {
         return tags;
     }
 
-    private void sendCommand(DeviceCommand command) {
-        try {
-            this.commands.put(command);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
+    }
 
     public List<Dimension> getSizes() {
         return sizes;
@@ -79,4 +65,19 @@ public class Device extends Thread {
         this.sizes = sizes;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public DeviceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeviceStatus status) {
+        this.status = status;
+    }
 }

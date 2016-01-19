@@ -108,27 +108,35 @@ var App = {
     init: function () {
         this.initTemplates({
             specsBrowser: "tpl-specs-browser",
-            testResults: "tpl-test-results"
+            testResults: "tpl-test-results",
+            devices: "tpl-devices"
         });
 
         App.updateSpecsBrowser();
-
-        whenClick("#specs-browser .action-launch-spec", function () {
-            var specName = this.attr("data-spec-name");
-            postJSON("api/tester/test", {spec: specName}, function (result) {
-                App.waitForTestResults();
-            });
-        });
-
+        App.updateDevices();
         App.updateTestResults();
+    },
+
+    updateDevices: function () {
+        getJSON("api/devices", function (devices) {
+            App.showDevices(devices);
+        });
+    },
+    showDevices: function (devices) {
+        this.templates.devices.renderTo("#devices-panel", {devices: devices});
     },
 
     updateSpecsBrowser: function () {
         getJSON("api/specs", function (items) {
             App.showSpecBrowserItems(items);
+            whenClick("#specs-browser .action-launch-spec", function () {
+                var specName = this.attr("data-spec-name");
+                postJSON("api/tester/test", {spec: specName}, function (result) {
+                    App.waitForTestResults();
+                });
+            });
         });
     },
-    
     showSpecBrowserItems: function (items) {
         this.templates.specsBrowser.renderTo("#specs-browser", {items: items});
     },

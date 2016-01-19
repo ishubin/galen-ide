@@ -25,6 +25,44 @@ body {
     color: black;
 }
 
+.device-icon img{
+    width: 24px;
+    height: 24px;
+    display: none;
+}
+.device-icon-firefox img {
+    display: inline-block;
+}
+.device-icon-chrome img {
+    display: inline-block;
+}
+.device-icon-safari img {
+    display: inline-block;
+}
+
+ul.device-tags, ul.device-sizes {
+    list-style: none;
+    padding: 0;
+}
+ul.device-tags li, ul.device-sizes li{
+    float: left;
+    margin: 2px;
+    font-size: 0.8em;
+    color: black;
+    border: 1px solid #aaa;
+    padding: 1px 3px 1px 3px;
+    background: #efefef;
+    border-radius: 3px;
+}
+ul.device-sizes li .size-splitter {
+    color: #999;
+}
+
+ul.device-tags:after , ul.device-sizes: after {
+    display: block;
+    clear: both;
+    content: " ";
+}
 
 .test-status-running {
   animation: blink 1s steps(5, start) infinite;

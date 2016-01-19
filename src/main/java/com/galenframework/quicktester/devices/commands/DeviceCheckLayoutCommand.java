@@ -1,15 +1,11 @@
 package com.galenframework.quicktester.devices.commands;
 
 import com.galenframework.api.Galen;
-import com.galenframework.quicktester.devices.Device;
-import com.galenframework.quicktester.devices.DeviceCommand;
-import com.galenframework.quicktester.devices.TestResult;
-import com.galenframework.quicktester.devices.TestResultsListener;
+import com.galenframework.quicktester.devices.*;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.util.Date;
@@ -35,11 +31,11 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
     }
 
     @Override
-    public void execute(Device device, WebDriver driver) {
+    public void execute(Device device, DeviceThread deviceThread) {
         TestResult testResult;
         try {
             Date startedAt = new Date();
-            LayoutReport layoutReport = Galen.checkLayout(driver, "specs/" + spec, device.getTags());
+            LayoutReport layoutReport = Galen.checkLayout(device.getDriver(), "specs/" + spec, device.getTags());
 
             testResult = new TestResult(layoutReport);
 
