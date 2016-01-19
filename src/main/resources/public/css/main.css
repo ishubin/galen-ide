@@ -20,6 +20,12 @@ body {
 }
 
 
+#specs-browser .file-item {
+    font-size: 0.9em;
+    color: black;
+}
+
+
 .test-status-running {
   animation: blink 1s steps(5, start) infinite;
   -webkit-animation: blink 1s steps(5, start) infinite;

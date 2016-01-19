@@ -83,16 +83,6 @@ Template.prototype.renderTo = function (elementLocator, data) {
 };
 
 
-var Data = {
-    specFiles: [{
-        name: "loginPage.gspec"
-    }, {
-        name: "myNotesPage.gspec"
-    }, {
-        name: "welcomePage.gspec"
-    }]
-}
-
 function whenClick(locator, callback) {
     $(locator).click(function () {
         callback.call($(this));
@@ -121,7 +111,7 @@ var App = {
             testResults: "tpl-test-results"
         });
 
-        this.templates.specsBrowser.renderTo("#specs-browser", {files: Data.specFiles});
+        App.updateSpecsBrowser();
 
         whenClick("#specs-browser .action-launch-spec", function () {
             var specName = this.attr("data-spec-name");
@@ -131,6 +121,16 @@ var App = {
         });
 
         App.updateTestResults();
+    },
+
+    updateSpecsBrowser: function () {
+        getJSON("api/specs", function (items) {
+            App.showSpecBrowserItems(items);
+        });
+    },
+    
+    showSpecBrowserItems: function (items) {
+        this.templates.specsBrowser.renderTo("#specs-browser", {items: items});
     },
 
 

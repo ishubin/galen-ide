@@ -26,10 +26,25 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/app.js"></script>
 
-        <h1>Galen Instant Tester</h1>
-
         <div id="">
-            <div id="specs-browser"></div>
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Specs</div>
+                        <div class="panel-body">
+                            <div id="specs-browser"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Devices</div>
+                        <div class="panel-body">
+                            <div id="devices-panel"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="test-results"></div>
         </div>
 
@@ -102,30 +117,31 @@
         </script>
         
         <script id="tpl-specs-browser" type="text/x-handlebars-template">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <thead>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                        {{#unless directory}}
                             <tr>
-                                <th width="200px"></th>
-                                <th width="100%">Name</th>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-spec-name="{{name}}">
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                    </button>
+                                    <a class="file-item" href="#">{{name}}</a>
+                                </td>
+                                <td>
+                                    <span></span>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {{#each files}}
-                                <tr>
-                                    <td>
-                                        <button type="button" class="btn btn-primary action-launch-spec" data-spec-name="{{name}}">Test</button>
-                                    </td>
-                                    <td>
-                                        {{name}}
-                                    </td>
-                                </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        {{/unless}}
+                    {{/each}}
+                </tbody>
+            </table>
         </script>
 
     </body>

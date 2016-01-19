@@ -20,15 +20,16 @@ public class TesterService implements TestResultsListener {
     private List<TestResultContainer> testResults = Collections.synchronizedList(new LinkedList<>());
 
     public TesterService() {
-        masterDriver = createDriver();
-        devices.add(new Device(createDriver(), asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600))));
+        //masterDriver = createDriver();
+        //masterDriver.manage().window().maximize();
+
+        /*devices.add(new Device(createDriver(), asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600))));
         devices.add(new Device(createDriver(), asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600))));
         devices.add(new Device(createDriver(), asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768))));
+        */
 
-        masterDriver.manage().window().maximize();
 
         devices.forEach((device -> device.start()));
-        System.out.println("Started all devices");
     }
 
     private WebDriver createDriver() {
