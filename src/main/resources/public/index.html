@@ -9,6 +9,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" rel="stylesheet">
         <link href="css/main.css" rel="stylesheet">
+        <link href="css/galen-highlight-dark.css" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,6 +18,7 @@
           <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script src="js/handlebars-v4.0.5.js"></script>
+        <script src="js/galen-highlight-v2.js"></script>
     </head>
     </head>
     <body>
@@ -26,13 +28,27 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/app.js"></script>
 
-        <div id="">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img alt="Brand" src="...">
+                    </a>
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">Profiles</a></li>
+                        <li><a class="action-settings-panel" href="#">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div id="content">
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Specs</div>
                         <div class="panel-body">
-                            <div id="specs-browser"></div>
+                            <div id="specs-browser" class="scrollable-panel-group-a"></div>
                         </div>
                     </div>
                 </div>
@@ -40,12 +56,45 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">Devices</div>
                         <div class="panel-body">
-                            <div id="devices-panel"></div>
+                            <div id="devices-panel" class="scrollable-panel-group-a"></div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div id="file-editor"></div>
+
             <div id="test-results"></div>
+        </div>
+
+        <div id="settings-panel">
+            <div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Settings</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="text-left">
+                                        <span class="text-left">
+                                            <input id="chk-settings-make-screenshots" name="make-screenshots" type="checkbox" aria-label="Screenshot">
+                                            <label for="chk-settings-make-screenshots">Make screenshots when testing layout</label>
+                                        </span>
+
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary action-settings-submit" data-dismiss="modal">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script id="tpl-devices" type="text/x-handlebars-template">
@@ -158,7 +207,29 @@
                 </tbody>
             </table>
         </script>
-        
+
+        <script id="tpl-file-editor" type="text/x-handlebars-template">
+            {{#with fileItem}}
+            <div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">{{name}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <pre class="code code-gspec"><code>{{content}}</code></pre>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" data-spec-path="{{path}}">Run Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/with}}
+        </script>
+
         <script id="tpl-specs-browser" type="text/x-handlebars-template">
             <table class="table table-striped">
                 <thead>
@@ -172,10 +243,10 @@
                         {{#unless directory}}
                             <tr>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-spec-name="{{name}}">
+                                    <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-spec-name="{{name}}" data-spec-path="{{path}}">
                                         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                     </button>
-                                    <a class="file-item" href="#">{{name}}</a>
+                                    <a class="file-item" data-file-path="{{path}}" href="#">{{name}}</a>
                                 </td>
                                 <td>
                                     <span></span>

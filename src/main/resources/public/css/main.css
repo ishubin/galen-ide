@@ -2,6 +2,14 @@ body {
     margin: 20px;
 }
 
+
+.scrollable-panel-group-a {
+    min-height: 200px;
+    max-height: 200px;
+    height: 200px;
+    overflow: scroll;
+}
+
 .test-status-running {
     color: gray;
 }
@@ -19,6 +27,18 @@ body {
     color: red;
 }
 
+#file-editor .modal-dialog {
+    width: 95%;
+}
+pre.code {
+    background: #333;
+    background: url("../images/code-back.png") repeat;
+}
+pre.code code {
+    overflow: auto;
+    word-wrap: normal;
+    white-space: pre;
+}
 
 #specs-browser .file-item {
     font-size: 0.9em;
@@ -58,7 +78,7 @@ ul.device-sizes li .size-splitter {
     color: #999;
 }
 
-ul.device-tags:after , ul.device-sizes: after {
+ul.device-tags:after , ul.device-sizes:after {
     display: block;
     clear: both;
     content: " ";

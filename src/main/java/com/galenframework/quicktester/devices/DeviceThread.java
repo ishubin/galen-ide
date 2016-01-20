@@ -1,6 +1,7 @@
 package com.galenframework.quicktester.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galenframework.quicktester.Settings;
 import com.galenframework.quicktester.devices.commands.*;
 import org.openqa.selenium.*;
 
@@ -56,8 +57,8 @@ public class DeviceThread extends Thread {
         sendCommand(new DeviceInjectSourceCommand(originSource));
     }
 
-    public void checkLayout(String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
-        sendCommand(new DeviceCheckLayoutCommand(uniqueId, size, spec, testResultsListener, reportStoragePath));
+    public void checkLayout(Settings settings, String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+        sendCommand(new DeviceCheckLayoutCommand(settings, uniqueId, size, spec, testResultsListener, reportStoragePath));
     }
 
     public void resize(Dimension size) {

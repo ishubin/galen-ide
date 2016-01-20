@@ -14,6 +14,7 @@ public class TesterController {
     ObjectMapper mapper = new ObjectMapper();
 
 
+
     public TesterController(String reportStoragePath) {
         this.reportStoragePath = reportStoragePath;
 
@@ -37,8 +38,22 @@ public class TesterController {
             return specsBrowserService.getFiles();
         }, toJson());
 
+        get("/api/specs-content/*", (req, res) -> {
+            String[] splat = req.splat();
+            if (splat.length > 0) {
+                return FileContent.fromFile(splat[0]);
+            } else throw new RuntimeException("Incorrect request");
+        }, toJson());
 
         get("api/devices", (request, response) -> testerService.getAllDevices(), toJson());
+
+        get("api/settings", ((request, response) -> testerService.getSettings()), toJson());
+
+        post("api/settings", ((request, response) -> {
+            Settings settings = mapper.readValue(request.body(), Settings.class);
+            testerService.setSettings(settings);
+            return "saved";
+        }));
     }
 
 }

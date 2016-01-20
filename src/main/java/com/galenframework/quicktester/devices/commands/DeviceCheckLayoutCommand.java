@@ -1,13 +1,17 @@
 package com.galenframework.quicktester.devices.commands;
 
 import com.galenframework.api.Galen;
+import com.galenframework.quicktester.Settings;
 import com.galenframework.quicktester.devices.*;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.speclang2.pagespec.SectionFilter;
+import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.Dimension;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +25,12 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
     private final String uniqueId;
     private final String reportStoragePath;
     private final Dimension size;
+    private final Settings settings;
+    private final static File onePixelImage = createOnePixelFakeImage();
 
-    public DeviceCheckLayoutCommand(String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+
+    public DeviceCheckLayoutCommand(Settings settings, String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+        this.settings = settings;
         this.uniqueId = uniqueId;
         this.size = size;
         this.spec = spec;
@@ -35,7 +43,16 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         TestResult testResult;
         try {
             Date startedAt = new Date();
-            LayoutReport layoutReport = Galen.checkLayout(device.getDriver(), "specs/" + spec, device.getTags());
+            LayoutReport layoutReport;
+
+            if (settings.isMakeScreenshots()) {
+                layoutReport = Galen.checkLayout(
+                        device.getDriver(), "specs/" + spec, device.getTags());
+            } else {
+                layoutReport = Galen.checkLayout(
+                        device.getDriver(), "specs/" + spec,
+                        new SectionFilter(device.getTags(), null), null, null, onePixelImage);
+            }
 
             testResult = new TestResult(layoutReport);
 
@@ -58,6 +75,8 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         testResultsListener.onTestResult(uniqueId, testResult);
     }
 
+
+
     private String findTestHtmlFileIn(String reportDirPath) {
         File dir = new File(reportDirPath);
 
@@ -78,5 +97,19 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         testInfo.getReport().layout(layoutReport, spec);
         testInfos.add(testInfo);
         return testInfos;
+    }
+
+    private static File createOnePixelFakeImage() {
+        try {
+            File file = File.createTempFile("1-pixel-image", ".png");
+            FileWriter fw = new FileWriter(file);
+            IOUtils.copy(DeviceCheckLayoutCommand.class.getResourceAsStream("/public/images/1-pixel-image.png"), fw);
+            fw.flush();
+            fw.close();
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

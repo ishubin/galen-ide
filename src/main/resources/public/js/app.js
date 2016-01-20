@@ -75,6 +75,10 @@ function postJSON(resource, jsonObject, callback) {
     });
 }
 
+function isChecked(locator) {
+    return $(locator).is(":checked");
+}
+
 function Template(tpl) {
     this._tpl = tpl;
 }
@@ -109,16 +113,40 @@ var App = {
         this.initTemplates({
             specsBrowser: "tpl-specs-browser",
             testResults: "tpl-test-results",
-            devices: "tpl-devices"
+            devices: "tpl-devices",
+            fileEditor: "tpl-file-editor"
         });
+        App.initSettingsPanel();
+
 
         App.updateSpecsBrowser();
         App.updateDevices();
         App.updateTestResults();
     },
+    initSettingsPanel: function () {
+        whenClick(".action-settings-panel", App.showSettingsPanel);
+        whenClick(".action-settings-submit", App.onSettingsPanelSubmit);
+
+    },
+
+    showSettingsPanel: function() {
+        getJSON("api/settings", function (settings) {
+            $("#settings-panel input[name='make-screenshots']").prop("checked", settings.makeScreenshots);
+            $("#settings-panel .modal").modal("show");
+        });
+
+    },
+    onSettingsPanelSubmit: function() {
+        var settings = {
+            makeScreenshots: isChecked("#settings-panel input[name='make-screenshots']")
+        };
+        postJSON("api/settings", settings, function () {
+            $("#settings-panel .modal").modal("hide");
+        });
+    },
 
     updateDevices: function () {
-        getJSON("api/devices", function (devices) {
+        getJSON("/api/devices", function (devices) {
             App.showDevices(devices);
         });
     },
@@ -127,7 +155,7 @@ var App = {
     },
 
     updateSpecsBrowser: function () {
-        getJSON("api/specs", function (items) {
+        getJSON("/api/specs", function (items) {
             App.showSpecBrowserItems(items);
             whenClick("#specs-browser .action-launch-spec", function () {
                 var specName = this.attr("data-spec-name");
@@ -139,6 +167,19 @@ var App = {
     },
     showSpecBrowserItems: function (items) {
         this.templates.specsBrowser.renderTo("#specs-browser", {items: items});
+        whenClick("#specs-browser a.file-item", function () {
+            var filePath = this.attr("data-file-path");
+            getJSON("/api/specs-content/" + filePath, function (fileItem) {
+                App.showFileEditor(fileItem);
+            });
+        });
+    },
+    showFileEditor: function (fileItem) {
+        this.templates.fileEditor.renderTo("#file-editor", {fileItem: fileItem});
+        var $content = $("#file-editor pre.code-gspec");
+        $content.html(GalenHighlightV2.specs($content.html()));
+
+        $("#file-editor > .modal").modal("show");
     },
 
 
@@ -150,7 +191,7 @@ var App = {
     },
 
     updateTestResults: function () {
-        getJSON("api/tester/results", function (data) {
+        getJSON("/api/tester/results", function (data) {
             App.showResults(data);
 
             var amountOfFinished = 0;

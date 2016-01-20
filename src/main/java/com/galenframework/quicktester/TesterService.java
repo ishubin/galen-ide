@@ -20,6 +20,7 @@ public class TesterService implements TestResultsListener {
     private WebDriver masterDriver;
     private List<DeviceThread> devices = new LinkedList<>();
     private List<TestResultContainer> testResults = Collections.synchronizedList(new LinkedList<>());
+    private Settings settings = new Settings();
 
     public TesterService() {
         masterDriver = new FirefoxDriver();
@@ -50,7 +51,7 @@ public class TesterService implements TestResultsListener {
             device.getSizes().forEach(size -> {
                 TestResultContainer testResultContainer = registerNewTestResultContainer(device, size);
                 device.resize(size);
-                device.checkLayout(testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
+                device.checkLayout(settings, testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
             })
         );
     }
@@ -84,5 +85,13 @@ public class TesterService implements TestResultsListener {
 
     public List<Device> getAllDevices() {
         return devices.stream().map(d -> d.getDevice()).collect(Collectors.toList());
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 }
