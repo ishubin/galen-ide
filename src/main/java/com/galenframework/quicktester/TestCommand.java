@@ -1,13 +1,13 @@
 package com.galenframework.quicktester;
 
 public class TestCommand {
-    private String spec;
+    private String specPath;
 
-    public String getSpec() {
-        return spec;
+    public String getSpecPath() {
+        return specPath;
     }
 
-    public void setSpec(String spec) {
-        this.spec = spec;
+    public void setSpecPath(String specPath) {
+        this.specPath = specPath;
     }
 }

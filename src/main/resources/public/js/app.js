@@ -1,3 +1,46 @@
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+
+function FormHandler(locator) {
+    this.$form = $(locator);
+}
+FormHandler.prototype.mandatorySelect = function (name, readableName) {
+    var value = this.$form.find("select[name='" + name +"']").val();
+    if (isBlank(value)) {
+        throw new Error(readableName + " should not be empty");
+    }
+    return value;
+};
+FormHandler.prototype.mandatoryTextfield = function (name, readableName) {
+    var value = this.$form.find("input[name='" + name +"']").val();
+    if (isBlank(value)) {
+        throw new Error(readableName + " should not be empty");
+    }
+    return value;
+};
+
+function fromCommaSeparated(text) {
+    var parts = text.split(",");
+    var result = [];
+    for (var i = 0; i < parts.length; i++) {
+        result.push(parts[i].trim());
+    }
+    return result;
+}
+function convertSizeFromText(text) {
+    var parts = text.split("x");
+    if (parts.length === 2) {
+        return {
+            width: parseInt(parts[0]),
+            height: parseInt(parts[1])
+        }
+    } else {
+        throw new Error("Incorrect size format: " + text);
+    }
+};
+
+
 Handlebars.registerHelper("formatDurationHumanReadable", function (durationInMillis) {
     var durationInSeconds = Math.floor(durationInMillis / 1000);
     if (durationInSeconds > 0) {
@@ -117,6 +160,7 @@ var App = {
             fileEditor: "tpl-file-editor"
         });
         App.initSettingsPanel();
+        App.initDevicesPanel();
 
 
         App.updateSpecsBrowser();
@@ -126,22 +170,47 @@ var App = {
     initSettingsPanel: function () {
         whenClick(".action-settings-panel", App.showSettingsPanel);
         whenClick(".action-settings-submit", App.onSettingsPanelSubmit);
+    },
+    initDevicesPanel: function () {
+        whenClick(".action-devices-add-new", App.showNewDevicePopup);
+        whenClick(".action-devices-add-new-submit", App.submitNewDevice);
+    },
+    showNewDevicePopup: function () {
+        $("#add-device-modal").modal("show");
+    },
+    submitNewDevice: function () {
+        try {
+            var f = new FormHandler("#add-device-modal");
 
+            var request = {
+                browserType: f.mandatorySelect("browser-type", "Browser type"),
+                name: f.mandatoryTextfield("name", "Device name"),
+                tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
+                sizes: fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText)
+            };
+            postJSON("api/devices", request, function () {
+                App.updateDevices();
+            });
+            $("#add-device-modal").modal("hide");
+
+        } catch (error) {
+            alert(error);
+        }
     },
 
     showSettingsPanel: function() {
         getJSON("api/settings", function (settings) {
-            $("#settings-panel input[name='make-screenshots']").prop("checked", settings.makeScreenshots);
-            $("#settings-panel .modal").modal("show");
+            $("#settings-modal input[name='make-screenshots']").prop("checked", settings.makeScreenshots);
+            $("#settings-modal").modal("show");
         });
 
     },
     onSettingsPanelSubmit: function() {
         var settings = {
-            makeScreenshots: isChecked("#settings-panel input[name='make-screenshots']")
+            makeScreenshots: isChecked("#settings-modal input[name='make-screenshots']")
         };
         postJSON("api/settings", settings, function () {
-            $("#settings-panel .modal").modal("hide");
+            $("#settings-modal").modal("hide");
         });
     },
 
@@ -158,8 +227,8 @@ var App = {
         getJSON("/api/specs", function (items) {
             App.showSpecBrowserItems(items);
             whenClick("#specs-browser .action-launch-spec", function () {
-                var specName = this.attr("data-spec-name");
-                postJSON("api/tester/test", {spec: specName}, function (result) {
+                var specPath = this.attr("data-spec-path");
+                postJSON("api/tester/test", {specPath: specPath}, function (result) {
                     App.waitForTestResults();
                 });
             });

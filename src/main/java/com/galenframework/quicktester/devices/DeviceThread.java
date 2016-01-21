@@ -38,6 +38,7 @@ public class DeviceThread extends Thread {
                                 device.setStatus(DeviceStatus.READY);
                             }
                         } catch (Exception ex) {
+                            ex.printStackTrace();
                             device.setStatus(DeviceStatus.CRASHED);
                             device.setIsActive(false);
                         }

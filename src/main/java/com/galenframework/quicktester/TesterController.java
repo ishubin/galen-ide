@@ -25,8 +25,8 @@ public class TesterController {
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
             testerService.syncAllBrowsers();
-            testerService.testAllBrowsers(testCommand.getSpec(), reportStoragePath);
-            return "Started testing: " + testCommand.getSpec();
+            testerService.testAllBrowsers(testCommand.getSpecPath(), reportStoragePath);
+            return "Started testing: " + testCommand.getSpecPath();
         });
 
         get("/api/tester/results", (request, response) -> {
@@ -46,6 +46,12 @@ public class TesterController {
         }, toJson());
 
         get("api/devices", (request, response) -> testerService.getAllDevices(), toJson());
+
+        post("api/devices", (req, res) -> {
+            CreateDeviceRequest createDeviceRequest = mapper.readValue(req.body(), CreateDeviceRequest.class);
+            testerService.createDevice(createDeviceRequest);
+            return "created";
+        });
 
         get("api/settings", ((request, response) -> testerService.getSettings()), toJson());
 

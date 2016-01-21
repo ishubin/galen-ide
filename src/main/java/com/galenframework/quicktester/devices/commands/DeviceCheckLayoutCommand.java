@@ -47,10 +47,10 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
 
             if (settings.isMakeScreenshots()) {
                 layoutReport = Galen.checkLayout(
-                        device.getDriver(), "specs/" + spec, device.getTags());
+                        device.getDriver(), spec, device.getTags());
             } else {
                 layoutReport = Galen.checkLayout(
-                        device.getDriver(), "specs/" + spec,
+                        device.getDriver(), spec,
                         new SectionFilter(device.getTags(), null), null, null, onePixelImage);
             }
 
