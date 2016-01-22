@@ -1,4 +1,4 @@
-package com.galenframework.quicktester.devices;
+package com.galenframework.ide.devices;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

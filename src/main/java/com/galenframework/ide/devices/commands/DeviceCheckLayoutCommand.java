@@ -1,8 +1,8 @@
-package com.galenframework.quicktester.devices.commands;
+package com.galenframework.ide.devices.commands;
 
 import com.galenframework.api.Galen;
-import com.galenframework.quicktester.Settings;
-import com.galenframework.quicktester.devices.*;
+import com.galenframework.ide.Settings;
+import com.galenframework.ide.devices.*;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;

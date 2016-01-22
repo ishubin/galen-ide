@@ -1,4 +1,4 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 import java.io.File;
 import java.util.LinkedList;

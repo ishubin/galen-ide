@@ -1,8 +1,8 @@
-package com.galenframework.quicktester.devices;
+package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.galenframework.quicktester.Settings;
-import com.galenframework.quicktester.devices.commands.*;
+import com.galenframework.ide.Settings;
+import com.galenframework.ide.devices.commands.*;
 import org.openqa.selenium.*;
 
 import java.util.List;
@@ -41,6 +41,7 @@ public class DeviceThread extends Thread {
                             ex.printStackTrace();
                             device.setStatus(DeviceStatus.CRASHED);
                             device.setIsActive(false);
+                            device.setLastErrorMessage(ex.getClass().getSimpleName() + ": " + ex.getMessage());
                         }
                     }
                 } catch (InterruptedException e) {
@@ -48,6 +49,7 @@ public class DeviceThread extends Thread {
                 }
             }
         }
+        device.setStatus(DeviceStatus.SHUTDOWN);
     }
 
     public void openUrl(String url) {
@@ -70,9 +72,15 @@ public class DeviceThread extends Thread {
         sendCommand(new DeviceCreateDriverFromClassCommand(driverClass));
     }
 
+    public void shutdownDevice() {
+        sendCommand(new DeviceShutdownCommand());
+    }
+
     private void sendCommand(DeviceCommand command) {
         try {
-            this.commands.put(command);
+            if (device.isActive()) {
+                this.commands.put(command);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -89,4 +97,5 @@ public class DeviceThread extends Thread {
     public Device getDevice() {
         return device;
     }
+
 }

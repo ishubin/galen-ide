@@ -1,4 +1,4 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import spark.ResponseTransformer;

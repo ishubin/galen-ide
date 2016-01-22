@@ -1,4 +1,4 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 import org.apache.commons.io.FileUtils;
 

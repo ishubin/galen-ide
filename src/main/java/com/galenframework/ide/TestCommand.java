@@ -1,4 +1,4 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 public class TestCommand {
     private String specPath;

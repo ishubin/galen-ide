@@ -1,4 +1,4 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 import org.openqa.selenium.Dimension;
 

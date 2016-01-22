@@ -1,4 +1,4 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 
 import java.util.List;
@@ -8,6 +8,7 @@ public class CreateDeviceRequest {
     private String name = "";
     private List<String> tags;
     private List<Size> sizes;
+    private SizeVariation sizeVariation;
 
     public String getBrowserType() {
         return browserType;
@@ -39,5 +40,13 @@ public class CreateDeviceRequest {
 
     public void setSizes(List<Size> sizes) {
         this.sizes = sizes;
+    }
+
+    public SizeVariation getSizeVariation() {
+        return sizeVariation;
+    }
+
+    public void setSizeVariation(SizeVariation sizeVariation) {
+        this.sizeVariation = sizeVariation;
     }
 }

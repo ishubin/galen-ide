@@ -1,12 +1,15 @@
-package com.galenframework.quicktester.devices;
+package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Device {
+    private String deviceId = UUID.randomUUID().toString();
+
     private List<String> tags;
     private String name;
     private String icon;
@@ -17,6 +20,7 @@ public class Device {
     private boolean isActive = true;
 
     private DeviceStatus status = DeviceStatus.STARTING;
+    private String lastErrorMessage;
 
     public Device(String name, String icon, List<String> tags, List<Dimension> sizes) {
         this.name = name;
@@ -79,5 +83,21 @@ public class Device {
 
     public void setStatus(DeviceStatus status) {
         this.status = status;
+    }
+
+    public String getLastErrorMessage() {
+        return lastErrorMessage;
+    }
+
+    public void setLastErrorMessage(String lastErrorMessage) {
+        this.lastErrorMessage = lastErrorMessage;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }

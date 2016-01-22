@@ -13,12 +13,19 @@ FormHandler.prototype.mandatorySelect = function (name, readableName) {
     return value;
 };
 FormHandler.prototype.mandatoryTextfield = function (name, readableName) {
-    var value = this.$form.find("input[name='" + name +"']").val();
+    var value = this.textfield(name);
     if (isBlank(value)) {
         throw new Error(readableName + " should not be empty");
     }
     return value;
 };
+FormHandler.prototype.textfield = function (name) {
+    return this.$form.find("input[name='" + name +"']").val();
+};
+FormHandler.prototype.isChecked = function(name) {
+    return this.$form.find("input[name='" + name +"']").is(":checked");
+};
+
 
 function fromCommaSeparated(text) {
     var parts = text.split(",");
@@ -118,8 +125,17 @@ function postJSON(resource, jsonObject, callback) {
     });
 }
 
-function isChecked(locator) {
-    return $(locator).is(":checked");
+function deleteJSON(resource, callback) {
+    console.log("delete " + resource);
+    $.ajax({
+        url: resource,
+        type: 'delete',
+        success: function (data) {
+            if (callback !== undefined && callback !== null) {
+                callback(data);
+            }
+        }
+    });
 }
 
 function Template(tpl) {
@@ -187,6 +203,11 @@ var App = {
                 name: f.mandatoryTextfield("name", "Device name"),
                 tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
                 sizes: fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText)
+                /*sizeVariation: {
+                    start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
+                    end: convertSizeFromText(f.textfield("size-range-end")),
+                    iterations: parseInt(f.textfield("size-range-iterations"))
+                }*/
             };
             postJSON("api/devices", request, function () {
                 App.updateDevices();
@@ -206,8 +227,12 @@ var App = {
 
     },
     onSettingsPanelSubmit: function() {
+        var f = new FormHandler("#settings-modal");
         var settings = {
-            makeScreenshots: isChecked("#settings-modal input[name='make-screenshots']")
+            makeScreenshots: f.isChecked("make-screenshots"),
+            chromeDriverBinPath: f.textfield("chrome-driver-bin-path"),
+            safariDriverBinPath: f.textfield("safari-driver-bin-path"),
+            edgeDriverBinPath: f.textfield("edge-driver-bin-path"),
         };
         postJSON("api/settings", settings, function () {
             $("#settings-modal").modal("hide");
@@ -221,6 +246,12 @@ var App = {
     },
     showDevices: function (devices) {
         this.templates.devices.renderTo("#devices-panel", {devices: devices});
+        whenClick("#devices-panel .action-delete-device", function () {
+            var deviceId = this.attr("data-device-id");
+            deleteJSON("api/devices/" + deviceId, function (data) {
+                App.updateDevices();
+            });
+        });
     },
 
     updateSpecsBrowser: function () {

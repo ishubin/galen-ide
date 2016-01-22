@@ -1,7 +1,7 @@
-package com.galenframework.quicktester.devices.commands;
+package com.galenframework.ide.devices.commands;
 
-import com.galenframework.quicktester.devices.Device;
-import com.galenframework.quicktester.devices.DeviceThread;
+import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.Dimension;
 

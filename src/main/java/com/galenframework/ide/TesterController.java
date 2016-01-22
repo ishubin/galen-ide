@@ -1,8 +1,8 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static com.galenframework.quicktester.JsonTransformer.toJson;
+import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 
@@ -53,11 +53,19 @@ public class TesterController {
             return "created";
         });
 
+        delete("api/devices/:deviceId", (req, res) -> {
+            String deviceId = req.params("deviceId");
+            if (deviceId != null && !deviceId.trim().isEmpty()) {
+                testerService.shutdownDevice(deviceId);
+                return "Delete device " + deviceId;
+            } else throw new RuntimeException("Incorrect request, missing device id");
+        }, toJson());
+
         get("api/settings", ((request, response) -> testerService.getSettings()), toJson());
 
         post("api/settings", ((request, response) -> {
             Settings settings = mapper.readValue(request.body(), Settings.class);
-            testerService.setSettings(settings);
+            testerService.applySettings(settings);
             return "saved";
         }));
     }

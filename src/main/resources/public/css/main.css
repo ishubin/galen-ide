@@ -45,6 +45,25 @@ pre.code code {
     color: black;
 }
 
+
+.device-status-SHUTDOWN {
+    opacity: 0.2;
+}
+.device-status-CRASHED {
+    color: red;
+    opacity: 0.2;
+}
+.device-error-message {
+    display: none;
+}
+
+.device-status-CRASHED .device-error-message {
+    display: block;
+}
+
+.device-icon {
+    display: inline-block;
+}
 .device-icon img{
     width: 24px;
     height: 24px;

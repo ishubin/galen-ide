@@ -1,6 +1,6 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
-import com.galenframework.quicktester.devices.TestResult;
+import com.galenframework.ide.devices.TestResult;
 import org.openqa.selenium.Dimension;
 
 import java.util.List;

@@ -1,9 +1,9 @@
-package com.galenframework.quicktester;
+package com.galenframework.ide;
 
-import com.galenframework.quicktester.devices.Device;
-import com.galenframework.quicktester.devices.DeviceThread;
-import com.galenframework.quicktester.devices.TestResult;
-import com.galenframework.quicktester.devices.TestResultsListener;
+import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.TestResult;
+import com.galenframework.ide.devices.TestResultsListener;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -28,12 +28,13 @@ public class TesterService implements TestResultsListener {
         masterDriver.get("http://localhost:8080");
         masterDriver.manage().window().maximize();
 
-        /*
-        devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600)))));
+
+        //devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600)))));
+
+        /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600)))));
         devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));
         devices.add(new DeviceThread(new Device("Firefox desktop", "firefox", asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768)))));
-        */
-
+*/
         devices.forEach((device -> {
             device.start();
             device.createDriverFromClass(FirefoxDriver.class);
@@ -129,6 +130,22 @@ public class TesterService implements TestResultsListener {
             return webDriverMappings.get(browserType);
         } else {
             throw new RuntimeException("Unsupported browser type: " + browserType);
+        }
+    }
+
+    public void applySettings(Settings settings) {
+        setSettings(settings);
+        if (settings.getChromeDriverBinPath() != null) {
+            System.setProperty("webdriver.chrome.driver", settings.getChromeDriverBinPath());
+        }
+    }
+
+    public void shutdownDevice(String deviceId) {
+        Optional<DeviceThread> deviceOption = devices.stream().filter(d -> d.getDevice().getDeviceId().equals(deviceId)).findFirst();
+        if (deviceOption.isPresent()) {
+            deviceOption.get().shutdownDevice();
+        } else {
+            throw new RuntimeException("Unknown device: " + deviceId);
         }
     }
 }

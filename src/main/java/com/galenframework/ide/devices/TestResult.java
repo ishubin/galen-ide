@@ -1,7 +1,6 @@
-package com.galenframework.quicktester.devices;
+package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.galenframework.reports.TestStatistic;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.validation.ValidationResult;
 
