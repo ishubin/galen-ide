@@ -202,12 +202,12 @@ var App = {
                 browserType: f.mandatorySelect("browser-type", "Browser type"),
                 name: f.mandatoryTextfield("name", "Device name"),
                 tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
-                sizes: fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText)
-                /*sizeVariation: {
+                //sizes: fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText)
+                sizeVariation: {
                     start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
                     end: convertSizeFromText(f.textfield("size-range-end")),
                     iterations: parseInt(f.textfield("size-range-iterations"))
-                }*/
+                }
             };
             postJSON("api/devices", request, function () {
                 App.updateDevices();

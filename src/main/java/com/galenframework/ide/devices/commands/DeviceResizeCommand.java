@@ -14,6 +14,8 @@ public class DeviceResizeCommand extends DeviceCommand {
 
     @Override
     public void execute(Device device, DeviceThread deviceThread) {
-        GalenUtils.resizeDriver(device.getDriver(), size.width, size.height);
+        if (device.isSupportsResizing()) {
+            GalenUtils.resizeDriver(device.getDriver(), size.width, size.height);
+        }
     }
 }

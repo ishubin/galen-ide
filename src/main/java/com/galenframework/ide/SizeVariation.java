@@ -1,5 +1,10 @@
 package com.galenframework.ide;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 public class SizeVariation {
     private Size start;
     private Size end;
@@ -27,5 +32,27 @@ public class SizeVariation {
 
     public void setIterations(int iterations) {
         this.iterations = iterations;
+    }
+
+    public List<Size> generateVariations() {
+        if (end == null || iterations < 2) {
+            return asList(start);
+        } else {
+            List<Size> sizes = new LinkedList<>();
+
+            int deltaWidth  = end.getWidth() - start.getWidth();
+            int deltaHeight = end.getHeight() - start.getHeight();
+            int maxDistance = Math.max(Math.abs(deltaWidth), Math.abs(deltaHeight));
+
+            int amount = Math.min(maxDistance, iterations);
+
+            for (int i = 0; i < amount; i++) {
+                int w = (int)Math.floor(start.getWidth() + deltaWidth * i / amount);
+                int h = (int)Math.floor(start.getHeight() + deltaHeight * i / amount);
+                sizes.add(new Size(w,h));
+            }
+
+            return sizes;
+        }
     }
 }

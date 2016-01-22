@@ -13,6 +13,7 @@ public class Device {
     private List<String> tags;
     private String name;
     private String icon;
+    private boolean supportsResizing = true;
 
     @JsonIgnore
     private WebDriver driver;
@@ -21,6 +22,12 @@ public class Device {
 
     private DeviceStatus status = DeviceStatus.STARTING;
     private String lastErrorMessage;
+
+    public Device(String name, String icon, List<String> tags) {
+        this.name = name;
+        this.tags = tags;
+        this.icon = icon;
+    }
 
     public Device(String name, String icon, List<String> tags, List<Dimension> sizes) {
         this.name = name;
@@ -99,5 +106,13 @@ public class Device {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public boolean isSupportsResizing() {
+        return supportsResizing;
+    }
+
+    public void setSupportsResizing(boolean supportsResizing) {
+        this.supportsResizing = supportsResizing;
     }
 }

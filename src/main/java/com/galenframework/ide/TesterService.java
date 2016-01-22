@@ -4,14 +4,19 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.devices.TestResultsListener;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,21 +30,18 @@ public class TesterService implements TestResultsListener {
 
     public TesterService() {
         masterDriver = new FirefoxDriver();
-        masterDriver.get("http://localhost:8080");
+        masterDriver.get("http://testapp.galenframework.com");
         masterDriver.manage().window().maximize();
-
-
-        //devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600)))));
 
         /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600)))));
         devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));
         devices.add(new DeviceThread(new Device("Firefox desktop", "firefox", asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768)))));
-*/
         devices.forEach((device -> {
             device.start();
             device.createDriverFromClass(FirefoxDriver.class);
             device.openUrl("http://localhost:8080");
         }));
+*/
     }
 
     public void syncAllBrowsers() {
@@ -102,7 +104,18 @@ public class TesterService implements TestResultsListener {
     public void createDevice(CreateDeviceRequest createDeviceRequest) {
         Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
 
-        Device device = new Device(createDeviceRequest.getName(), createDeviceRequest.getBrowserType(), createDeviceRequest.getTags(), toSeleniumSizes(createDeviceRequest.getSizes()));
+        List<Size> sizes;
+        if (createDeviceRequest.getSizeVariation() != null) {
+            sizes = createDeviceRequest.getSizeVariation().generateVariations();
+        } else {
+            sizes = createDeviceRequest.getSizes();
+        }
+
+        Device device = new Device(createDeviceRequest.getName(),
+                createDeviceRequest.getBrowserType(),
+                createDeviceRequest.getTags(),
+                toSeleniumSizes(sizes)
+        );
         DeviceThread  deviceThread = new DeviceThread(device);
         devices.add(deviceThread);
 

@@ -1,6 +1,7 @@
 package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galenframework.ide.DriverProvider;
 import com.galenframework.ide.Settings;
 import com.galenframework.ide.devices.commands.*;
 import org.openqa.selenium.*;
@@ -74,6 +75,10 @@ public class DeviceThread extends Thread {
 
     public void shutdownDevice() {
         sendCommand(new DeviceShutdownCommand());
+    }
+
+    public void createDriver(DriverProvider driverProvider) {
+        sendCommand(new DeviceCreateDriverFromProvider(driverProvider));
     }
 
     private void sendCommand(DeviceCommand command) {
