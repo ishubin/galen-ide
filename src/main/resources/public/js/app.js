@@ -278,8 +278,6 @@ var App = {
 
         App.updateSpecsBrowser();
         App.updateDevices();
-        Data.devices =
-[{"deviceId":"25a3b768-eb72-428a-9bf2-b2a7748b5b40","tags":["desktop"],"name":"qwe1","icon":"firefox","supportsResizing":true,"sizeProvider":{"sizes":[{"width":1024,"height":768},{"width":1200,"height":768}],"type":"custom"},"status":"READY","lastErrorMessage":null,"active":true},{"deviceId":"be9bc142-8f29-4e66-ac0e-1c2966a9d3d8","tags":["mobile"],"name":"qwe2","icon":"firefox","supportsResizing":true,"sizeProvider":{"sizeVariation":{"start":{"width":400,"height":500},"end":{"width":500,"height":600},"iterations":6},"type":"range"},"status":"READY","lastErrorMessage":null,"active":true},{"deviceId":"e15d6d6f-0b22-4897-bd3c-b42929754b88","tags":["tablet"],"name":"qwe3","icon":"firefox","supportsResizing":true,"sizeProvider":{"type":"unsupported"},"status":"READY","lastErrorMessage":null,"active":true}]
         App.showDevices(Data.devices);
 
         App.updateTestResults();
