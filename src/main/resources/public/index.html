@@ -32,7 +32,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
-                        <img alt="Brand" src="...">
+                        <img alt="Brand" src="images/logo.png" height="26px"> Galen IDE
                     </a>
                     <ul class="nav navbar-nav">
                         <li><a href="#">Load</a></li>
@@ -214,7 +214,7 @@
                 <tbody>
                     {{#each devices}}
                     <tr class="device-status-{{status}}">
-                        <td><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"/></div> {{name}}</td>
+                        <td class="layout-whitespace-nowrap"><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"/></div> {{name}}</td>
                         <td>
                             <ul class="device-tags">
                                 {{#each tags}}
@@ -240,7 +240,7 @@
                             <divl class="device-error-message">{{lastErrorMessage}}</divl>
                             {{/if}}
                         </td>
-                        <td>
+                        <td class="layout-whitespace-nowrap">
                             <button type="button" class="btn btn-sm btn-default action-edit-device" data-device-id="{{deviceId}}">
                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                             </button>

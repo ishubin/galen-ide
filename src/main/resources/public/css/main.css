@@ -2,6 +2,20 @@ body {
     margin: 2px;
 }
 
+nav a.navbar-brand img {
+    position: absolute;
+    left: 8px;
+    top: 12px;
+}
+nav a.navbar-brand {
+    font-weight: bold;
+    padding-left: 40px;
+    position: relative;
+}
+
+.layout-whitespace-nowrap {
+    white-space: nowrap;
+}
 
 .scrollable-panel-group-a {
     min-height: 200px;
