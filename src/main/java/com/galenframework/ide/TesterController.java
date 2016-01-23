@@ -48,9 +48,18 @@ public class TesterController {
         get("api/devices", (request, response) -> testerService.getAllDevices(), toJson());
 
         post("api/devices", (req, res) -> {
-            CreateDeviceRequest createDeviceRequest = mapper.readValue(req.body(), CreateDeviceRequest.class);
+            DeviceRequest createDeviceRequest = mapper.readValue(req.body(), DeviceRequest.class);
             testerService.createDevice(createDeviceRequest);
             return "created";
+        });
+
+        put("api/devices/:deviceId", (req, res) -> {
+            String deviceId = req.params("deviceId");
+            if (deviceId != null && !deviceId.trim().isEmpty()) {
+                DeviceRequest createDeviceRequest = mapper.readValue(req.body(), DeviceRequest.class);
+                testerService.changeDevice(deviceId, createDeviceRequest);
+                return "modified";
+            } else throw new RuntimeException("Incorrect request, missing device id");
         });
 
         delete("api/devices/:deviceId", (req, res) -> {

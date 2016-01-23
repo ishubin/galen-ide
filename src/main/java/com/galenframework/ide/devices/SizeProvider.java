@@ -1,6 +1,6 @@
 package com.galenframework.ide.devices;
 
-import com.galenframework.ide.CreateDeviceRequest;
+import com.galenframework.ide.DeviceRequest;
 import com.galenframework.ide.Size;
 import org.openqa.selenium.Dimension;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public abstract class SizeProvider {
     public abstract String getType();
 
-    public static SizeProvider readFrom(CreateDeviceRequest createDeviceRequest) {
+    public static SizeProvider readFrom(DeviceRequest createDeviceRequest) {
         switch (createDeviceRequest.getSizeType()) {
             case "custom":
                 return new SizeProviderCustom(toSeleniumSizes(createDeviceRequest.getSizes()));

@@ -1,23 +1,16 @@
 package com.galenframework.ide;
 
 import com.galenframework.ide.devices.*;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
 
 public class TesterService implements TestResultsListener {
     private WebDriver masterDriver;
@@ -26,19 +19,19 @@ public class TesterService implements TestResultsListener {
     private Settings settings = new Settings();
 
     public TesterService() {
-        masterDriver = new FirefoxDriver();
-        masterDriver.get("http://testapp.galenframework.com");
-        masterDriver.manage().window().maximize();
+        masterDriver = null; //new FirefoxDriver();
+        //masterDriver.get("http://testapp.galenframework.com");
+        //masterDriver.manage().window().maximize();
 
-        /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), asList(size(450, 600), size(480, 600), size(500, 600)))));
+        /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), new SizeProviderCustom(asList(size(450, 600), size(480, 600), size(500, 600))))));
         devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));
         devices.add(new DeviceThread(new Device("Firefox desktop", "firefox", asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768)))));
         devices.forEach((device -> {
             device.start();
             device.createDriverFromClass(FirefoxDriver.class);
-            device.openUrl("http://localhost:8080");
+            //device.openUrl("http://localhost:8080");
         }));
-*/
+        */
     }
 
     public void syncAllBrowsers() {
@@ -51,10 +44,10 @@ public class TesterService implements TestResultsListener {
     public void testAllBrowsers(String spec, String reportStoragePath) {
         this.testResults.clear();
         devices.forEach(deviceThread ->
-            deviceThread.getDevice().getSizeProvider().forEachIteration(deviceThread, size -> {
-                TestResultContainer testResultContainer = registerNewTestResultContainer(deviceThread, size);
-                deviceThread.checkLayout(settings, testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
-            })
+                        deviceThread.getDevice().getSizeProvider().forEachIteration(deviceThread, size -> {
+                            TestResultContainer testResultContainer = registerNewTestResultContainer(deviceThread, size);
+                            deviceThread.checkLayout(settings, testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
+                        })
         );
     }
 
@@ -97,7 +90,7 @@ public class TesterService implements TestResultsListener {
         this.settings = settings;
     }
 
-    public void createDevice(CreateDeviceRequest createDeviceRequest) {
+    public void createDevice(DeviceRequest createDeviceRequest) {
         Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
 
         Device device = new Device(createDeviceRequest.getName(),
@@ -141,6 +134,16 @@ public class TesterService implements TestResultsListener {
             deviceOption.get().shutdownDevice();
         } else {
             throw new RuntimeException("Unknown device: " + deviceId);
+        }
+    }
+
+    public void changeDevice(String deviceId, DeviceRequest deviceRequest) {
+        Optional<DeviceThread> optionalDevice = devices.stream().filter(d -> d.getDevice().getDeviceId().equals(deviceId)).findFirst();
+        if (optionalDevice.isPresent()) {
+            Device device = optionalDevice.get().getDevice();
+            device.setName(deviceRequest.getName());
+            device.setTags(deviceRequest.getTags());
+            device.setSizeProvider(SizeProvider.readFrom(deviceRequest));
         }
     }
 }

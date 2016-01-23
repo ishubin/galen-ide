@@ -3,7 +3,7 @@ package com.galenframework.ide;
 
 import java.util.List;
 
-public class CreateDeviceRequest {
+public class DeviceRequest {
     private String browserType = "";
     private String name = "";
     private List<String> tags;

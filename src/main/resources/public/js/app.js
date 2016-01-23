@@ -5,6 +5,9 @@ function isBlank(str) {
 function FormHandler(locator) {
     this.$form = $(locator);
 }
+FormHandler.prototype.select = function (name) {
+    return this.$form.find("select[name='" + name +"']").val();
+};
 FormHandler.prototype.mandatorySelect = function (name, readableName) {
     var value = this.$form.find("select[name='" + name +"']").val();
     if (isBlank(value)) {
@@ -28,8 +31,50 @@ FormHandler.prototype.isChecked = function(name) {
 FormHandler.prototype.radio = function (name) {
     return this.$form.find("input:radio[name='size-type']:checked").val();
 };
+FormHandler.prototype.disable = function (name) {
+    return this.$form.find("*[name='" + name +"']").prop("disabled", true);
+};
+FormHandler.prototype.enable = function (name) {
+    return this.$form.find("*[name='" + name +"']").prop("disabled", false);
+};
+FormHandler.prototype.set = function (name, value) {
+    this.$form.find("input[name='" + name +"']").val(value);
+};
+FormHandler.prototype.showSubPanel = function (groupLocator, dataType) {
+    this.$form.find(groupLocator).each(function () {
+        var $this = $(this);
+        if ($this.attr("data-type") === dataType) {
+            $this.show();
+        } else {
+            $this.hide();
+        }
+    });
+};
+FormHandler.prototype.selectBootstrapRadioGroup = function (containerLocator, value) {
+    var $container = this.$form.find(containerLocator);
+    $container.find("input:radio").each(function () {
+        var $this = $(this);
+        if ($this.val() === value) {
+            $this.prop("checked", true);
+            $this.parent().addClass("active");
+        } else {
+            $this.prop("checked", false);
+            $this.parent().removeClass("active");
+        }
+    });
+};
 
 
+function toCommaSeparated(elements) {
+    var text = "";
+    for (var i = 0; i < elements.length; i++) {
+        if (i > 0) {
+            text += ", ";
+        }
+        text += elements[i];
+    }
+    return text;
+}
 function fromCommaSeparated(text) {
     var parts = text.split(",");
     var result = [];
@@ -49,6 +94,9 @@ function convertSizeFromText(text) {
         throw new Error("Incorrect size format: " + text);
     }
 };
+function sizeToText(size) {
+    return size.width + "x" + size.height;
+}
 
 
 Handlebars.registerHelper("formatDurationHumanReadable", function (durationInMillis) {
@@ -109,7 +157,6 @@ Handlebars.registerHelper('shortText', function(text) {
 });
 
 Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
-    // <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
     if (sizeProvider.type === "unsupported") {
         return new Handlebars.SafeString("<i>unsupported</i>")
 
@@ -141,10 +188,16 @@ function getJSON(resource, callback) {
 }
 
 function postJSON(resource, jsonObject, callback) {
-    console.log("post " + resource);
+    sendJSON(resource, "post", jsonObject, callback);
+}
+function putJSON(resource, jsonObject, callback) {
+    sendJSON(resource, "put", jsonObject, callback);
+}
+
+function sendJSON(resource, method, jsonObject, callback) {
     $.ajax({
         url: resource,
-        type: 'post',
+        type: method,
         contentType: "application/json",
         success: function (data) {
             if (callback !== undefined && callback !== null) {
@@ -184,6 +237,20 @@ function whenClick(locator, callback) {
     });
 }
 
+var Data = {
+    devices: null,
+    findDevice: function (deviceId) {
+        if (this.devices) {
+            for (var i = 0; i < this.devices.length; i++) {
+                if (this.devices[i].deviceId === deviceId) {
+                    return this.devices[i];
+                }
+            }
+        }
+        return null;
+    }
+};
+
 var App = {
     templates: {},
     compileTemplate: function (id) {
@@ -211,6 +278,10 @@ var App = {
 
         App.updateSpecsBrowser();
         App.updateDevices();
+        Data.devices =
+[{"deviceId":"25a3b768-eb72-428a-9bf2-b2a7748b5b40","tags":["desktop"],"name":"qwe1","icon":"firefox","supportsResizing":true,"sizeProvider":{"sizes":[{"width":1024,"height":768},{"width":1200,"height":768}],"type":"custom"},"status":"READY","lastErrorMessage":null,"active":true},{"deviceId":"be9bc142-8f29-4e66-ac0e-1c2966a9d3d8","tags":["mobile"],"name":"qwe2","icon":"firefox","supportsResizing":true,"sizeProvider":{"sizeVariation":{"start":{"width":400,"height":500},"end":{"width":500,"height":600},"iterations":6},"type":"range"},"status":"READY","lastErrorMessage":null,"active":true},{"deviceId":"e15d6d6f-0b22-4897-bd3c-b42929754b88","tags":["tablet"],"name":"qwe3","icon":"firefox","supportsResizing":true,"sizeProvider":{"type":"unsupported"},"status":"READY","lastErrorMessage":null,"active":true}]
+        App.showDevices(Data.devices);
+
         App.updateTestResults();
     },
     initSettingsPanel: function () {
@@ -219,7 +290,15 @@ var App = {
     },
     initDevicesPanel: function () {
         whenClick(".action-devices-add-new", App.showNewDevicePopup);
-        whenClick(".action-devices-add-new-submit", App.submitNewDevice);
+        whenClick("#add-device-modal .action-devices-submit", function () {
+            var type = this.attr("data-type");
+            if (type === "add") {
+                App.submitNewDevice();
+            } else if (type === "update") {
+                App.submitUpdateDevice();
+            }
+        });
+
 
         $("#add-device-modal input:radio[name='size-type']").change(function() {
             var selectedSizeType = $("input:radio[name='size-type']:checked").val();
@@ -234,38 +313,80 @@ var App = {
         });
     },
     showNewDevicePopup: function () {
+        var f = new FormHandler("#add-device-modal");
+        f.enable("browser-type");
+        f.showSubPanel(".action-devices-submit", "add");
+
+        $("#add-device-modal .modal-title").html("Add new device");
+        $("#add-device-modal").modal("show");
+    },
+    showEditDevicePopup: function (device) {
+        var f = new FormHandler("#add-device-modal");
+        f.disable("browser-type");
+        f.set("name", device.name);
+        f.set("device-id", device.deviceId);
+        f.set("tags", toCommaSeparated(device.tags));
+        $("#add-device-modal .modal-title").html("Edit device: " + device.name);
+
+        f.selectBootstrapRadioGroup(".device-size-type", device.sizeProvider.type);
+        if (device.sizeProvider.type === "custom") {
+            f.set("sizes", toCommaSeparated(device.sizeProvider.sizes.map(sizeToText)));
+        } else if (device.sizeProvider.type === "range") {
+            f.set("size-range-start", sizeToText(device.sizeProvider.sizeVariation.start));
+            f.set("size-range-end", sizeToText(device.sizeProvider.sizeVariation.end));
+            f.set("size-range-iterations", device.sizeProvider.sizeVariation.iterations);
+        }
+        f.showSubPanel(".action-devices-submit", "update");
+        f.showSubPanel(".settings-form-group-size", device.sizeProvider.type);
         $("#add-device-modal").modal("show");
     },
     submitNewDevice: function () {
         try {
-            var f = new FormHandler("#add-device-modal");
-            var sizeType = f.radio("size-type");
-
-            var request = {
-                browserType: f.mandatorySelect("browser-type", "Browser type"),
-                name: f.mandatoryTextfield("name", "Device name"),
-                tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
-                sizeType: sizeType
-            };
-
-            if (sizeType === "custom") {
-                request["sizes"] = fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText);
-            } else if (sizeType === "range") {
-                request["sizeVariation"] = {
-                    start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
-                    end: convertSizeFromText(f.textfield("size-range-end")),
-                    iterations: parseInt(f.textfield("size-range-iterations"))
-                }
-            }
+            var request = this.collectDeviceRequest();
 
             postJSON("api/devices", request, function () {
                 App.updateDevices();
             });
             $("#add-device-modal").modal("hide");
-
-        } catch (error) {
-            alert(error);
+        } catch (ex) {
+            alert(ex);
         }
+    },
+    submitUpdateDevice: function () {
+        try {
+            var request = this.collectDeviceRequest();
+            var deviceId = $("#add-device-modal input[name='device-id']").val();
+
+            putJSON("api/devices/" + deviceId, request, function () {
+                App.updateDevices();
+            });
+            $("#add-device-modal").modal("hide");
+        } catch (ex) {
+            alert(ex);
+        }
+    },
+    collectDeviceRequest: function () {
+        var f = new FormHandler("#add-device-modal");
+        var sizeType = f.radio("size-type");
+
+        var request = {
+            browserType: f.select("browser-type", "Browser type"),
+            name: f.mandatoryTextfield("name", "Device name"),
+            tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
+            sizeType: sizeType
+        };
+
+        if (sizeType === "custom") {
+            request["sizes"] = fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText);
+        } else if (sizeType === "range") {
+            request["sizeVariation"] = {
+                start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
+                end: convertSizeFromText(f.textfield("size-range-end")),
+                iterations: parseInt(f.textfield("size-range-iterations"))
+            }
+        }
+
+        return request;
     },
 
     showSettingsPanel: function() {
@@ -290,11 +411,20 @@ var App = {
 
     updateDevices: function () {
         getJSON("/api/devices", function (devices) {
+            Data.devices = devices;
             App.showDevices(devices);
         });
     },
     showDevices: function (devices) {
         this.templates.devices.renderTo("#devices-panel", {devices: devices});
+        whenClick("#devices-panel .action-edit-device", function () {
+            var deviceId = this.attr("data-device-id");
+            var device = Data.findDevice(deviceId);
+            if (device) {
+                App.showEditDevicePopup(device);
+            }
+        });
+
         whenClick("#devices-panel .action-delete-device", function () {
             var deviceId = this.attr("data-device-id");
             deleteJSON("api/devices/" + deviceId, function (data) {
