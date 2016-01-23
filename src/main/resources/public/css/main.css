@@ -1,5 +1,5 @@
 body {
-    margin: 20px;
+    margin: 2px;
 }
 
 
@@ -79,11 +79,11 @@ pre.code code {
     display: inline-block;
 }
 
-ul.device-tags, ul.device-sizes {
+ul.device-tags, .device-sizes ul {
     list-style: none;
     padding: 0;
 }
-ul.device-tags li, ul.device-sizes li{
+ul.device-tags li, .device-sizes ul li {
     float: left;
     margin: 2px;
     font-size: 0.8em;
@@ -93,20 +93,37 @@ ul.device-tags li, ul.device-sizes li{
     background: #efefef;
     border-radius: 3px;
 }
-ul.device-sizes li .size-splitter {
-    color: #999;
+.device-sizes .size-splitter {
+    color: #666;
 }
 
-ul.device-tags:after , ul.device-sizes:after {
+ul.device-tags:after , .device-sizes ul:after {
     display: block;
     clear: both;
     content: " ";
+}
+
+.device-sizes code {
+    color: #111;
 }
 
 .test-status-running {
   animation: blink 1s steps(5, start) infinite;
   -webkit-animation: blink 1s steps(5, start) infinite;
 }
+
+
+/* Devices modal */
+.settings-form-group-size {
+    display: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.settings-form-group-size.show-by-default {
+    display: block;
+}
+
+
 @keyframes blink {
     0%   { opacity:1; }
     50%  { opacity:0; }

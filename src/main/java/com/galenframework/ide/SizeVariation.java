@@ -1,5 +1,7 @@
 package com.galenframework.ide;
 
+import org.openqa.selenium.Dimension;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,11 +36,11 @@ public class SizeVariation {
         this.iterations = iterations;
     }
 
-    public List<Size> generateVariations() {
+    public List<Dimension> generateVariations() {
         if (end == null || iterations < 2) {
-            return asList(start);
+            return asList(start.toSeleniumDimension());
         } else {
-            List<Size> sizes = new LinkedList<>();
+            List<Dimension> sizes = new LinkedList<>();
 
             int deltaWidth  = end.getWidth() - start.getWidth();
             int deltaHeight = end.getHeight() - start.getHeight();
@@ -49,7 +51,7 @@ public class SizeVariation {
             for (int i = 0; i < amount; i++) {
                 int w = (int)Math.floor(start.getWidth() + deltaWidth * i / amount);
                 int h = (int)Math.floor(start.getHeight() + deltaHeight * i / amount);
-                sizes.add(new Size(w,h));
+                sizes.add(new Dimension(w, h));
             }
 
             return sizes;

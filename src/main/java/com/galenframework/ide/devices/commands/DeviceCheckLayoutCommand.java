@@ -59,7 +59,7 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             HtmlReportBuilder reportBuilder = new HtmlReportBuilder();
             String reportDir = uniqueId + "-" + new Date().getTime();
             String reportDirPath = reportStoragePath + File.separator + reportDir;
-            reportBuilder.build(createTestInfo(spec, size, layoutReport), reportDirPath);
+            reportBuilder.build(createTestInfo(device, spec, size, layoutReport), reportDirPath);
 
             testResult.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
 
@@ -91,9 +91,9 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         return REPORT_HTML;
     }
 
-    private List<GalenTestInfo> createTestInfo(String spec, Dimension size, LayoutReport layoutReport) {
+    private List<GalenTestInfo> createTestInfo(Device device, String spec, Dimension size, LayoutReport layoutReport) {
         List<GalenTestInfo> testInfos = new LinkedList<>();
-        GalenTestInfo testInfo = new GalenTestInfo(spec + format(", size %dx%d", size.width, size.height), null);
+        GalenTestInfo testInfo = new GalenTestInfo(format("%s on %s with size %dx%d", spec, device.getName(), size.width, size.height), null);
         testInfo.getReport().layout(layoutReport, spec);
         testInfos.add(testInfo);
         return testInfos;

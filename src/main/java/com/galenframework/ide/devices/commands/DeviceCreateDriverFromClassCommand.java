@@ -22,11 +22,5 @@ public class DeviceCreateDriverFromClassCommand extends DeviceCommand {
         }
         WebDriver newDriver = driverClass.newInstance();
         device.setDriver(newDriver);
-
-        if (!device.getSizes().isEmpty()) {
-            newDriver.manage().window().setSize(device.getSizes().get(0));
-        } else {
-            throw new RuntimeException("Should have at least one size");
-        }
     }
 }

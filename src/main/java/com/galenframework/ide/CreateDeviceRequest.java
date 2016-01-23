@@ -8,6 +8,7 @@ public class CreateDeviceRequest {
     private String name = "";
     private List<String> tags;
     private List<Size> sizes;
+    private String sizeType;
     private SizeVariation sizeVariation;
 
     public String getBrowserType() {
@@ -48,5 +49,13 @@ public class CreateDeviceRequest {
 
     public void setSizeVariation(SizeVariation sizeVariation) {
         this.sizeVariation = sizeVariation;
+    }
+
+    public String getSizeType() {
+        return sizeType;
+    }
+
+    public void setSizeType(String sizeType) {
+        this.sizeType = sizeType;
     }
 }

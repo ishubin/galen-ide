@@ -25,6 +25,9 @@ FormHandler.prototype.textfield = function (name) {
 FormHandler.prototype.isChecked = function(name) {
     return this.$form.find("input[name='" + name +"']").is(":checked");
 };
+FormHandler.prototype.radio = function (name) {
+    return this.$form.find("input:radio[name='size-type']:checked").val();
+};
 
 
 function fromCommaSeparated(text) {
@@ -103,6 +106,33 @@ Handlebars.registerHelper('shortText', function(text) {
         text = text.substring(0, 50) + "...";
     }
     return new Handlebars.SafeString(text);
+});
+
+Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
+    // <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
+    if (sizeProvider.type === "unsupported") {
+        return new Handlebars.SafeString("<i>unsupported</i>")
+
+    } else if (sizeProvider.type === "custom") {
+        var html = '<ul>';
+        for (var i = 0; i < sizeProvider.sizes.length; i++) {
+            html += '<li>';
+            html += '<code>' + sizeProvider.sizes[i].width + '<span class="size-splitter">x</span>'
+                + sizeProvider.sizes[i].height + '</code>';
+            html += '</li>';
+        }
+        html += '</ul>';
+        return new Handlebars.SafeString(html);
+
+    } else if (sizeProvider.type === "range") {
+        html = '<code>' + sizeProvider.sizeVariation.iterations + "</code> x ( ";
+        html += '<code>' + sizeProvider.sizeVariation.start.width + '<span class="size-splitter">x</span>'
+            + sizeProvider.sizeVariation.start.height + '</code>';
+        html += ' until <code>' + sizeProvider.sizeVariation.end.width + '</span><span class="size-splitter">x</span>'
+            + sizeProvider.sizeVariation.end.height + '</code> )';
+        html += '</li>';
+        return new Handlebars.SafeString(html);
+    }
 });
 
 function getJSON(resource, callback) {
@@ -190,6 +220,18 @@ var App = {
     initDevicesPanel: function () {
         whenClick(".action-devices-add-new", App.showNewDevicePopup);
         whenClick(".action-devices-add-new-submit", App.submitNewDevice);
+
+        $("#add-device-modal input:radio[name='size-type']").change(function() {
+            var selectedSizeType = $("input:radio[name='size-type']:checked").val();
+            $("#add-device-modal .settings-form-group-size").each(function () {
+                var $this = $(this);
+                if ($this.attr("data-type") === selectedSizeType) {
+                    $this.show();
+                } else {
+                    $this.hide();
+                }
+            });
+        });
     },
     showNewDevicePopup: function () {
         $("#add-device-modal").modal("show");
@@ -197,18 +239,25 @@ var App = {
     submitNewDevice: function () {
         try {
             var f = new FormHandler("#add-device-modal");
+            var sizeType = f.radio("size-type");
 
             var request = {
                 browserType: f.mandatorySelect("browser-type", "Browser type"),
                 name: f.mandatoryTextfield("name", "Device name"),
                 tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
-                //sizes: fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText)
-                sizeVariation: {
+                sizeType: sizeType
+            };
+
+            if (sizeType === "custom") {
+                request["sizes"] = fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText);
+            } else if (sizeType === "range") {
+                request["sizeVariation"] = {
                     start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
                     end: convertSizeFromText(f.textfield("size-range-end")),
                     iterations: parseInt(f.textfield("size-range-iterations"))
                 }
-            };
+            }
+
             postJSON("api/devices", request, function () {
                 App.updateDevices();
             });

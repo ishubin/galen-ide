@@ -1,9 +1,6 @@
 package com.galenframework.ide;
 
-import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
-import com.galenframework.ide.devices.TestResult;
-import com.galenframework.ide.devices.TestResultsListener;
+import com.galenframework.ide.devices.*;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -53,11 +50,10 @@ public class TesterService implements TestResultsListener {
 
     public void testAllBrowsers(String spec, String reportStoragePath) {
         this.testResults.clear();
-        devices.forEach((device) ->
-            device.getSizes().forEach(size -> {
-                TestResultContainer testResultContainer = registerNewTestResultContainer(device, size);
-                device.resize(size);
-                device.checkLayout(settings, testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
+        devices.forEach(deviceThread ->
+            deviceThread.getDevice().getSizeProvider().forEachIteration(deviceThread, size -> {
+                TestResultContainer testResultContainer = registerNewTestResultContainer(deviceThread, size);
+                deviceThread.checkLayout(settings, testResultContainer.getUniqueId(), size, spec, this, reportStoragePath);
             })
         );
     }
@@ -104,17 +100,10 @@ public class TesterService implements TestResultsListener {
     public void createDevice(CreateDeviceRequest createDeviceRequest) {
         Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
 
-        List<Size> sizes;
-        if (createDeviceRequest.getSizeVariation() != null) {
-            sizes = createDeviceRequest.getSizeVariation().generateVariations();
-        } else {
-            sizes = createDeviceRequest.getSizes();
-        }
-
         Device device = new Device(createDeviceRequest.getName(),
                 createDeviceRequest.getBrowserType(),
                 createDeviceRequest.getTags(),
-                toSeleniumSizes(sizes)
+                SizeProvider.readFrom(createDeviceRequest)
         );
         DeviceThread  deviceThread = new DeviceThread(device);
         devices.add(deviceThread);
@@ -123,13 +112,6 @@ public class TesterService implements TestResultsListener {
         deviceThread.createDriverFromClass(webDriverClass);
     }
 
-    private List<Dimension> toSeleniumSizes(List<Size> sizes) {
-        if (sizes != null) {
-            return sizes.stream().map(Size::toSeleniumDimension).collect(Collectors.toList());
-        } else {
-            return null;
-        }
-    }
 
     private static final Map<String, Class<? extends WebDriver>> webDriverMappings = new HashMap<String, Class<? extends WebDriver>>() {{
         put("firefox", FirefoxDriver.class);

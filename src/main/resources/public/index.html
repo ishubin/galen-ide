@@ -28,14 +28,15 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/app.js"></script>
 
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
                         <img alt="Brand" src="...">
                     </a>
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Profiles</a></li>
+                        <li><a href="#">Load</a></li>
+                        <li><a href="#">Save</a></li>
                         <li><a class="action-settings-panel" href="#">Settings</a></li>
                     </ul>
                 </div>
@@ -156,22 +157,37 @@
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <div class="text-left">
-                                    <h5>Sizes</h5>
-                                    <input type="text" name="sizes" class="form-control" placeholder="Type comma separated list of sizes" aria-describedby="basic-addon1" value="1024x768">
+                                <h5>Size</h5>
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default action-change-size-type active">
+                                        <input type="radio" name="size-type" value="custom" checked="checked"/> Custom
+                                    </label>
+                                    <label class="btn btn-default action-change-size-type">
+                                        <input type="radio" name="size-type" value="range" /> Range
+                                    </label>
+                                    <label class="btn btn-default action-change-size-type">
+                                        <input type="radio" name="size-type" value="unsupported" /> Unsupported
+                                    </label>
                                 </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <h5>Sizes</h5>
-                                <div class="input-group">
-                                    <span class="input-group-addon">From</span>
-                                    <input type="text" name="size-range-start" class="form-control" aria-describedby="basic-addon3" value="1024x768">
-                                    <span class="input-group-addon">To</span>
-                                    <input type="text" name="size-range-end" class="form-control" aria-describedby="basic-addon3">
-                                    <span class="input-group-addon"> x Times</span>
-                                    <input type="text" name="size-range-iterations" class="form-control" aria-describedby="basic-addon3" value="1">
+                                <div class="row">
+                                    <div class="settings-form-group-size col-lg-12 show-by-default" data-type="custom">
+                                        <input type="text" name="sizes" class="form-control" placeholder="Type comma separated list of sizes" aria-describedby="basic-addon1" value="1024x768">
+                                        Comma separated list of sizes (e.g. <code>1024x768, 1100x768, 1200x768</code>)
+                                    </div>
+                                    <div class="settings-form-group-size col-lg-12" data-type="range">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">From</span>
+                                            <input type="text" name="size-range-start" class="form-control" aria-describedby="basic-addon3" value="1024x768">
+                                            <span class="input-group-addon">To</span>
+                                            <input type="text" name="size-range-end" class="form-control" aria-describedby="basic-addon3">
+                                            <span class="input-group-addon"> x Times</span>
+                                            <input type="text" name="size-range-iterations" class="form-control" aria-describedby="basic-addon3" value="1">
+                                        </div>
+                                    </div>
+                                    <div class="settings-form-group-size col-lg-12" data-type="unsupported">
+                                        Means that a device does not support resizing (e.g. mobile devices)
+                                    </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -206,7 +222,8 @@
                                 {{/each}}
                             </ul>
                         </td>
-                        <td>
+                        <td class="device-sizes">
+                            {{renderDeviceSizeProvider sizeProvider}}
                             <ul class="device-sizes">
                                 {{#each sizes}}
                                 <li>

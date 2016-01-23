@@ -17,23 +17,17 @@ public class Device {
 
     @JsonIgnore
     private WebDriver driver;
-    private List<Dimension> sizes;
+    private SizeProvider sizeProvider;
     private boolean isActive = true;
 
     private DeviceStatus status = DeviceStatus.STARTING;
     private String lastErrorMessage;
 
-    public Device(String name, String icon, List<String> tags) {
+    public Device(String name, String icon, List<String> tags, SizeProvider sizeProvider) {
         this.name = name;
         this.tags = tags;
         this.icon = icon;
-    }
-
-    public Device(String name, String icon, List<String> tags, List<Dimension> sizes) {
-        this.name = name;
-        this.sizes = sizes;
-        this.tags = tags;
-        this.icon = icon;
+        this.sizeProvider = sizeProvider;
     }
 
     public List<String> getTags() {
@@ -66,14 +60,6 @@ public class Device {
 
     public void setDriver(WebDriver driver) {
         this.driver = driver;
-    }
-
-    public List<Dimension> getSizes() {
-        return sizes;
-    }
-
-    public void setSizes(List<Dimension> sizes) {
-        this.sizes = sizes;
     }
 
     public boolean isActive() {
@@ -114,5 +100,13 @@ public class Device {
 
     public void setSupportsResizing(boolean supportsResizing) {
         this.supportsResizing = supportsResizing;
+    }
+
+    public SizeProvider getSizeProvider() {
+        return sizeProvider;
+    }
+
+    public void setSizeProvider(SizeProvider sizeProvider) {
+        this.sizeProvider = sizeProvider;
     }
 }

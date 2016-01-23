@@ -91,10 +91,6 @@ public class DeviceThread extends Thread {
         }
     }
 
-    public List<Dimension> getSizes() {
-        return device.getSizes();
-    }
-
     public List<String> getTags() {
         return device.getTags();
     }
