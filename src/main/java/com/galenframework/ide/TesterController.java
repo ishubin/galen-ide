@@ -1,6 +1,7 @@
 package com.galenframework.ide;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galenframework.ide.devices.DeviceContainer;
 
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -9,8 +10,11 @@ import static spark.Spark.*;
 public class TesterController {
     private static final String APPLICATION_JSON = "application/json";
     private final String reportStoragePath;
-    private TesterService testerService = new TesterService();
+    private DeviceContainer deviceContainer = new DeviceContainer();
+    private TesterService testerService = new TesterService(deviceContainer);
     private SpecsBrowserService specsBrowserService = new SpecsBrowserService();
+    private ProfilesService profilesService = new ProfilesService(deviceContainer, testerService);
+
     ObjectMapper mapper = new ObjectMapper();
 
 
@@ -70,13 +74,33 @@ public class TesterController {
             } else throw new RuntimeException("Incorrect request, missing device id");
         }, toJson());
 
-        get("api/settings", ((request, response) -> testerService.getSettings()), toJson());
+        get("api/settings", (request, response) -> deviceContainer.getSettings(), toJson());
 
-        post("api/settings", ((request, response) -> {
+        post("api/settings", (request, response) -> {
             Settings settings = mapper.readValue(request.body(), Settings.class);
             testerService.applySettings(settings);
             return "saved";
-        }));
+        });
+
+
+
+        get("api/profiles", (req, res) -> {
+            return profilesService.getProfiles();
+        }, toJson());
+
+        post("api/profiles", (req, res) -> {
+            SaveProfileRequest saveProfileRequest = mapper.readValue(req.body(), SaveProfileRequest.class);
+            profilesService.saveProfile(saveProfileRequest.getName());
+            return "saved";
+        }, toJson());
+
+        post("api/profiles-load/*", (req, res) -> {
+            String[] splat = req.splat();
+            if (splat.length > 0) {
+                profilesService.loadProfile(splat[0]);
+                return "loaded";
+            } else throw new RuntimeException("Incorrect request");
+        }, toJson());
     }
 
 }

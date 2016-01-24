@@ -5,6 +5,12 @@ function isBlank(str) {
 function FormHandler(locator) {
     this.$form = $(locator);
 }
+FormHandler.prototype.showModal = function () {
+    this.$form.modal("show");
+};
+FormHandler.prototype.hideModal = function () {
+    this.$form.modal("hide");
+};
 FormHandler.prototype.select = function (name) {
     return this.$form.find("select[name='" + name +"']").val();
 };
@@ -172,12 +178,12 @@ Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
         return new Handlebars.SafeString(html);
 
     } else if (sizeProvider.type === "range") {
-        html = '<code>' + sizeProvider.sizeVariation.iterations + "</code> x ( ";
+        html = '<div class="layout-whitespace-nowrap"><code>' + sizeProvider.sizeVariation.iterations + "</code> x ( ";
         html += '<code>' + sizeProvider.sizeVariation.start.width + '<span class="size-splitter">x</span>'
             + sizeProvider.sizeVariation.start.height + '</code>';
         html += ' until <code>' + sizeProvider.sizeVariation.end.width + '</span><span class="size-splitter">x</span>'
             + sizeProvider.sizeVariation.end.height + '</code> )';
-        html += '</li>';
+        html += '</div>';
         return new Handlebars.SafeString(html);
     }
 });
@@ -270,17 +276,21 @@ var App = {
             specsBrowser: "tpl-specs-browser",
             testResults: "tpl-test-results",
             devices: "tpl-devices",
-            fileEditor: "tpl-file-editor"
+            fileEditor: "tpl-file-editor",
+            profilesBrowser: "tpl-profiles-browser"
         });
+        App.initProfilesPanel();
         App.initSettingsPanel();
         App.initDevicesPanel();
 
-
         App.updateSpecsBrowser();
         App.updateDevices();
-        App.showDevices(Data.devices);
-
         App.updateTestResults();
+    },
+    initProfilesPanel: function () {
+        whenClick(".action-profiles-load", App.showLoadProfilesPanel);
+        whenClick(".action-profiles-save", App.showSaveProfilePanel);
+        whenClick(".action-profiles-submit-save", App.submitSaveProfile);
     },
     initSettingsPanel: function () {
         whenClick(".action-settings-panel", App.showSettingsPanel);
@@ -297,7 +307,6 @@ var App = {
             }
         });
 
-
         $("#add-device-modal input:radio[name='size-type']").change(function() {
             var selectedSizeType = $("input:radio[name='size-type']:checked").val();
             $("#add-device-modal .settings-form-group-size").each(function () {
@@ -310,6 +319,44 @@ var App = {
             });
         });
     },
+
+    showLoadProfilesPanel: function () {
+        getJSON("api/profiles", function (files) {
+            Data.profiles = files;
+            App.templates.profilesBrowser.renderTo("#load-profiles-modal-files", {items: files});
+
+            whenClick("#load-profiles-modal .profile-file-item", function () {
+                var path = $(this).attr("data-file-path");
+                if (!isBlank(path)) {
+                    postJSON("api/profiles-load/" + path, {}, function () {
+                        $("#load-profiles-modal").modal("hide");
+                        App.updateDevices();
+                    });
+                }
+            });
+
+            $("#load-profiles-modal").modal("show");
+        });
+    },
+    showSaveProfilePanel: function () {
+        getJSON("api/profiles", function (files) {
+            Data.profiles = files;
+            var f = new FormHandler("#save-profiles-modal");
+            f.set("profile-name", "");
+            f.showModal();
+        });
+    },
+    submitSaveProfile: function () {
+        var f = new FormHandler("#save-profiles-modal");
+        var profileName = f.mandatoryTextfield("profile-name", "Profile name");
+
+        postJSON("api/profiles", {
+            name: profileName
+        }, function () {
+            f.hideModal();
+        });
+    },
+
     showNewDevicePopup: function () {
         var f = new FormHandler("#add-device-modal");
         f.enable("browser-type");

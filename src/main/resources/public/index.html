@@ -35,8 +35,8 @@
                         <img alt="Brand" src="images/logo.png" height="26px"> Galen IDE
                     </a>
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Load</a></li>
-                        <li><a href="#">Save</a></li>
+                        <li><a href="#" class="action-profiles-load">Load</a></li>
+                        <li><a href="#" class="action-profiles-save">Save</a></li>
                         <li><a class="action-settings-panel" href="#">Settings</a></li>
                     </ul>
                 </div>
@@ -70,6 +70,41 @@
             <div id="file-editor"></div>
 
             <div id="test-results"></div>
+        </div>
+
+        <div id="load-profiles-modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Load profile</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="load-profiles-modal-files"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="save-profiles-modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Save profile</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" name="profile-name" class="form-control" placeholder="Type name for your profile..." aria-describedby="basic-addon1">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary action-profiles-submit-save" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="settings-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -368,6 +403,27 @@
                             </tr>
                         {{/unless}}
                     {{/each}}
+                </tbody>
+            </table>
+        </script>
+
+        <script id="tpl-profiles-browser" type="text/x-handlebars-template">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each items}}
+                {{#unless directory}}
+                <tr>
+                    <td>
+                        <a class="profile-file-item" data-file-path="{{path}}" href="#">{{name}}</a>
+                    </td>
+                </tr>
+                {{/unless}}
+                {{/each}}
                 </tbody>
             </table>
         </script>

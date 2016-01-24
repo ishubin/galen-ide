@@ -1,6 +1,5 @@
 package com.galenframework.ide.devices;
 
-import com.galenframework.ide.Size;
 import com.galenframework.ide.SizeVariation;
 import org.openqa.selenium.Dimension;
 

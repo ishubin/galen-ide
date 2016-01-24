@@ -1,6 +1,11 @@
 package com.galenframework.ide;
 
 
+import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.SizeProviderCustom;
+import com.galenframework.ide.devices.SizeProviderRange;
+import com.galenframework.ide.devices.SizeProviderUnsupported;
+
 import java.util.List;
 
 public class DeviceRequest {
@@ -57,5 +62,19 @@ public class DeviceRequest {
 
     public void setSizeType(String sizeType) {
         this.sizeType = sizeType;
+    }
+
+    public static DeviceRequest fromDevice(Device device) {
+        DeviceRequest dr = new DeviceRequest();
+        dr.setBrowserType(device.getBrowserType());
+        dr.setTags(device.getTags());
+        dr.setName(device.getName());
+        dr.setSizeType(device.getSizeProvider().getType());
+        if (device.getSizeProvider() instanceof SizeProviderCustom) {
+            dr.setSizes(((SizeProviderCustom) device.getSizeProvider()).getSizes());
+        } else if (device.getSizeProvider() instanceof SizeProviderRange) {
+            dr.setSizeVariation(((SizeProviderRange) device.getSizeProvider()).getSizeVariation());
+        }
+        return dr;
     }
 }

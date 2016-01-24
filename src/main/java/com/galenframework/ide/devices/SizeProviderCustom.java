@@ -1,5 +1,7 @@
 package com.galenframework.ide.devices;
 
+
+import com.galenframework.ide.Size;
 import org.openqa.selenium.Dimension;
 
 import java.util.List;
@@ -7,9 +9,9 @@ import java.util.function.Consumer;
 
 public class SizeProviderCustom extends SizeProvider {
 
-    private List<Dimension> sizes;
+    private List<Size> sizes;
 
-    public SizeProviderCustom(List<Dimension> sizes) {
+    public SizeProviderCustom(List<Size> sizes) {
         this.sizes = sizes;
     }
 
@@ -21,16 +23,17 @@ public class SizeProviderCustom extends SizeProvider {
     @Override
     public void forEachIteration(DeviceThread deviceThread, Consumer<Dimension> action) {
         sizes.stream().forEach(size -> {
-            deviceThread.resize(size);
-            action.accept(size);
+            Dimension dimension = size.toSeleniumDimension();
+            deviceThread.resize(dimension);
+            action.accept(dimension);
         });
     }
 
-    public List<Dimension> getSizes() {
+    public List<Size> getSizes() {
         return sizes;
     }
 
-    public void setSizes(List<Dimension> sizes) {
+    public void setSizes(List<Size> sizes) {
         this.sizes = sizes;
     }
 }

@@ -12,7 +12,6 @@ public class Device {
 
     private List<String> tags;
     private String name;
-    private String icon;
     private boolean supportsResizing = true;
 
     @JsonIgnore
@@ -22,11 +21,12 @@ public class Device {
 
     private DeviceStatus status = DeviceStatus.STARTING;
     private String lastErrorMessage;
+    private String browserType;
 
-    public Device(String name, String icon, List<String> tags, SizeProvider sizeProvider) {
+    public Device(String name, String browserType, List<String> tags, SizeProvider sizeProvider) {
         this.name = name;
         this.tags = tags;
-        this.icon = icon;
+        this.browserType = browserType;
         this.sizeProvider = sizeProvider;
     }
 
@@ -44,14 +44,6 @@ public class Device {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public WebDriver getDriver() {
@@ -108,5 +100,13 @@ public class Device {
 
     public void setSizeProvider(SizeProvider sizeProvider) {
         this.sizeProvider = sizeProvider;
+    }
+
+    public String getBrowserType() {
+        return browserType;
+    }
+
+    public void setBrowserType(String browserType) {
+        this.browserType = browserType;
     }
 }
