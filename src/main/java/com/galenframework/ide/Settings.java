@@ -1,7 +1,10 @@
 package com.galenframework.ide;
 
+import java.io.File;
+
 public class Settings {
     private boolean makeScreenshots = true;
+    private String homeDirectory = System.getProperty("user.home") + File.separator + ".galen";
     private String chromeDriverBinPath;
     private String safariDriverBinPath;
     private String edgeDriverBinPath;
@@ -37,5 +40,13 @@ public class Settings {
 
     public void setEdgeDriverBinPath(String edgeDriverBinPath) {
         this.edgeDriverBinPath = edgeDriverBinPath;
+    }
+
+    public String getHomeDirectory() {
+        return homeDirectory;
+    }
+
+    public void setHomeDirectory(String homeDirectory) {
+        this.homeDirectory = homeDirectory;
     }
 }

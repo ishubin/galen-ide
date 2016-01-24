@@ -21,10 +21,21 @@ public class ProfilesService {
         this.testerService = testerService;
     }
 
+    public File obtainRootFolder() {
+        File root = new File(deviceContainer.getSettings().getHomeDirectory());
+        if (root.exists()) {
+            if (!root.isDirectory()) {
+                throw new RuntimeException("Home is not a directory: " + root.getAbsolutePath());
+            }
+        } else {
+            if (!root.mkdirs()) {
+                throw new RuntimeException("Cannot create a directory: " + root.getAbsolutePath());
+            }
+        }
+        return root;
+    }
     public List<FileItem> getProfiles() {
-        File root = new File(".");
-
-        File[] filesInFolder = root.listFiles();
+        File[] filesInFolder = obtainRootFolder().listFiles();
 
         List<FileItem> fileItems = new LinkedList<>();
         if (filesInFolder != null) {
@@ -49,7 +60,7 @@ public class ProfilesService {
             fileName = fileName + GALEN_EXTENSION;
         }
 
-        File profileFile = new File(fileName);
+        File profileFile = new File(obtainRootFolder().getAbsolutePath() + File.separator + fileName);
         ProfileContent profileContent = new ProfileContent();
         profileContent.setSettings(deviceContainer.getSettings());
         profileContent.setDevices(deviceContainer.getAllDevices().stream().map(DeviceRequest::fromDevice).collect(Collectors.toList()));
@@ -62,7 +73,7 @@ public class ProfilesService {
     }
 
     public void loadProfile(String path) {
-        File file = new File(path);
+        File file = new File(obtainRootFolder().getAbsolutePath() + File.separator + path);
         if (file.exists() && !file.isDirectory()) {
             try {
                 String content = FileUtils.readFileToString(file);

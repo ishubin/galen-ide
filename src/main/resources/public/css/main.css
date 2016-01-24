@@ -138,6 +138,18 @@ ul.device-tags:after , .device-sizes ul:after {
 }
 
 
+.modal-section {
+    border-bottom:1px solid #ddd;
+    padding-bottom: 30px
+}
+.modal-section:last-child {
+    border-bottom: none;
+    padding-bottom: 10px
+}
+.modal-section h5 {
+    font-weight: bold;
+}
+
 @keyframes blink {
     0%   { opacity:1; }
     50%  { opacity:0; }

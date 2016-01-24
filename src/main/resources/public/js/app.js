@@ -11,6 +11,19 @@ FormHandler.prototype.showModal = function () {
 FormHandler.prototype.hideModal = function () {
     this.$form.modal("hide");
 };
+FormHandler.prototype.setCheck = function (name, isChecked) {
+    if (isChecked) {
+        this.check(name);
+    } else {
+        this.uncheck(name);
+    }
+};
+FormHandler.prototype.check = function (name) {
+    this.$form.find("input[name='" + name + "']").prop("checked", true);
+};
+FormHandler.prototype.uncheck = function (name) {
+    this.$form.find("input[name='" + name + "']").prop("checked", false);
+};
 FormHandler.prototype.select = function (name) {
     return this.$form.find("select[name='" + name +"']").val();
 };
@@ -436,10 +449,15 @@ var App = {
 
     showSettingsPanel: function() {
         getJSON("api/settings", function (settings) {
-            $("#settings-modal input[name='make-screenshots']").prop("checked", settings.makeScreenshots);
+            var f = new FormHandler("#settings-modal");
+            f.setCheck("make-screenshots", settings.makeScreenshots);
+            f.set("home-directory", settings.homeDirectory);
+            f.set("chrome-driver-bin-path", settings.chromeDriverBinPath);
+            f.set("safari-driver-bin-path", settings.safariDriverBinPath);
+            f.set("edge-driver-bin-path", settings.edgeDriverBinPath);
+            f.set("phantomjs-driver-bin-path", settings.phantomjsDriverBinPath);
             $("#settings-modal").modal("show");
         });
-
     },
     onSettingsPanelSubmit: function() {
         var f = new FormHandler("#settings-modal");
@@ -448,6 +466,7 @@ var App = {
             chromeDriverBinPath: f.textfield("chrome-driver-bin-path"),
             safariDriverBinPath: f.textfield("safari-driver-bin-path"),
             edgeDriverBinPath: f.textfield("edge-driver-bin-path"),
+            phantomjsDriverBinPath: f.textfield("phantomjs-driver-bin-path")
         };
         postJSON("api/settings", settings, function () {
             $("#settings-modal").modal("hide");
