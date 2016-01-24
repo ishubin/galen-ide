@@ -42,7 +42,7 @@ FormHandler.prototype.mandatoryTextfield = function (name, readableName) {
     return value;
 };
 FormHandler.prototype.textfield = function (name) {
-    return this.$form.find("input[name='" + name +"']").val();
+    return this.get(name);
 };
 FormHandler.prototype.isChecked = function(name) {
     return this.$form.find("input[name='" + name +"']").is(":checked");
@@ -58,6 +58,9 @@ FormHandler.prototype.enable = function (name) {
 };
 FormHandler.prototype.set = function (name, value) {
     this.$form.find("input[name='" + name +"']").val(value);
+};
+FormHandler.prototype.get = function (name) {
+    return this.$form.find("input[name='" + name +"']").val();
 };
 FormHandler.prototype.showSubPanel = function (groupLocator, dataType) {
     this.$form.find(groupLocator).each(function () {
@@ -207,6 +210,7 @@ function getJSON(resource, callback) {
 }
 
 function postJSON(resource, jsonObject, callback) {
+    console.log("post  " + resource, jsonObject);
     sendJSON(resource, "post", jsonObject, callback);
 }
 function putJSON(resource, jsonObject, callback) {
@@ -289,12 +293,12 @@ var App = {
             specsBrowser: "tpl-specs-browser",
             testResults: "tpl-test-results",
             devices: "tpl-devices",
-            fileEditor: "tpl-file-editor",
             profilesBrowser: "tpl-profiles-browser"
         });
         App.initProfilesPanel();
         App.initSettingsPanel();
         App.initDevicesPanel();
+        App.initFileEditorPanel();
 
         App.updateSpecsBrowser();
         App.updateDevices();
@@ -331,6 +335,14 @@ var App = {
                     $this.hide();
                 }
             });
+        });
+    },
+    initFileEditorPanel: function () {
+        whenClick(".action-file-editor-run-test", function () {
+            var f = new FormHandler("#file-editor-modal");
+            var specPath = f.get("spec-path");
+            App.runTest(specPath);
+            f.hideModal();
         });
     },
 
@@ -500,14 +512,18 @@ var App = {
         });
     },
 
+    runTest: function (specPath) {
+        postJSON("api/tester/test", {specPath: specPath}, function (result) {
+            App.waitForTestResults();
+        });
+    },
+
     updateSpecsBrowser: function () {
         getJSON("/api/specs", function (items) {
             App.showSpecBrowserItems(items);
             whenClick("#specs-browser .action-launch-spec", function () {
                 var specPath = this.attr("data-spec-path");
-                postJSON("api/tester/test", {specPath: specPath}, function (result) {
-                    App.waitForTestResults();
-                });
+                App.runTest(specPath);
             });
         });
     },
@@ -521,11 +537,12 @@ var App = {
         });
     },
     showFileEditor: function (fileItem) {
-        this.templates.fileEditor.renderTo("#file-editor", {fileItem: fileItem});
-        var $content = $("#file-editor pre.code-gspec");
-        $content.html(GalenHighlightV2.specs($content.html()));
-
-        $("#file-editor > .modal").modal("show");
+        var $modal = $("#file-editor-modal");
+        $modal.find(".modal-title").html(fileItem.name);
+        $modal.find("input[name='spec-path']").val(fileItem.path);
+        $modal.find(".code-placeholder").text();
+        $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
+        $modal.modal("show");
     },
 
 
