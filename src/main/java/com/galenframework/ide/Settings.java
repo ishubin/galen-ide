@@ -7,6 +7,7 @@ public class Settings {
     private String homeDirectory = System.getProperty("user.home") + File.separator + ".galen";
     private String chromeDriverBinPath;
     private String safariDriverBinPath;
+    private String phantomjsDriverBinPath;
     private String edgeDriverBinPath;
 
 
@@ -48,5 +49,13 @@ public class Settings {
 
     public void setHomeDirectory(String homeDirectory) {
         this.homeDirectory = homeDirectory;
+    }
+
+    public String getPhantomjsDriverBinPath() {
+        return phantomjsDriverBinPath;
+    }
+
+    public void setPhantomjsDriverBinPath(String phantomjsDriverBinPath) {
+        this.phantomjsDriverBinPath = phantomjsDriverBinPath;
     }
 }

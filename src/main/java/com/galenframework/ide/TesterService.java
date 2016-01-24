@@ -66,8 +66,15 @@ public class TesterService {
 
     public void applySettings(Settings settings) {
         deviceContainer.setSettings(settings);
-        if (settings.getChromeDriverBinPath() != null) {
-            System.setProperty("webdriver.chrome.driver", settings.getChromeDriverBinPath());
+
+        applySystemPropertyIfDefined("webdriver.chrome.driver", settings.getChromeDriverBinPath());
+        applySystemPropertyIfDefined("phantomjs.binary.path", settings.getPhantomjsDriverBinPath());
+        applySystemPropertyIfDefined("webdriver.edge.driver", settings.getEdgeDriverBinPath());
+    }
+
+    private void applySystemPropertyIfDefined(String systemPropertyName, String value) {
+        if (value != null) {
+            System.setProperty(systemPropertyName, value);
         }
     }
 

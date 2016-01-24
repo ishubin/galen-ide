@@ -1,0 +1,29 @@
+@import common-data.gspec
+@objects
+    login_box           #login-page
+    login_button        .button-login
+    cancel_button       .button-cancel
+
+@groups
+    (login_box_button, login_box_buttons)                   login_button, cancel_button
+
+@set
+    login_box_elements_vertical_margin  50 to 60px
+    login_box_elements_side_margin      ~ 40px
+    login_box_desktop_width             380px
+    login_caption_text                  Login
+    login_button_text                   Login
+    cancel_button_text                  Cancel
+
+@on mobile
+    @set login_box_elements_side_margin 0px
+
+
+= Login box =
+    | every &login_box_button is tapable
+
+    @on desktop, tablet
+        | &login_box_buttons are aligned horizontally next to each other with 0 to 5px margin
+    @on mobile
+        | &login_box_buttons are aligned vertically above each other with ${login_box_elements_vertical_margin} margin
+
