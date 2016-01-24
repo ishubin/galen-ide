@@ -14,7 +14,7 @@ import static java.lang.String.format;
 public class TestResult {
     public static final String FAILED = "failed";
     public static final String RUNNING = "running";
-    private static final String WARNING = "warning";
+    public static final String WARNING = "warning";
     public static final String PASSED = "passed";
     private final List<String> errorMessages;
 

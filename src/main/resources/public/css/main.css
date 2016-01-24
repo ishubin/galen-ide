@@ -1,7 +1,12 @@
 body {
-    margin: 2px;
+    margin: 0px;
 }
 
+.navbar {
+    margin: 0;
+    border-radius: 0;
+    background: #222;
+}
 nav a.navbar-brand img {
     position: absolute;
     left: 8px;
@@ -12,6 +17,44 @@ nav a.navbar-brand {
     padding-left: 40px;
     position: relative;
 }
+
+#content {
+    margin: 5px;
+}
+
+.panel-heading {
+    padding: 4px 8px 4px 8px;
+    position: relative;
+}
+.panel-heading .panel-buttons {
+    display: inline-block;
+}
+.panel-heading .panel-buttons button {
+    padding: 3px;
+}
+.panel-heading .panel-buttons button .glyphicon {
+    font-size: 10px;
+    margin: 0;
+}
+.panel-body {
+    padding: 2px;
+}
+
+.table thead tr th {
+    font-size: 0.8em;
+    padding: 4px;
+}
+
+.table tbody tr td {
+    font-size: 0.9em;
+    padding: 4px;
+}
+.table tbody tr td button {
+    padding: 4px;
+}
+
+
+
 
 .layout-whitespace-nowrap {
     white-space: nowrap;
@@ -28,8 +71,27 @@ nav a.navbar-brand {
     color: gray;
 }
 
+.test-status .test-status-icon {
+    display: none;
+}
+.test-status-running {
+  animation: blink 1s steps(5, start) infinite;
+  -webkit-animation: blink 1s steps(5, start) infinite;
+}
 .test-status-passed {
     color: green;
+}
+.test-status-passed .test-status-icon-passed {
+    display: inline;
+}
+.test-status-failed .test-status-icon-failed {
+    display: inline;
+}
+.test-status-running .test-status-icon-running {
+    display: inline;
+}
+.test-status-warning .test-status-icon-warning {
+    display: inline;
 }
 
 .test-status-failed {
@@ -96,6 +158,7 @@ pre.code code {
 ul.device-tags, .device-sizes ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 ul.device-tags li, .device-sizes ul li {
     float: left;
@@ -121,10 +184,6 @@ ul.device-tags:after , .device-sizes ul:after {
     color: #111;
 }
 
-.test-status-running {
-  animation: blink 1s steps(5, start) infinite;
-  -webkit-animation: blink 1s steps(5, start) infinite;
-}
 
 
 /* Devices modal */
@@ -160,11 +219,11 @@ input[type='checkbox'] {
 
 @keyframes blink {
     0%   { opacity:1; }
-    50%  { opacity:0; }
+    50%  { opacity:0.2; }
     100% { opacity:1; }
 }
 @-webkit-keyframes blink {
     0%   { opacity:1; }
-    50%  { opacity:0; }
+    50%  { opacity:0.2; }
     100% { opacity:1; }
 }

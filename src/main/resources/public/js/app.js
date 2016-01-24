@@ -299,6 +299,7 @@ var App = {
         App.updateSpecsBrowser();
         App.updateDevices();
         App.updateTestResults();
+
     },
     initProfilesPanel: function () {
         whenClick(".action-profiles-load", App.showLoadProfilesPanel);

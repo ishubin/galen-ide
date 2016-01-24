@@ -57,8 +57,11 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <span>Devices</span>
-                            <button type="button" class="btn btn-default btn-sm action-devices-add-new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-
+                            <div class="panel-buttons">
+                                <button type="button" class="btn btn-default action-devices-add-new">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
                         </div>
                         <div class="panel-body">
                             <div id="devices-panel" class="scrollable-panel-group-a"></div>
@@ -319,71 +322,81 @@
         </script>
 
         <script id="tpl-test-results" type="text/x-handlebars-template">
-            <h3>Test Results{{#if overview/totalDuration}}, total duration:  {{formatDurationHumanReadable overview/totalDuration}}{{/if}}</h3>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Device</th>
-                        <th>Size</th>
-                        <th>Duration</th>
-                        <th>Details</th>
-                        <th>Report</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each tests}}
-                    <tr>
-                        <td>
-                            {{#if testResult}}
-                                <span class="test-status-{{testResult/status}}">
-                                    {{testResult/status}}
-                                </span>
-                            {{else}}
-                                <span class="test-status-{{status}}">{{status}}</span>
-                            {{/if}}
-                        </td>
-                        <td>
-                            {{name}}
-                        </td>
-                        <td>
-                            {{size}}
-                        </td>
-                        <td>
-                            {{#if testResult}}
-                                {{formatDurationHumanReadable testResult/duration}}
-                            {{/if}}
-                        </td>
-                        <td>
-                            {{#if testResult}}
-                                {{#with testResult}}
-                                    <span class="test-status-{{status}}">
-                                        {{errors}} errors, {{warnings}} warnings
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Test Results{{#if overview/totalDuration}}, total duration:  {{formatDurationHumanReadable overview/totalDuration}}{{/if}}
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Device</th>
+                            <th>Size</th>
+                            <th>Duration</th>
+                            <th>Details</th>
+                            <th>Report</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each tests}}
+                        <tr>
+                            <td>
+                                {{#if testResult}}
+                                    <span class="test-status test-status-{{testResult/status}}">
+                                        <span class="glyphicon glyphicon-ok test-status-icon test-status-icon-passed" aria-hidden="true"></span>
+                                        <span class="glyphicon glyphicon-remove test-status-icon test-status-icon-failed" aria-hidden="true"></span>
+                                        <span class="glyphicon glyphicon-flash test-status-icon test-status-icon-warning" aria-hidden="true"></span>
                                     </span>
-                                    <ul class="error-messages">
-                                        {{#each errorMessages}}
-                                        <li>
-                                            {{this}}
-                                        </li>
-                                        {{/each}}
-                                    </ul>
-                                {{/with}}
-                            {{/if}}
-                        </td>
-                        <td>
-                            {{#if testResult}}
+                                {{else}}
+                                    <span class="test-status test-status-running">
+                                        <span class="glyphicon glyphicon-repeat test-status-icon test-status-icon-running" aria-hidden="true"></span>
+                                    </span>
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{name}}
+                            </td>
+                            <td>
+                                <code>{{size}}</code>
+                            </td>
+                            <td>
+                                {{#if testResult}}
+                                {{formatDurationHumanReadable testResult/duration}}
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{#if testResult}}
                                 {{#with testResult}}
-                                    {{#if externalReport}}
-                                        <a href="/reports/{{externalReport}}">Report</a>
-                                    {{/if}}
+                                        <span class="test-status-{{status}}">
+                                            {{errors}} errors, {{warnings}} warnings
+                                        </span>
+                                <ul class="error-messages">
+                                    {{#each errorMessages}}
+                                    <li>
+                                        {{this}}
+                                    </li>
+                                    {{/each}}
+                                </ul>
                                 {{/with}}
-                            {{/if}}
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{#if testResult}}
+                                {{#with testResult}}
+                                {{#if externalReport}}
+                                <a href="/reports/{{externalReport}}" target="_blank">Report</a>
+                                {{/if}}
+                                {{/with}}
+                                {{/if}}
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </script>
 
         <script id="tpl-file-editor" type="text/x-handlebars-template">
