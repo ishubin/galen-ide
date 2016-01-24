@@ -244,9 +244,13 @@
                                             <span class="input-group-addon"> x Times</span>
                                             <input type="text" name="size-range-iterations" class="form-control" aria-describedby="basic-addon3" value="1">
                                         </div>
+                                        <div class="input-group">
+                                            <input id="chk-random-iterations" name="random" type="checkbox" aria-label="Screenshot"> <label for="chk-random-iterations">Random iterations</label>
+                                        </div>
+
                                     </div>
                                     <div class="settings-form-group-size col-lg-12" data-type="unsupported">
-                                        Means that a device does not support resizing (e.g. mobile devices)
+                                        Should be used in case a device does not support resizing (e.g. mobile devices)
                                     </div>
                                 </div>
                         </div>
@@ -444,7 +448,7 @@
                 {{#unless directory}}
                 <tr>
                     <td>
-                        <a class="profile-file-item" data-file-path="{{path}}" href="#">{{name}}</a>
+                        <a class="profile-file-item" data-file-path="{{path}}" data-file-name="{{name}}" href="#">{{name}}</a>
                     </td>
                 </tr>
                 {{/unless}}

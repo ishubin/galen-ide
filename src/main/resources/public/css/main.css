@@ -138,6 +138,9 @@ ul.device-tags:after , .device-sizes ul:after {
 }
 
 
+label {
+    font-weight: normal
+}
 .modal-section {
     border-bottom:1px solid #ddd;
     padding-bottom: 30px
@@ -146,8 +149,13 @@ ul.device-tags:after , .device-sizes ul:after {
     border-bottom: none;
     padding-bottom: 10px
 }
-.modal-section h5 {
+h5 {
+    padding-top: 10px;
+    padding-bottom: 2px;
     font-weight: bold;
+}
+input[type='checkbox'] {
+    margin: 8px;
 }
 
 @keyframes blink {

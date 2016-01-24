@@ -4,6 +4,7 @@ import com.galenframework.ide.Settings;
 import com.galenframework.ide.TestResultContainer;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -19,9 +20,9 @@ public class DeviceContainer implements TestResultsListener {
 
 
     public DeviceContainer() {
-        masterDriver = null; //new FirefoxDriver();
-        //masterDriver.get("http://testapp.galenframework.com");
-        //masterDriver.manage().window().maximize();
+        masterDriver = new FirefoxDriver();
+        masterDriver.get("http://testapp.galenframework.com");
+        masterDriver.manage().window().maximize();
 
         /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), new SizeProviderCustom(asList(size(450, 600), size(480, 600), size(500, 600))))));
         devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));

@@ -6,11 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 
 public class SizeVariation {
     private Size start;
     private Size end;
     private int iterations;
+    private boolean random = false;
 
     public Size getStart() {
         return start;
@@ -48,13 +50,31 @@ public class SizeVariation {
 
             int amount = Math.min(maxDistance, iterations);
 
-            for (int i = 0; i < amount; i++) {
-                int w = (int)Math.floor(start.getWidth() + deltaWidth * i / amount);
-                int h = (int)Math.floor(start.getHeight() + deltaHeight * i / amount);
-                sizes.add(new Dimension(w, h));
-            }
+            if (amount > 0) {
+                int randomWidthDelta = 0;
+                int randomHeightDelta = 0;
+                if (random) {
+                    randomWidthDelta = (int) (Math.random() * deltaWidth / amount);
+                    randomHeightDelta = (int) (Math.random() * deltaHeight / amount);
+                }
 
+                for (int i = 0; i < amount; i++) {
+                    int w = (int) Math.floor(start.getWidth() + deltaWidth * i / amount + randomWidthDelta);
+                    int h = (int) Math.floor(start.getHeight() + deltaHeight * i / amount + randomHeightDelta);
+                    sizes.add(new Dimension(w, h));
+                }
+            } else {
+                sizes.add(new Dimension(start.getWidth(), start.getHeight()));
+            }
             return sizes;
         }
+    }
+
+    public boolean isRandom() {
+        return random;
+    }
+
+    public void setRandom(boolean random) {
+        this.random = random;
     }
 }

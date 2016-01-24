@@ -339,7 +339,7 @@ var App = {
             App.templates.profilesBrowser.renderTo("#load-profiles-modal-files", {items: files});
 
             whenClick("#load-profiles-modal .profile-file-item", function () {
-                var path = $(this).attr("data-file-path");
+                var path = $(this).attr("data-file-name");
                 if (!isBlank(path)) {
                     postJSON("api/profiles-load/" + path, {}, function () {
                         $("#load-profiles-modal").modal("hide");
@@ -393,6 +393,7 @@ var App = {
             f.set("size-range-start", sizeToText(device.sizeProvider.sizeVariation.start));
             f.set("size-range-end", sizeToText(device.sizeProvider.sizeVariation.end));
             f.set("size-range-iterations", device.sizeProvider.sizeVariation.iterations);
+            f.setCheck("random", device.sizeProvider.sizeVariation.random);
         }
         f.showSubPanel(".action-devices-submit", "update");
         f.showSubPanel(".settings-form-group-size", device.sizeProvider.type);
@@ -440,7 +441,8 @@ var App = {
             request["sizeVariation"] = {
                 start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
                 end: convertSizeFromText(f.textfield("size-range-end")),
-                iterations: parseInt(f.textfield("size-range-iterations"))
+                iterations: parseInt(f.textfield("size-range-iterations")),
+                random: f.isChecked("random")
             }
         }
 
