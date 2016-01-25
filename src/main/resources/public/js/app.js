@@ -485,6 +485,7 @@ var App = {
             f.set("chrome-driver-bin-path", settings.chromeDriverBinPath);
             f.set("safari-driver-bin-path", settings.safariDriverBinPath);
             f.set("edge-driver-bin-path", settings.edgeDriverBinPath);
+            f.set("ie-driver-bin-path", settings.ieDriverBinPath);
             f.set("phantomjs-driver-bin-path", settings.phantomjsDriverBinPath);
             $("#settings-modal").modal("show");
         });
@@ -496,6 +497,7 @@ var App = {
             chromeDriverBinPath: f.textfield("chrome-driver-bin-path"),
             safariDriverBinPath: f.textfield("safari-driver-bin-path"),
             edgeDriverBinPath: f.textfield("edge-driver-bin-path"),
+            ieDriverBinPath: f.textfield("ie-driver-bin-path"),
             phantomjsDriverBinPath: f.textfield("phantomjs-driver-bin-path")
         };
         postJSON("api/settings", settings, function () {

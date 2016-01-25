@@ -24,6 +24,7 @@ public class Settings {
     private String safariDriverBinPath;
     private String phantomjsDriverBinPath;
     private String edgeDriverBinPath;
+    private String ieDriverBinPath;
 
 
     public boolean isMakeScreenshots() {
@@ -72,5 +73,13 @@ public class Settings {
 
     public void setPhantomjsDriverBinPath(String phantomjsDriverBinPath) {
         this.phantomjsDriverBinPath = phantomjsDriverBinPath;
+    }
+
+    public String getIeDriverBinPath() {
+        return ieDriverBinPath;
+    }
+
+    public void setIeDriverBinPath(String ieDriverBinPath) {
+        this.ieDriverBinPath = ieDriverBinPath;
     }
 }

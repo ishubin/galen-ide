@@ -20,6 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
@@ -69,6 +70,7 @@ public class TesterService {
         put("chrome", ChromeDriver.class);
         put("safari", SafariDriver.class);
         put("edge", EdgeDriver.class);
+        put("ie", InternetExplorerDriver.class);
         put("phantomjs", PhantomJSDriver.class);
     }};
     private Class<? extends WebDriver> pickWebDriverClass(String browserType) {
@@ -85,6 +87,7 @@ public class TesterService {
         applySystemPropertyIfDefined("webdriver.chrome.driver", settings.getChromeDriverBinPath());
         applySystemPropertyIfDefined("phantomjs.binary.path", settings.getPhantomjsDriverBinPath());
         applySystemPropertyIfDefined("webdriver.edge.driver", settings.getEdgeDriverBinPath());
+        applySystemPropertyIfDefined("webdriver.ie.driver", settings.getIeDriverBinPath());
     }
 
     private void applySystemPropertyIfDefined(String systemPropertyName, String value) {
