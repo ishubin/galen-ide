@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.galenframework</groupId>
-  <artifactId>galen-instant-tester</artifactId>
+  <artifactId>galen-ide</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <name>Galen Quick Tester</name>
+  <name>Galen IDE</name>
   <dependencies>
     <dependency>
       <groupId>org.testng</groupId>
@@ -60,10 +60,10 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.galenframework.instanttester.Main</mainClass>
+              <mainClass>com.galenframework.ide.Main</mainClass>
             </manifest>
           </archive>
-          <finalName>galen-quick-tester</finalName>
+          <finalName>galen-ide</finalName>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
