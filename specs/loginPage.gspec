@@ -15,7 +15,7 @@
     (login_box_element, login_box_elements)                 &login_box_form_elements, &login_box_buttons
 
 @set
-    login_box_elements_vertical_margin  50 to 60px
+    login_box_elements_vertical_margin  5 to 20px
     login_box_elements_side_margin      ~ 40px
     login_box_desktop_width             380px
     login_caption_text                  Login
@@ -23,7 +23,8 @@
     cancel_button_text                  Cancel
 
 @on mobile
-    @set login_box_elements_side_margin 0px
+    @set
+        login_box_elements_side_margin      0px
 
 
 = Login box =

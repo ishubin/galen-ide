@@ -217,6 +217,12 @@ input[type='checkbox'] {
     margin: 8px;
 }
 
+
+/* Tests results */
+.test-results-overview .last-test-command {
+    padding: 10px;
+}
+
 @keyframes blink {
     0%   { opacity:1; }
     50%  { opacity:0.2; }

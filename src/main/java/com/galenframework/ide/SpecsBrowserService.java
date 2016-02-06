@@ -27,7 +27,10 @@ public class SpecsBrowserService {
         List<FileItem> fileItems = new LinkedList<>();
         if (filesInFolder != null) {
             for (File file : filesInFolder) {
-                fileItems.add(FileItem.createFrom(file));
+                String name = file.getName();
+                if (name.endsWith(".spec") || name.endsWith(".gspec")) {
+                    fileItems.add(FileItem.createFrom(file));
+                }
             }
         }
         return fileItems;

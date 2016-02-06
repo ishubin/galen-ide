@@ -36,7 +36,7 @@ public class DeviceContainer implements TestResultsListener {
 
     public DeviceContainer() {
         masterDriver = new FirefoxDriver();
-        masterDriver.get("http://testapp.galenframework.com");
+        masterDriver.get("http://localhost:8080");
         masterDriver.manage().window().maximize();
 
         /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), new SizeProviderCustom(asList(size(450, 600), size(480, 600), size(500, 600))))));

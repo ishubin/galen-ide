@@ -44,6 +44,7 @@ var GalenHighlightV2 = GalenHighlightV2 || {
         var state = NORMAL;
         var lines = html.split("\n");
         return this.processLines(lines, function (line) {
+            line = line.replace(/&/gi, "&amp;");
             line = line.replace(/\$\{(.*?)\}/gi, "<span class='galen-expression'>${$1}</span>");
 
             if (GalenHighlightV2.startsWith(line, "@objects")) {

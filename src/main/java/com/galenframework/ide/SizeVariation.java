@@ -68,12 +68,13 @@ public class SizeVariation {
             if (amount > 0) {
                 int randomWidthDelta = 0;
                 int randomHeightDelta = 0;
-                if (random) {
-                    randomWidthDelta = (int) (Math.random() * deltaWidth / amount);
-                    randomHeightDelta = (int) (Math.random() * deltaHeight / amount);
-                }
 
                 for (int i = 0; i < amount; i++) {
+                    if (random) {
+                        randomWidthDelta = (int) (Math.random() * deltaWidth / amount);
+                        randomHeightDelta = (int) (Math.random() * deltaHeight / amount);
+                    }
+
                     int w = (int) Math.floor(start.getWidth() + deltaWidth * i / amount + randomWidthDelta);
                     int h = (int) Math.floor(start.getHeight() + deltaHeight * i / amount + randomHeightDelta);
                     sizes.add(new Dimension(w, h));

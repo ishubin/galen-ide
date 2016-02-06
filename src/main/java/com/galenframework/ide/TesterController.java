@@ -25,10 +25,10 @@ import static spark.Spark.*;
 public class TesterController {
     private static final String APPLICATION_JSON = "application/json";
     private final String reportStoragePath;
-    private DeviceContainer deviceContainer = new DeviceContainer();
-    private TesterService testerService = new TesterService(deviceContainer);
-    private SpecsBrowserService specsBrowserService = new SpecsBrowserService();
-    private ProfilesService profilesService = new ProfilesService(deviceContainer, testerService);
+    private DeviceContainer deviceContainer;
+    private TesterService testerService;
+    private SpecsBrowserService specsBrowserService;
+    private ProfilesService profilesService;
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -36,21 +36,23 @@ public class TesterController {
 
     public TesterController(String reportStoragePath) {
         this.reportStoragePath = reportStoragePath;
-
+        this.deviceContainer = new DeviceContainer();
+        this.testerService  = new TesterService(deviceContainer, reportStoragePath);
+        this.specsBrowserService = new SpecsBrowserService();
+        this.profilesService = new ProfilesService(deviceContainer, testerService);
         initRoutes();
     }
 
     private void initRoutes() {
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
-            testerService.syncAllBrowsers();
-            testerService.testAllBrowsers(testCommand.getSpecPath(), reportStoragePath);
+            testerService.runtTest(testCommand);
             return "Started testing: " + testCommand.getSpecPath();
         });
 
         get("/api/tester/results", (request, response) -> {
             response.header("Content-Type", APPLICATION_JSON);
-            return testerService.getTestResults();
+            return testerService.getTestResultsOverview();
         }, toJson());
 
         get("/api/specs", (req, res) -> {

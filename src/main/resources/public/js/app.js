@@ -548,9 +548,12 @@ var App = {
         this.templates.specsBrowser.renderTo("#specs-browser", {items: items});
         whenClick("#specs-browser a.file-item", function () {
             var filePath = this.attr("data-file-path");
-            getJSON("/api/specs-content/" + filePath, function (fileItem) {
-                App.showFileEditor(fileItem);
-            });
+            App.loadFileInEditor(filePath);
+        });
+    },
+    loadFileInEditor: function (filePath) {
+        getJSON("/api/specs-content/" + filePath, function (fileItem) {
+            App.showFileEditor(fileItem);
         });
     },
     showFileEditor: function (fileItem) {
@@ -589,8 +592,18 @@ var App = {
     showResults: function (results) {
         console.log("rendering results",  results);
         this.templates.testResults.renderTo("#test-results", {
-            tests: results,
-            overview: this._createTestsOverview(results)
+            lastTestCommand: results.lastTestCommand,
+            tests: results.testResults,
+            overview: this._createTestsOverview(results.testResults)
+        });
+
+        whenClick("#test-results .action-rerun-test", function () {
+            var specPath = this.attr("data-spec-path");
+            App.runTest(specPath);
+        });
+        whenClick("#test-results .file-item", function () {
+            var filePath = this.attr("data-file-path");
+            App.loadFileInEditor(filePath);
         });
     },
     _createTestsOverview: function (results) {

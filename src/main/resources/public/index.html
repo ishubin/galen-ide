@@ -355,6 +355,18 @@
                     Test Results{{#if overview/totalDuration}}, total duration:  {{formatDurationHumanReadable overview/totalDuration}}{{/if}}
                 </div>
                 <div class="panel-body">
+                    <div class="test-results-overview">
+                        {{#if lastTestCommand}}
+                            {{#with lastTestCommand}}
+                                <div class="last-test-command">
+                                    <button type="button" class="btn btn-sm btn-primary action-rerun-test" data-spec-path="{{specPath}}">
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                    </button>
+                                    <a class="file-item" data-file-path="{{specPath}}" href="#">{{specPath}}</a>
+                                </div>
+                            {{/with}}
+                        {{/if}}
+                    </div>
                     <table class="table">
                         <thead>
                         <tr>

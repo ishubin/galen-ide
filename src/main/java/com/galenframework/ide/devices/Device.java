@@ -16,7 +16,6 @@
 package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;

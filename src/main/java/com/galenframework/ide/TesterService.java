@@ -28,9 +28,12 @@ import java.util.*;
 
 public class TesterService {
     private final DeviceContainer deviceContainer;
+    private final String reportStoragePath;
+    private TestCommand lastTestCommand;
 
-    public TesterService(DeviceContainer deviceContainer) {
+    public TesterService(DeviceContainer deviceContainer, String reportStoragePath) {
         this.deviceContainer = deviceContainer;
+        this.reportStoragePath = reportStoragePath;
     }
 
     public void syncAllBrowsers() {
@@ -43,10 +46,10 @@ public class TesterService {
     public void testAllBrowsers(String spec, String reportStoragePath) {
         deviceContainer.clearAllTestResults();
         deviceContainer.getDeviceThreads().forEach(dt ->
-                        dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                            TestResultContainer testResultContainer = deviceContainer.registerNewTestResultContainer(dt, size);
-                            dt.checkLayout(deviceContainer.getSettings(), testResultContainer.getUniqueId(), size, spec, deviceContainer, reportStoragePath);
-                        })
+            dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
+                TestResultContainer testResultContainer = deviceContainer.registerNewTestResultContainer(dt, size);
+                dt.checkLayout(deviceContainer.getSettings(), testResultContainer.getUniqueId(), size, spec, deviceContainer, reportStoragePath);
+            })
         );
     }
 
@@ -110,11 +113,21 @@ public class TesterService {
         }
     }
 
-    public List<TestResultContainer> getTestResults() {
-        return deviceContainer.getTestResults();
+    public TestResultsOverview getTestResultsOverview() {
+        return new TestResultsOverview(deviceContainer.getTestResults(), getLastTestCommand());
     }
 
     public List<Device> getAllDevices() {
         return deviceContainer.getAllDevices();
+    }
+
+    public void runtTest(TestCommand testCommand) {
+        this.lastTestCommand = testCommand;
+        syncAllBrowsers();
+        testAllBrowsers(testCommand.getSpecPath(), reportStoragePath);
+    }
+
+    public TestCommand getLastTestCommand() {
+        return lastTestCommand;
     }
 }

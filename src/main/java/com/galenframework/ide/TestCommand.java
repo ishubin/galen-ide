@@ -25,4 +25,6 @@ public class TestCommand {
     public void setSpecPath(String specPath) {
         this.specPath = specPath;
     }
+
+
 }
