@@ -327,6 +327,12 @@ var SpecsBrowser = {
     },
     showFileEditor: function (fileItem) {
         var $modal = $("#file-editor-modal");
+        var buttonRunTest = $modal.find(".action-file-editor-run-test");
+        if (fileItem.executable) {
+            buttonRunTest.show();
+        } else {
+            buttonRunTest.hide();
+        }
         $modal.find(".modal-title").html(fileItem.name);
         $modal.find("input[name='spec-path']").val(fileItem.path);
         $modal.find(".code-placeholder").text();

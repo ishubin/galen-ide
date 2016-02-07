@@ -44,9 +44,12 @@ public class FileItem {
         fileItem.directory = file.isDirectory();
         fileItem.name = file.getName();
         fileItem.path = file.getPath();
-        fileItem.executable = file.getName().endsWith(".gspec") || file.getName().endsWith(".spec");
-
+        fileItem.executable = isExecutable(fileItem.name);
         return fileItem;
+    }
+
+    public static boolean isExecutable(String name) {
+        return name.endsWith(".gspec") || name.endsWith(".spec");
     }
 
     public String getPath() {

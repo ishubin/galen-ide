@@ -71,7 +71,7 @@ public class TesterController {
         get("/api/specs-content/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
-                return FileContent.fromFile(splat[0]);
+                return specsBrowserService.showFileContent(splat[0]);
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 

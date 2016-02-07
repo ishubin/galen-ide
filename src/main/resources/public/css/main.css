@@ -132,6 +132,11 @@ pre.code code {
     color: #777;
 }
 
+#specs-browser button {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
 .device-status-SHUTDOWN {
     opacity: 0.2;
 }

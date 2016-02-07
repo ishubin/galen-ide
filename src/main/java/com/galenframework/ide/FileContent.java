@@ -20,15 +20,15 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class FileContent {
-    private final String name;
-    private final String path;
+public class FileContent extends FileItem {
     private final String content;
 
     public FileContent(String name, String path, String content) {
-        this.name = name;
-        this.path = path;
+        this.setName(name);
+        this.setDirectory(false);
+        this.setPath(path);
         this.content = content;
+        this.setExecutable(FileItem.isExecutable(name));
     }
 
     public static FileContent fromFile(String path) {
@@ -46,13 +46,6 @@ public class FileContent {
         } else throw new RuntimeException("File is not found: " + path);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPath() {
-        return path;
-    }
 
     public String getContent() {
         return content;

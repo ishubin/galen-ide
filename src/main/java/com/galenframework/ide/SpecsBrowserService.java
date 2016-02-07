@@ -49,8 +49,9 @@ public class SpecsBrowserService {
         int dirDiff = toInt(right.isDirectory()) - toInt(left.isDirectory());
         if (dirDiff != 0) {
             return dirDiff;
+        } else {
+            return left.getName().compareTo(right.getName());
         }
-        return left.getName().compareTo(right.getName());
     }
 
     private static int toInt(boolean booleanValue) {
@@ -69,4 +70,7 @@ public class SpecsBrowserService {
 
     }
 
+    public FileContent showFileContent(String path) {
+        return FileContent.fromFile(path);
+    }
 }
