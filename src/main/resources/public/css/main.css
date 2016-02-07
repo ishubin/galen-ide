@@ -2,6 +2,11 @@ body {
     margin: 0px;
 }
 
+a.link-with-icon span.link-icon {
+    padding-right: 5px;
+    width: 24px;
+}
+
 .navbar {
     margin: 0;
     border-radius: 0;
@@ -120,7 +125,12 @@ pre.code code {
     font-size: 0.9em;
     color: black;
 }
-
+#specs-browser a .link-icon {
+    color: #428bca;
+}
+#specs-browser a.file-item .link-icon {
+    color: #777;
+}
 
 .device-status-SHUTDOWN {
     opacity: 0.2;

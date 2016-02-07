@@ -64,4 +64,12 @@ public class FileItem {
     public void setExecutable(boolean executable) {
         this.executable = executable;
     }
+
+    public static FileItem directory(String name, String path) {
+        FileItem fileItem = new FileItem();
+        fileItem.setName(name);
+        fileItem.setPath(path);
+        fileItem.setDirectory(true);
+        return fileItem;
+    }
 }

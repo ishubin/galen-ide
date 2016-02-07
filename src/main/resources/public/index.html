@@ -1,19 +1,19 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Galen IDE</title>
+        <title>galen ide</title>
 
-        <!-- Bootstrap -->
+        <!-- bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" rel="stylesheet">
         <link href="css/main.css" rel="stylesheet">
         <link href="css/galen-highlight-dark.css" rel="stylesheet">
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
+        <!-- html5 shim and respond.js ie8 support of html5 elements and media queries -->
+        <!-- warning: respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt ie 9]>
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
@@ -22,9 +22,9 @@
     </head>
     </head>
     <body>
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <!-- jquery (necessary for bootstrap's javascript plugins) -->
         <script src="js/jquery-1.8.3.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <!-- include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
         <script src="js/app.js"></script>
 
@@ -32,12 +32,12 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
-                        <img alt="Brand" src="images/logo.png" height="26px"> Galen IDE
+                        <img alt="brand" src="images/logo.png" height="26px"> galen ide
                     </a>
                     <ul class="nav navbar-nav">
-                        <li><a href="#" class="action-profiles-load">Load</a></li>
-                        <li><a href="#" class="action-profiles-save">Save</a></li>
-                        <li><a class="action-settings-panel" href="#">Settings</a></li>
+                        <li><a href="#" class="action-profiles-load">load</a></li>
+                        <li><a href="#" class="action-profiles-save">save</a></li>
+                        <li><a class="action-settings-panel" href="#">settings</a></li>
                     </ul>
                 </div>
             </div>
@@ -47,7 +47,7 @@
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Specs</div>
+                        <div class="panel-heading">specs</div>
                         <div class="panel-body">
                             <div id="specs-browser" class="scrollable-panel-group-a"></div>
                         </div>
@@ -56,7 +56,7 @@
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <span>Devices</span>
+                            <span>devices</span>
                             <div class="panel-buttons">
                                 <button type="button" class="btn btn-default action-devices-add-new">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -79,14 +79,14 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"></h4>
                     </div>
                     <div class="modal-body">
                         <pre class="code code-gspec"><code></code></pre>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
                         <input type="hidden" name="spec-path" value=""/>
                         <button type="button" class="btn btn-primary action-file-editor-run-test" data-dismiss="modal">Run Test</button>
                     </div>
@@ -450,19 +450,28 @@
                 </thead>
                 <tbody>
                     {{#each items}}
-                        {{#unless directory}}
                             <tr>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-spec-name="{{name}}" data-spec-path="{{path}}">
-                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                    </button>
-                                    <a class="file-item" data-file-path="{{path}}" href="#">{{name}}</a>
+                                    {{#if directory}}
+                                        <a class="link-with-icon directory-item" data-file-path="{{path}}" href="#">
+                                            <span class="link-icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                                            <span class="link-text">{{name}}</span>
+                                        </a>
+                                    {{else}}
+                                        <a class="link-with-icon file-item" data-file-path="{{path}}" href="#">
+                                            <span class="link-icon glyphicon glyphicon-file" aria-hidden="true"></span>
+                                            <span class="link-text">{{name}}</span>
+                                        </a>
+                                    {{/if}}
                                 </td>
                                 <td>
-                                    <span></span>
+                                    {{#if executable}}
+                                        <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-spec-name="{{name}}" data-spec-path="{{path}}">
+                                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                        </button>
+                                    {{/if}}
                                 </td>
                             </tr>
-                        {{/unless}}
                     {{/each}}
                 </tbody>
             </table>

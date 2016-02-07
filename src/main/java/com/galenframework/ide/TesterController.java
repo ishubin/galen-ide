@@ -56,7 +56,16 @@ public class TesterController {
         }, toJson());
 
         get("/api/specs", (req, res) -> {
-            return specsBrowserService.getFiles();
+            return specsBrowserService.getFilesInPath(".");
+        }, toJson());
+        get("/api/specs/", (req, res) -> {
+            return specsBrowserService.getFilesInPath(".");
+        }, toJson());
+        get("/api/specs/*", (req, res) -> {
+            String[] splat = req.splat();
+            if (splat.length > 0) {
+                return specsBrowserService.getFilesInPath(splat[0]);
+            } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
         get("/api/specs-content/*", (req, res) -> {

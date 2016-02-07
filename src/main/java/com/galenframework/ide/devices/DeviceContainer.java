@@ -35,9 +35,10 @@ public class DeviceContainer implements TestResultsListener {
 
 
     public DeviceContainer() {
-        masterDriver = new FirefoxDriver();
-        masterDriver.get("http://localhost:8080");
-        masterDriver.manage().window().maximize();
+
+        //masterDriver = new FirefoxDriver();
+        //masterDriver.get("http://localhost:8080");
+        //masterDriver.manage().window().maximize();
 
         /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), new SizeProviderCustom(asList(size(450, 600), size(480, 600), size(500, 600))))));
         devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));

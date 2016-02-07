@@ -289,6 +289,52 @@ var Data = {
     }
 };
 
+
+var SpecsBrowser = {
+    currentFolder: "",
+    changeFolder: function (filePath) {
+        this.currentFolder = filePath;
+        this.update();
+    },
+    update: function () {
+        var that = this;
+        getJSON("/api/specs/" + this.currentFolder, function (items) {
+            that.showItems(items);
+            whenClick("#specs-browser .action-launch-spec", function () {
+                var specPath = this.attr("data-spec-path");
+                App.runTest(specPath);
+            });
+        });
+    },
+    showItems: function (items) {
+        App.templates.specsBrowser.renderTo("#specs-browser", {items: items});
+        var that = this;
+        whenClick("#specs-browser a.file-item", function () {
+            var filePath = this.attr("data-file-path");
+            that.loadFileInEditor(filePath);
+        });
+        var that = this;
+        whenClick("#specs-browser a.directory-item", function () {
+            var filePath = this.attr("data-file-path");
+            that.changeFolder(filePath);
+        });
+    },
+    loadFileInEditor: function (filePath) {
+        var that = this;
+        getJSON("/api/specs-content/" + filePath, function (fileItem) {
+            that.showFileEditor(fileItem);
+        });
+    },
+    showFileEditor: function (fileItem) {
+        var $modal = $("#file-editor-modal");
+        $modal.find(".modal-title").html(fileItem.name);
+        $modal.find("input[name='spec-path']").val(fileItem.path);
+        $modal.find(".code-placeholder").text();
+        $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
+        $modal.modal("show");
+    }
+};
+
 var App = {
     templates: {},
     compileTemplate: function (id) {
@@ -315,7 +361,7 @@ var App = {
         App.initDevicesPanel();
         App.initFileEditorPanel();
 
-        App.updateSpecsBrowser();
+        SpecsBrowser.update();
         App.updateDevices();
         App.updateTestResults();
 
@@ -534,37 +580,6 @@ var App = {
             App.waitForTestResults();
         });
     },
-
-    updateSpecsBrowser: function () {
-        getJSON("/api/specs", function (items) {
-            App.showSpecBrowserItems(items);
-            whenClick("#specs-browser .action-launch-spec", function () {
-                var specPath = this.attr("data-spec-path");
-                App.runTest(specPath);
-            });
-        });
-    },
-    showSpecBrowserItems: function (items) {
-        this.templates.specsBrowser.renderTo("#specs-browser", {items: items});
-        whenClick("#specs-browser a.file-item", function () {
-            var filePath = this.attr("data-file-path");
-            App.loadFileInEditor(filePath);
-        });
-    },
-    loadFileInEditor: function (filePath) {
-        getJSON("/api/specs-content/" + filePath, function (fileItem) {
-            App.showFileEditor(fileItem);
-        });
-    },
-    showFileEditor: function (fileItem) {
-        var $modal = $("#file-editor-modal");
-        $modal.find(".modal-title").html(fileItem.name);
-        $modal.find("input[name='spec-path']").val(fileItem.path);
-        $modal.find(".code-placeholder").text();
-        $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
-        $modal.modal("show");
-    },
-
 
     _waitForTestResultsTimer: null,
     waitForTestResults: function () {
