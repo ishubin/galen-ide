@@ -15,16 +15,13 @@
 ******************************************************************************/
 package com.galenframework.ide;
 
-import com.galenframework.specs.Spec;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class SpecsBrowserService {
-    private File workingDirectory = new File(".");
+public class FileBrowserService {
 
     public List<FileItem> getFilesInPath(String path) {
         if (path.isEmpty()) {
@@ -41,7 +38,7 @@ public class SpecsBrowserService {
                 fileItems.add(FileItem.createFrom(file));
             }
         }
-        Collections.sort(fileItems, SpecsBrowserService::sortOrderForFileItems);
+        Collections.sort(fileItems, FileBrowserService::sortOrderForFileItems);
         return fileItems;
     }
 

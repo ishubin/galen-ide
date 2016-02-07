@@ -290,7 +290,7 @@ var Data = {
 };
 
 
-var SpecsBrowser = {
+var FileBrowser = {
     currentFolder: "",
     changeFolder: function (filePath) {
         this.currentFolder = filePath;
@@ -298,30 +298,30 @@ var SpecsBrowser = {
     },
     update: function () {
         var that = this;
-        getJSON("/api/specs/" + this.currentFolder, function (items) {
+        getJSON("/api/files/" + this.currentFolder, function (items) {
             that.showItems(items);
-            whenClick("#specs-browser .action-launch-spec", function () {
-                var specPath = this.attr("data-spec-path");
+            whenClick("#file-browser .action-launch-spec", function () {
+                var specPath = this.attr("data-file-path");
                 App.runTest(specPath);
             });
         });
     },
     showItems: function (items) {
-        App.templates.specsBrowser.renderTo("#specs-browser", {items: items});
+        App.templates.fileBrowser.renderTo("#file-browser", {items: items});
         var that = this;
-        whenClick("#specs-browser a.file-item", function () {
+        whenClick("#file-browser a.file-item", function () {
             var filePath = this.attr("data-file-path");
             that.loadFileInEditor(filePath);
         });
         var that = this;
-        whenClick("#specs-browser a.directory-item", function () {
+        whenClick("#file-browser a.directory-item", function () {
             var filePath = this.attr("data-file-path");
             that.changeFolder(filePath);
         });
     },
     loadFileInEditor: function (filePath) {
         var that = this;
-        getJSON("/api/specs-content/" + filePath, function (fileItem) {
+        getJSON("/api/file-content/" + filePath, function (fileItem) {
             that.showFileEditor(fileItem);
         });
     },
@@ -334,7 +334,7 @@ var SpecsBrowser = {
             buttonRunTest.hide();
         }
         $modal.find(".modal-title").html(fileItem.name);
-        $modal.find("input[name='spec-path']").val(fileItem.path);
+        $modal.find("input[name='file-path']").val(fileItem.path);
         $modal.find(".code-placeholder").text();
         $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
         $modal.modal("show");
@@ -357,7 +357,7 @@ var App = {
     
     init: function () {
         this.initTemplates({
-            specsBrowser: "tpl-specs-browser",
+            fileBrowser: "tpl-file-browser",
             testResults: "tpl-test-results",
             devices: "tpl-devices",
             profilesBrowser: "tpl-profiles-browser"
@@ -367,7 +367,7 @@ var App = {
         App.initDevicesPanel();
         App.initFileEditorPanel();
 
-        SpecsBrowser.update();
+        FileBrowser.update();
         App.updateDevices();
         App.updateTestResults();
 
@@ -407,7 +407,7 @@ var App = {
     initFileEditorPanel: function () {
         whenClick(".action-file-editor-run-test", function () {
             var f = new FormHandler("#file-editor-modal");
-            var specPath = f.get("spec-path");
+            var specPath = f.get("file-path");
             App.runTest(specPath);
             f.hideModal();
         });
@@ -619,7 +619,7 @@ var App = {
         });
 
         whenClick("#test-results .action-rerun-test", function () {
-            var specPath = this.attr("data-spec-path");
+            var specPath = this.attr("data-file-path");
             App.runTest(specPath);
         });
         whenClick("#test-results .file-item", function () {

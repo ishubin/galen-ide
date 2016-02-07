@@ -121,18 +121,18 @@ pre.code code {
     white-space: pre;
 }
 
-#specs-browser .file-item {
+#file-browser .file-item {
     font-size: 0.9em;
     color: black;
 }
-#specs-browser a .link-icon {
+#file-browser a .link-icon {
     color: #428bca;
 }
-#specs-browser a.file-item .link-icon {
+#file-browser a.file-item .link-icon {
     color: #777;
 }
 
-#specs-browser button {
+#file-browser button {
     padding-top: 1px;
     padding-bottom: 1px;
 }

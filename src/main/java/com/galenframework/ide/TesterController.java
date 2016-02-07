@@ -27,7 +27,7 @@ public class TesterController {
     private final String reportStoragePath;
     private DeviceContainer deviceContainer;
     private TesterService testerService;
-    private SpecsBrowserService specsBrowserService;
+    private FileBrowserService specsBrowserService;
     private ProfilesService profilesService;
 
     ObjectMapper mapper = new ObjectMapper();
@@ -38,7 +38,7 @@ public class TesterController {
         this.reportStoragePath = reportStoragePath;
         this.deviceContainer = new DeviceContainer();
         this.testerService  = new TesterService(deviceContainer, reportStoragePath);
-        this.specsBrowserService = new SpecsBrowserService();
+        this.specsBrowserService = new FileBrowserService();
         this.profilesService = new ProfilesService(deviceContainer, testerService);
         initRoutes();
     }
@@ -55,20 +55,20 @@ public class TesterController {
             return testerService.getTestResultsOverview();
         }, toJson());
 
-        get("/api/specs", (req, res) -> {
+        get("/api/files", (req, res) -> {
             return specsBrowserService.getFilesInPath(".");
         }, toJson());
-        get("/api/specs/", (req, res) -> {
+        get("/api/files/", (req, res) -> {
             return specsBrowserService.getFilesInPath(".");
         }, toJson());
-        get("/api/specs/*", (req, res) -> {
+        get("/api/files/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
                 return specsBrowserService.getFilesInPath(splat[0]);
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
-        get("/api/specs-content/*", (req, res) -> {
+        get("/api/file-content/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
                 return specsBrowserService.showFileContent(splat[0]);

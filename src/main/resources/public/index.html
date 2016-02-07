@@ -49,7 +49,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">specs</div>
                         <div class="panel-body">
-                            <div id="specs-browser" class="scrollable-panel-group-a"></div>
+                            <div id="file-browser" class="scrollable-panel-group-a"></div>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="hidden" name="spec-path" value=""/>
+                        <input type="hidden" name="file-path" value=""/>
                         <button type="button" class="btn btn-primary action-file-editor-run-test" data-dismiss="modal">Run Test</button>
                     </div>
                 </div>
@@ -359,7 +359,7 @@
                         {{#if lastTestCommand}}
                             {{#with lastTestCommand}}
                                 <div class="last-test-command">
-                                    <button type="button" class="btn btn-sm btn-primary action-rerun-test" data-spec-path="{{specPath}}">
+                                    <button type="button" class="btn btn-sm btn-primary action-rerun-test" data-file-path="{{specPath}}">
                                         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                     </button>
                                     <a class="file-item" data-file-path="{{specPath}}" href="#">{{specPath}}</a>
@@ -440,7 +440,7 @@
         </script>
 
 
-        <script id="tpl-specs-browser" type="text/x-handlebars-template">
+        <script id="tpl-file-browser" type="text/x-handlebars-template">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -466,7 +466,7 @@
                                 </td>
                                 <td>
                                     {{#if executable}}
-                                        <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-spec-name="{{name}}" data-spec-path="{{path}}">
+                                        <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-file-name="{{name}}" data-file-path="{{path}}">
                                             Test
                                         </button>
                                     {{/if}}
