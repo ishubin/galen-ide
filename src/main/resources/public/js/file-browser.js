@@ -13,53 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-var FileBrowser = {
-    currentFolder: "",
-    changeFolder: function (filePath) {
-        this.currentFolder = filePath;
-        this.update();
-    },
-    update: function () {
-        var that = this;
-        API.files.get(this.currentFolder, function (items) {
-            that.showItems(items);
-            whenClick("#file-browser .action-launch-spec", function () {
-                var specPath = this.attr("data-file-path");
-                App.runTest(specPath);
-            });
-        });
-    },
-    showItems: function (items) {
-        App.templates.fileBrowser.renderTo("#file-browser", {items: items});
-        var that = this;
-        whenClick("#file-browser a.file-item", function () {
-            var filePath = this.attr("data-file-path");
-            that.loadFileInEditor(filePath);
-        });
-        var that = this;
-        whenClick("#file-browser a.directory-item", function () {
-            var filePath = this.attr("data-file-path");
-            that.changeFolder(filePath);
-        });
-    },
-    loadFileInEditor: function (filePath) {
-        var that = this;
-        API.files.getFile(filePath, function (fileItem) {
-            that.showFileEditor(fileItem);
-        });
-    },
-    showFileEditor: function (fileItem) {
-        var $modal = $("#file-editor-modal");
-        var buttonRunTest = $modal.find(".action-file-editor-run-test");
-        if (fileItem.executable) {
-            buttonRunTest.show();
-        } else {
-            buttonRunTest.hide();
-        }
-        $modal.find(".modal-title").html(fileItem.name);
-        $modal.find("input[name='file-path']").val(fileItem.path);
-        $modal.find(".code-placeholder").text();
-        $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
-        $modal.modal("show");
+
+
+function FileBrowser(app) {
+    FileBrowser._super(this, "#file-browser", "#tpl-file-browser");
+    this.currentFolder = "";
+    this.app = app;
+}
+extend(FileBrowser, UIComponent);
+
+FileBrowser.prototype.changeFolder = function (filePath) {
+    this.currentFolder = filePath;
+    this.update();
+};
+FileBrowser.prototype.update = function () {
+    var that = this;
+    API.files.get(this.currentFolder, function (items) {
+        that.showItems(items);
+    });
+};
+FileBrowser.prototype.showItems = function (items) {
+    this.render({items: items});
+
+    var that = this;
+    this.whenClick("a.file-item", function (element) {
+        var filePath = element.attr("data-file-path");
+        that.loadFileInEditor(filePath);
+    });
+    this.whenClick("a.directory-item", function (element) {
+        var filePath = element.attr("data-file-path");
+        that.changeFolder(filePath);
+    });
+    this.whenClick(".action-launch-spec", function (element) {
+        var specPath = element.attr("data-file-path");
+        that.app.runTest(specPath);
+    });
+};
+FileBrowser.prototype.loadFileInEditor = function (filePath) {
+    var that = this;
+    API.files.getFile(filePath, function (fileItem) {
+        that.showFileEditor(fileItem);
+    });
+};
+FileBrowser.prototype.showFileEditor = function (fileItem) {
+    var $modal = $("#file-editor-modal");
+    var buttonRunTest = $modal.find(".action-file-editor-run-test");
+    if (fileItem.executable) {
+        buttonRunTest.show();
+    } else {
+        buttonRunTest.hide();
     }
+    $modal.find(".modal-title").html(fileItem.name);
+    $modal.find("input[name='file-path']").val(fileItem.path);
+    $modal.find(".code-placeholder").text();
+    $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
+    $modal.modal("show");
 };

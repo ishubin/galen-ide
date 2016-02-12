@@ -79,7 +79,9 @@ var App = {
         App.initDevicesPanel();
         App.initFileEditorPanel();
 
-        FileBrowser.update();
+        this.fileBrowser = new FileBrowser(this);
+        this.fileBrowser.update();
+
         App.updateDevices();
         App.updateTestResults();
 

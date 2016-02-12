@@ -13,6 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+function extend(Child, Parent) {
+    Child.prototype = inherit(Parent.prototype);
+    Child.prototype.constructor = Child;
+    Child.parent = Parent.prototype;
+    Child._super = function (thisItem) {
+        var args = [];
+        for (var i = 1; i < arguments.length; i++) {
+            args.push(arguments[i]);
+        }
+        this.parent.constructor.apply(thisItem, args);
+    };
+}
+function inherit(proto) {
+    function F() {};
+    F.prototype = proto;
+    return new F;
+}
+
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
@@ -192,13 +210,6 @@ Handlebars.registerHelper('shortText', function(text) {
     }
     return new Handlebars.SafeString(text);
 });
-
-function Template(tpl) {
-    this._tpl = tpl;
-}
-Template.prototype.renderTo = function (elementLocator, data) {
-    $(elementLocator).html(this._tpl(data));
-};
 
 
 function whenClick(locator, callback) {
