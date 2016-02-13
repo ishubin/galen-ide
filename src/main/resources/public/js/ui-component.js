@@ -48,6 +48,7 @@ UIComponent.prototype.render = function (data) {
     this._tpl.renderTo(this._locator, data);
     this.reassignBehavior(this.$behavior);
 };
+UIComponent.prototype.$behavior = {};
 UIComponent.prototype.reassignBehavior = function (behavior) {
     if (behavior.hasOwnProperty("click")) {
         for (var locator in behavior.click) {
@@ -57,13 +58,15 @@ UIComponent.prototype.reassignBehavior = function (behavior) {
         }
     }
 };
-
 UIComponent.prototype.whenClick = function (elementLocator, callback) {
     var that = this;
     $(this._locator).find(elementLocator).click(function () {
         callback.call(that, $(this));
         return false;
     });
+};
+UIComponent.prototype.getTextfieldText = function (name, readableName) {
+    return this.$find("input[name='" + name+"']").val();
 };
 
 
@@ -80,4 +83,8 @@ UIModal.prototype.showModal = function () {
 UIModal.prototype.hideModal = function () {
     var $modal = this.$find(".modal");
     $modal.modal("hide");
+};
+UIModal.prototype.show = function () {
+    this.render({});
+    this.showModal();
 };

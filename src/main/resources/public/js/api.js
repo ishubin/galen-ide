@@ -55,6 +55,25 @@ function deleteJSON(resource, callback) {
 
 
 var API = {
+    profiles: {
+        list: function (callback) {
+            getJSON("api/profiles", function (items) {
+                callback(items);
+            });
+        },
+        load: function (path, callback) {
+            postJSON("api/profiles-load/" + path, {}, function () {
+                callback();
+            });
+        },
+        save: function (name, callback) {
+            postJSON("api/profiles", {
+                name: name
+            }, function () {
+                callback();
+            });
+        }
+    },
     files: {
         get: function (path, callback) {
             getJSON("/api/files/" + path, function (items) {
@@ -72,6 +91,27 @@ var API = {
 
 
 var APIMock = {
+    profiles: {
+        list: function (callback) {
+            callback([{
+                "directory": false,
+                "name": "responsive-emulation.galen",
+                "path": "/home/ishubin/.galen/responsive-emulation.galen",
+                "executable": false
+            }, {
+                "directory": false,
+                "name": "crossbrowser-testing.galen",
+                "path": "/home/ishubin/.galen/crossbrowser-emulation.galen",
+                "executable": false
+            }]);
+        },
+        load: function (path, callback) {
+            callback();
+        },
+        save: function (name, callback) {
+            callback();
+        }
+    },
     files: {
         get: function (path, callback) {
             callback([

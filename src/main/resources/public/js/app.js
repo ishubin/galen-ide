@@ -69,10 +69,8 @@ var App = {
     
     init: function () {
         this.initTemplates({
-            fileBrowser: "tpl-file-browser",
             testResults: "tpl-test-results",
-            devices: "tpl-devices",
-            profilesBrowser: "tpl-profiles-browser"
+            devices: "tpl-devices"
         });
         App.initProfilesPanel();
         App.initSettingsPanel();
@@ -81,14 +79,20 @@ var App = {
         this.fileBrowser = new FileBrowser(this);
         this.fileBrowser.update();
 
+        this.loadProfilesModal = new LoadProfilesModal(this);
+        this.saveProfilesModal = new SaveProfilesModal(this);
+
         App.updateDevices();
         App.updateTestResults();
 
     },
     initProfilesPanel: function () {
-        whenClick(".action-profiles-load", App.showLoadProfilesPanel);
-        whenClick(".action-profiles-save", App.showSaveProfilePanel);
-        whenClick(".action-profiles-submit-save", App.submitSaveProfile);
+        whenClick(".action-profiles-load", function () {
+            App.loadProfilesModal.show();
+        });
+        whenClick(".action-profiles-save", function () {
+            App.saveProfilesModal.show();
+        });
     },
     initSettingsPanel: function () {
         whenClick(".action-settings-panel", App.showSettingsPanel);
@@ -115,43 +119,6 @@ var App = {
                     $this.hide();
                 }
             });
-        });
-    },
-
-    showLoadProfilesPanel: function () {
-        getJSON("api/profiles", function (files) {
-            Data.profiles = files;
-            App.templates.profilesBrowser.renderTo("#load-profiles-modal-files", {items: files});
-
-            whenClick("#load-profiles-modal .profile-file-item", function () {
-                var path = $(this).attr("data-file-name");
-                if (!isBlank(path)) {
-                    postJSON("api/profiles-load/" + path, {}, function () {
-                        $("#load-profiles-modal").modal("hide");
-                        App.updateDevices();
-                    });
-                }
-            });
-
-            $("#load-profiles-modal").modal("show");
-        });
-    },
-    showSaveProfilePanel: function () {
-        getJSON("api/profiles", function (files) {
-            Data.profiles = files;
-            var f = new FormHandler("#save-profiles-modal");
-            f.set("profile-name", "");
-            f.showModal();
-        });
-    },
-    submitSaveProfile: function () {
-        var f = new FormHandler("#save-profiles-modal");
-        var profileName = f.mandatoryTextfield("profile-name", "Profile name");
-
-        postJSON("api/profiles", {
-            name: profileName
-        }, function () {
-            f.hideModal();
         });
     },
 

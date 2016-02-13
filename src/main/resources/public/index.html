@@ -30,6 +30,7 @@
         <script src="js/ui-component.js"></script>
         <script src="js/api.js"></script>
         <script src="js/file-browser.js"></script>
+        <script src="js/profiles-modal.js"></script>
         <script src="js/app.js"></script>
 
         <nav class="navbar navbar-inverse">
@@ -76,43 +77,11 @@
 
             <div id="file-editor"></div>
 
+            <div id="load-profiles-modal"></div>
+            <div id="save-profiles-modal">
             <div id="test-results"></div>
         </div>
 
-        <div id="load-profiles-modal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Load profile</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="load-profiles-modal-files"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="save-profiles-modal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Save profile</h4>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" name="profile-name" class="form-control" placeholder="Type name for your profile..." aria-describedby="basic-addon1">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary action-profiles-submit-save" data-dismiss="modal">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div id="settings-modal" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog">
@@ -462,27 +431,6 @@
             </table>
         </script>
 
-        <script id="tpl-profiles-browser" type="text/x-handlebars-template">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each items}}
-                {{#unless directory}}
-                <tr>
-                    <td>
-                        <a class="profile-file-item" data-file-path="{{path}}" data-file-name="{{name}}" href="#">{{name}}</a>
-                    </td>
-                </tr>
-                {{/unless}}
-                {{/each}}
-                </tbody>
-            </table>
-        </script>
-
         <script id="tpl-file-editor" type="text/x-handlebars-template">
             <div class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg">
@@ -502,6 +450,62 @@
                                 {{/if}}
                             </div>
                         {{/with}}
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="tpl-load-profiles-modal" type="text/x-handlebars-template">
+            <div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Load profile</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each items}}
+                                        {{#unless directory}}
+                                            <tr>
+                                                <td>
+                                                    <a class="profile-file-item" data-file-path="{{path}}" data-file-name="{{name}}" href="#">{{name}}</a>
+                                                </td>
+                                            </tr>
+                                        {{/unless}}
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="tpl-save-profiles-modal" type="text/x-handlebars-template">
+            <div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Save profile</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" name="profile-name" class="form-control" placeholder="Type name for your profile..." aria-describedby="basic-addon1">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary action-profiles-submit-save" data-dismiss="modal">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
