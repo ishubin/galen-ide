@@ -77,7 +77,6 @@ var App = {
         App.initProfilesPanel();
         App.initSettingsPanel();
         App.initDevicesPanel();
-        App.initFileEditorPanel();
 
         this.fileBrowser = new FileBrowser(this);
         this.fileBrowser.update();
@@ -116,14 +115,6 @@ var App = {
                     $this.hide();
                 }
             });
-        });
-    },
-    initFileEditorPanel: function () {
-        whenClick(".action-file-editor-run-test", function () {
-            var f = new FormHandler("#file-editor-modal");
-            var specPath = f.get("file-path");
-            App.runTest(specPath);
-            f.hideModal();
         });
     },
 

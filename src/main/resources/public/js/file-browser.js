@@ -19,9 +19,26 @@ function FileBrowser(app) {
     FileBrowser._super(this, "#file-browser", "#tpl-file-browser");
     this.currentFolder = "";
     this.app = app;
+    this.fileEditor = new FileEditor(app);
 }
 extend(FileBrowser, UIComponent);
 
+FileBrowser.prototype.$behavior = {
+    click: {
+        "a.file-item": function (element) {
+            var filePath = element.attr("data-file-path");
+            this.loadFileInEditor(filePath);
+        },
+        "a.directory-item": function (element) {
+            var filePath = element.attr("data-file-path");
+            this.changeFolder(filePath);
+        },
+        ".action-launch-spec": function (element) {
+            var specPath = element.attr("data-file-path");
+            this.app.runTest(specPath);
+        }
+    }
+};
 FileBrowser.prototype.changeFolder = function (filePath) {
     this.currentFolder = filePath;
     this.update();
@@ -34,20 +51,6 @@ FileBrowser.prototype.update = function () {
 };
 FileBrowser.prototype.showItems = function (items) {
     this.render({items: items});
-
-    var that = this;
-    this.whenClick("a.file-item", function (element) {
-        var filePath = element.attr("data-file-path");
-        that.loadFileInEditor(filePath);
-    });
-    this.whenClick("a.directory-item", function (element) {
-        var filePath = element.attr("data-file-path");
-        that.changeFolder(filePath);
-    });
-    this.whenClick(".action-launch-spec", function (element) {
-        var specPath = element.attr("data-file-path");
-        that.app.runTest(specPath);
-    });
 };
 FileBrowser.prototype.loadFileInEditor = function (filePath) {
     var that = this;
@@ -56,16 +59,38 @@ FileBrowser.prototype.loadFileInEditor = function (filePath) {
     });
 };
 FileBrowser.prototype.showFileEditor = function (fileItem) {
-    var $modal = $("#file-editor-modal");
-    var buttonRunTest = $modal.find(".action-file-editor-run-test");
-    if (fileItem.executable) {
-        buttonRunTest.show();
-    } else {
-        buttonRunTest.hide();
-    }
-    $modal.find(".modal-title").html(fileItem.name);
-    $modal.find("input[name='file-path']").val(fileItem.path);
-    $modal.find(".code-placeholder").text();
-    $modal.find("pre.code-gspec code").html(GalenHighlightV2.specs(fileItem.content));
-    $modal.modal("show");
+    this.fileEditor.show(fileItem);
 };
+
+
+
+function FileEditor(app) {
+    FileEditor._super(this, "#file-editor", "#tpl-file-editor");
+    this.fileItem = null;
+}
+extend(FileEditor, UIModal);
+
+FileEditor.prototype.show = function (fileItem) {
+    this.fileItem = fileItem;
+    var content = fileItem.content;
+    if (fileItem.executable) {
+        content = GalenHighlightV2.specs(fileItem.content);
+    }
+    this.render({
+        fileItem: {
+            name: fileItem.name,
+            executable: fileItem.executable,
+            content: content
+        }
+    });
+    this.showModal();
+};
+FileEditor.prototype.$behavior = {
+    click: {
+        ".action-file-editor-run-test": function () {
+            this.app.runTest(this.fileItem.path);
+            this.hideModal();
+        }
+    }
+};
+

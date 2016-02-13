@@ -37,8 +37,25 @@ UIComponent.prototype.compile = function () {
     this._tpl = new Template(Handlebars.compile(source));
 };
 
+
+UIComponent.prototype.$self = function () {
+    return $(this._locator);
+};
+UIComponent.prototype.$find = function (childLocator) {
+    return this.$self().find(childLocator);
+};
 UIComponent.prototype.render = function (data) {
     this._tpl.renderTo(this._locator, data);
+    this.reassignBehavior(this.$behavior);
+};
+UIComponent.prototype.reassignBehavior = function (behavior) {
+    if (behavior.hasOwnProperty("click")) {
+        for (var locator in behavior.click) {
+            if (behavior.click.hasOwnProperty(locator)) {
+                this.whenClick(locator, behavior.click[locator]);
+            }
+        }
+    }
 };
 
 UIComponent.prototype.whenClick = function (elementLocator, callback) {
@@ -47,4 +64,20 @@ UIComponent.prototype.whenClick = function (elementLocator, callback) {
         callback.call(that, $(this));
         return false;
     });
+};
+
+
+
+
+function UIModal(locator, templateLocator) {
+    UIModal._super(this, locator, templateLocator);
+}
+extend(UIModal, UIComponent);
+UIModal.prototype.showModal = function () {
+    var $modal = this.$find(".modal");
+    $modal.modal("show");
+};
+UIModal.prototype.hideModal = function () {
+    var $modal = this.$find(".modal");
+    $modal.modal("hide");
 };

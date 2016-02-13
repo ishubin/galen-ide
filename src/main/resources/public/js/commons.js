@@ -211,6 +211,9 @@ Handlebars.registerHelper('shortText', function(text) {
     return new Handlebars.SafeString(text);
 });
 
+Handlebars.registerHelper('asHtml', function(html) {
+    return new Handlebars.SafeString(html);
+});
 
 function whenClick(locator, callback) {
     $(locator).click(function () {

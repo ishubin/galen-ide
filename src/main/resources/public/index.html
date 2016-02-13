@@ -79,25 +79,6 @@
             <div id="test-results"></div>
         </div>
 
-        <div id="file-editor-modal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title"></h4>
-                    </div>
-                    <div class="modal-body">
-                        <pre class="code code-gspec"><code></code></pre>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="hidden" name="file-path" value=""/>
-                        <button type="button" class="btn btn-primary action-file-editor-run-test" data-dismiss="modal">Run Test</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div id="load-profiles-modal" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -502,5 +483,28 @@
             </table>
         </script>
 
+        <script id="tpl-file-editor" type="text/x-handlebars-template">
+            <div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        {{#with fileItem}}
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">{{name}}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <pre class="code code-gspec"><code>{{asHtml content}}</code></pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                {{#if executable}}
+                                    <button type="button" class="btn btn-primary action-file-editor-run-test" data-dismiss="modal">Run Test</button>
+                                {{/if}}
+                            </div>
+                        {{/with}}
+                    </div>
+                </div>
+            </div>
+        </script>
     </body>
 </html>
