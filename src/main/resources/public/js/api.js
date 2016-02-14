@@ -55,6 +55,18 @@ function deleteJSON(resource, callback) {
 
 
 var API = {
+    settings: {
+        get: function (callback) {
+            getJSON("api/settings", function (settings) {
+                callback(settings);
+            });
+        },
+        save: function (settings, callback) {
+            postJSON("api/settings", settings, function () {
+                callback();
+            });
+        }
+    },
     profiles: {
         list: function (callback) {
             getJSON("api/profiles", function (items) {
@@ -91,6 +103,23 @@ var API = {
 
 
 var APIMock = {
+    settings: {
+        get: function (callback) {
+            callback({
+                "makeScreenshots": true,
+                "homeDirectory": "/home/ishubin/.galen",
+                "chromeDriverBinPath": "some/chrome/driver",
+                "safariDriverBinPath": null,
+                "phantomjsDriverBinPath": "some/phantomjs/driver",
+                "edgeDriverBinPath": null,
+                "ieDriverBinPath": null
+            });
+        },
+        save: function (settings, callback) {
+            console.log("APIMock.settings.save", settings);
+            callback();
+        }
+    },
     profiles: {
         list: function (callback) {
             callback([{

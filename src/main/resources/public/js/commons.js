@@ -215,6 +215,22 @@ Handlebars.registerHelper('asHtml', function(html) {
     return new Handlebars.SafeString(html);
 });
 
+
+Handlebars.registerHelper('formCheckbox', function(elementName, label) {
+    var randomId = "chk-" + Math.round(Math.random() * 100000) + "-" + elementName;
+    var html = "<input id='" + randomId + "' name='" + elementName + "' " +
+                " type='checkbox' aria-label='Screenshot' />" +
+                "<label for='" + randomId + "'>" + label + "</label>"
+    return new Handlebars.SafeString(html);
+});
+
+Handlebars.registerHelper('formTextfield', function(elementName, placeholder) {
+    var html = "<input name='" + elementName + "' class='form-control' type='text' " +
+                "placeholder='" + placeholder + "' aria-describedby='basic-addon1' />";
+    return new Handlebars.SafeString(html);
+});
+
+
 function whenClick(locator, callback) {
     $(locator).click(function () {
         callback.call($(this));

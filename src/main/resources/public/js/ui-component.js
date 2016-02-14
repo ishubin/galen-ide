@@ -37,7 +37,6 @@ UIComponent.prototype.compile = function () {
     this._tpl = new Template(Handlebars.compile(source));
 };
 
-
 UIComponent.prototype.$self = function () {
     return $(this._locator);
 };
@@ -67,6 +66,50 @@ UIComponent.prototype.whenClick = function (elementLocator, callback) {
 };
 UIComponent.prototype.getTextfieldText = function (name, readableName) {
     return this.$find("input[name='" + name+"']").val();
+};
+UIComponent.prototype.collectModel = function (model, callback) {
+    var result = {};
+    for (var prop in model) {
+        if (model.hasOwnProperty(prop)) {
+            var formElementName = model[prop];
+
+            var $element = this.$find("*[name='" + formElementName + "']");
+            if ($element.length > 0) {
+                var attrType = $element.attr("type");
+                if (attrType === "checkbox") {
+                    result[prop] = $element.is(":checked");
+                } else if (attrType === "text") {
+                    result[prop] = $element.val();
+                }
+            } else {
+                throw new Error("Couldn't find form element: " + prop);
+            }
+        }
+    }
+    callback.call(this, result);
+};
+UIComponent.prototype.setModel = function (model, data) {
+    for (var prop in model) {
+        if (model.hasOwnProperty(prop)) {
+            var formElementName = model[prop];
+
+            var $element = this.$find("*[name='" + formElementName + "']");
+            if ($element.length > 0) {
+                var attrType = $element.attr("type");
+                if (attrType === "checkbox") {
+                    if (data[prop]) {
+                        $element.prop("checked", true);
+                    } else {
+                        $element.prop("checked", false);
+                    }
+                } else if (attrType === "text") {
+                    $element.val(data[prop]);
+                }
+            } else {
+                console.error("Error couldn't find form element: " + formElementName);
+            }
+        }
+    }
 };
 
 

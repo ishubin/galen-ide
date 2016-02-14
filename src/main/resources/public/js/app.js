@@ -81,6 +81,7 @@ var App = {
 
         this.loadProfilesModal = new LoadProfilesModal(this);
         this.saveProfilesModal = new SaveProfilesModal(this);
+        this.settingsModal = new SettingsModal(this);
 
         App.updateDevices();
         App.updateTestResults();
@@ -95,8 +96,9 @@ var App = {
         });
     },
     initSettingsPanel: function () {
-        whenClick(".action-settings-panel", App.showSettingsPanel);
-        whenClick(".action-settings-submit", App.onSettingsPanelSubmit);
+        whenClick(".action-settings-panel", function () {
+            App.settingsModal.show();
+        });
     },
     initDevicesPanel: function () {
         whenClick(".action-devices-add-new", App.showNewDevicePopup);
@@ -201,33 +203,6 @@ var App = {
         return request;
     },
 
-    showSettingsPanel: function() {
-        getJSON("api/settings", function (settings) {
-            var f = new FormHandler("#settings-modal");
-            f.setCheck("make-screenshots", settings.makeScreenshots);
-            f.set("home-directory", settings.homeDirectory);
-            f.set("chrome-driver-bin-path", settings.chromeDriverBinPath);
-            f.set("safari-driver-bin-path", settings.safariDriverBinPath);
-            f.set("edge-driver-bin-path", settings.edgeDriverBinPath);
-            f.set("ie-driver-bin-path", settings.ieDriverBinPath);
-            f.set("phantomjs-driver-bin-path", settings.phantomjsDriverBinPath);
-            $("#settings-modal").modal("show");
-        });
-    },
-    onSettingsPanelSubmit: function() {
-        var f = new FormHandler("#settings-modal");
-        var settings = {
-            makeScreenshots: f.isChecked("make-screenshots"),
-            chromeDriverBinPath: f.textfield("chrome-driver-bin-path"),
-            safariDriverBinPath: f.textfield("safari-driver-bin-path"),
-            edgeDriverBinPath: f.textfield("edge-driver-bin-path"),
-            ieDriverBinPath: f.textfield("ie-driver-bin-path"),
-            phantomjsDriverBinPath: f.textfield("phantomjs-driver-bin-path")
-        };
-        postJSON("api/settings", settings, function () {
-            $("#settings-modal").modal("hide");
-        });
-    },
 
     updateDevices: function () {
         getJSON("/api/devices", function (devices) {
