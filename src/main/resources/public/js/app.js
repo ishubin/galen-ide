@@ -60,7 +60,7 @@ var App = {
         return new Template(Handlebars.compile(source));
     },
     initTemplates: function (pages) {
-        for (name in pages) {
+        for (var name in pages) {
             if (pages.hasOwnProperty(name)) {
                 this.templates[name] = this.compileTemplate(pages[name]);
             }
@@ -83,6 +83,8 @@ var App = {
         this.saveProfilesModal = new SaveProfilesModal(this);
         this.settingsModal = new SettingsModal(this);
 
+        this.deviceModal = new DeviceModal(this);
+
         App.updateDevices();
         App.updateTestResults();
 
@@ -101,69 +103,31 @@ var App = {
         });
     },
     initDevicesPanel: function () {
-        whenClick(".action-devices-add-new", App.showNewDevicePopup);
-        whenClick("#add-device-modal .action-devices-submit", function () {
-            var type = this.attr("data-type");
-            if (type === "add") {
-                App.submitNewDevice();
-            } else if (type === "update") {
-                App.submitUpdateDevice();
-            }
-        });
-
-        $("#add-device-modal input:radio[name='size-type']").change(function() {
-            var selectedSizeType = $("input:radio[name='size-type']:checked").val();
-            $("#add-device-modal .settings-form-group-size").each(function () {
-                var $this = $(this);
-                if ($this.attr("data-type") === selectedSizeType) {
-                    $this.show();
-                } else {
-                    $this.hide();
-                }
-            });
+        whenClick(".action-devices-add-new", function () {
+            App.deviceModal.show();
         });
     },
 
-    showNewDevicePopup: function () {
-        var f = new FormHandler("#add-device-modal");
-        f.enable("browser-type");
-        f.showSubPanel(".action-devices-submit", "add");
-
-        $("#add-device-modal .modal-title").html("Add new device");
-        $("#add-device-modal").modal("show");
+    submitNewDevice: function (device, callback) {
+        API.devices.submitNew(device, function () {
+            App.updateDevices();
+            callback();
+        });
     },
     showEditDevicePopup: function (device) {
-        var f = new FormHandler("#add-device-modal");
-        f.disable("browser-type");
-        f.set("name", device.name);
-        f.set("device-id", device.deviceId);
-        f.set("tags", toCommaSeparated(device.tags));
-        $("#add-device-modal .modal-title").html("Edit device: " + device.name);
-
-        f.selectBootstrapRadioGroup(".device-size-type", device.sizeProvider.type);
+        var sizes = null;
         if (device.sizeProvider.type === "custom") {
-            f.set("sizes", toCommaSeparated(device.sizeProvider.sizes.map(sizeToText)));
-        } else if (device.sizeProvider.type === "range") {
-            f.set("size-range-start", sizeToText(device.sizeProvider.sizeVariation.start));
-            f.set("size-range-end", sizeToText(device.sizeProvider.sizeVariation.end));
-            f.set("size-range-iterations", device.sizeProvider.sizeVariation.iterations);
-            f.setCheck("random", device.sizeProvider.sizeVariation.random);
+            sizes = device.sizeProvider.sizes;
         }
-        f.showSubPanel(".action-devices-submit", "update");
-        f.showSubPanel(".settings-form-group-size", device.sizeProvider.type);
-        $("#add-device-modal").modal("show");
-    },
-    submitNewDevice: function () {
-        try {
-            var request = this.collectDeviceRequest();
-
-            postJSON("api/devices", request, function () {
-                App.updateDevices();
-            });
-            $("#add-device-modal").modal("hide");
-        } catch (ex) {
-            alert(ex);
-        }
+        this.deviceModal.show({
+            deviceId: device.deviceId,
+            browserType: device.browserType,
+            name: device.name,
+            tags: device.tags,
+            sizeType: device.sizeProvider.type,
+            sizes: sizes,
+            sizeVariation: null
+        });
     },
     submitUpdateDevice: function () {
         try {
@@ -178,34 +142,9 @@ var App = {
             alert(ex);
         }
     },
-    collectDeviceRequest: function () {
-        var f = new FormHandler("#add-device-modal");
-        var sizeType = f.radio("size-type");
-
-        var request = {
-            browserType: f.select("browser-type", "Browser type"),
-            name: f.mandatoryTextfield("name", "Device name"),
-            tags: fromCommaSeparated(f.mandatoryTextfield("tags", "Tags")),
-            sizeType: sizeType
-        };
-
-        if (sizeType === "custom") {
-            request["sizes"] = fromCommaSeparated(f.mandatoryTextfield("sizes", "Sizes")).map(convertSizeFromText);
-        } else if (sizeType === "range") {
-            request["sizeVariation"] = {
-                start: convertSizeFromText(f.mandatoryTextfield("size-range-start", "Size from")),
-                end: convertSizeFromText(f.textfield("size-range-end")),
-                iterations: parseInt(f.textfield("size-range-iterations")),
-                random: f.isChecked("random")
-            }
-        }
-
-        return request;
-    },
-
 
     updateDevices: function () {
-        getJSON("/api/devices", function (devices) {
+        API.devices.list(function (devices) {
             Data.devices = devices;
             App.showDevices(devices);
         });

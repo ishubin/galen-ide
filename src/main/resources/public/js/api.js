@@ -55,6 +55,14 @@ function deleteJSON(resource, callback) {
 
 
 var API = {
+    devices: {
+        submitNew: function (device, callback) {
+            postJSON("api/devices", device, callback);
+        },
+        list: function (callback) {
+            getJSON("api/devices", callback);
+        }
+    },
     settings: {
         get: function (callback) {
             getJSON("api/settings", function (settings) {
@@ -62,40 +70,26 @@ var API = {
             });
         },
         save: function (settings, callback) {
-            postJSON("api/settings", settings, function () {
-                callback();
-            });
+            postJSON("api/settings", settings, callback);
         }
     },
     profiles: {
         list: function (callback) {
-            getJSON("api/profiles", function (items) {
-                callback(items);
-            });
+            getJSON("api/profiles", callback);
         },
         load: function (path, callback) {
-            postJSON("api/profiles-load/" + path, {}, function () {
-                callback();
-            });
+            postJSON("api/profiles-load/" + path, {}, callback);
         },
         save: function (name, callback) {
-            postJSON("api/profiles", {
-                name: name
-            }, function () {
-                callback();
-            });
+            postJSON("api/profiles", {name: name}, callback);
         }
     },
     files: {
         get: function (path, callback) {
-            getJSON("/api/files/" + path, function (items) {
-                callback(items);
-            });
+            getJSON("/api/files/" + path, callback);
         },
         getFile: function (path, callback) {
-            getJSON("/api/file-content/" + path, function (fileItem) {
-                callback(fileItem);
-            });
+            getJSON("/api/file-content/" + path, callback);
         }
     }
 };
@@ -103,6 +97,41 @@ var API = {
 
 
 var APIMock = {
+    devices: {
+        submitNew: function (device, callback) {
+            callback();
+        },
+        list: function (callback) {
+            callback([{
+                "deviceId": "b13dadec-d83d-417a-ae2f-1963d677b4c3",
+                "tags": ["desktop"],
+                "name": "some device",
+                "supportsResizing": true,
+                "sizeProvider": {
+                    "sizes": [
+                        {"width": 1024, "height": 768}
+                    ],
+                    "type": "custom"
+                },
+                "status": "READY",
+                "lastErrorMessage": null,
+                "browserType": "chrome",
+                "active": true
+            },{
+                "deviceId": "qwr3242-111-417a-ae2f-1963d677b4c3",
+                "tags": ["desktop", "tablet"],
+                "name": "some device 2",
+                "supportsResizing": false,
+                "sizeProvider": {
+                    "type": "unsupported"
+                },
+                "status": "READY",
+                "lastErrorMessage": null,
+                "browserType": "firefox",
+                "active": true
+            }]);
+        }
+    },
     settings: {
         get: function (callback) {
             callback({

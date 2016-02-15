@@ -203,12 +203,8 @@ ul.device-tags:after , .device-sizes ul:after {
 
 /* Devices modal */
 .settings-form-group-size {
-    display: none;
     padding-top: 10px;
     padding-bottom: 10px;
-}
-.settings-form-group-size.show-by-default {
-    display: block;
 }
 
 
@@ -230,6 +226,14 @@ h5 {
 }
 input[type='checkbox'] {
     margin: 8px;
+}
+
+
+
+.invalid-form-value {
+    border: 1px solid red;
+    background: #ffeeee;
+    color: red;
 }
 
 

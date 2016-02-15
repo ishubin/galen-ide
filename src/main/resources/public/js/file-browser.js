@@ -23,19 +23,21 @@ function FileBrowser(app) {
 }
 extend(FileBrowser, UIComponent);
 
-FileBrowser.prototype.$behavior = {
-    click: {
-        "a.file-item": function (element) {
-            var filePath = element.attr("data-file-path");
-            this.loadFileInEditor(filePath);
-        },
-        "a.directory-item": function (element) {
-            var filePath = element.attr("data-file-path");
-            this.changeFolder(filePath);
-        },
-        ".action-launch-spec": function (element) {
-            var specPath = element.attr("data-file-path");
-            this.app.runTest(specPath);
+FileBrowser.prototype.$behavior = function () {
+    return {
+        click: {
+            "a.file-item": function (element) {
+                var filePath = element.attr("data-file-path");
+                this.loadFileInEditor(filePath);
+            },
+            "a.directory-item": function (element) {
+                var filePath = element.attr("data-file-path");
+                this.changeFolder(filePath);
+            },
+            ".action-launch-spec": function (element) {
+                var specPath = element.attr("data-file-path");
+                this.app.runTest(specPath);
+            }
         }
     }
 };
