@@ -115,9 +115,12 @@ var App = {
         });
     },
     showEditDevicePopup: function (device) {
-        var sizes = null;
+        var sizes = null,
+            sizeVariation = null;
         if (device.sizeProvider.type === "custom") {
             sizes = device.sizeProvider.sizes;
+        } else if (device.sizeProvider.type === "range") {
+            sizeVariation = device.sizeProvider.sizeVariation;
         }
         this.deviceModal.show({
             deviceId: device.deviceId,
@@ -126,7 +129,7 @@ var App = {
             tags: device.tags,
             sizeType: device.sizeProvider.type,
             sizes: sizes,
-            sizeVariation: null
+            sizeVariation: sizeVariation
         });
     },
     submitUpdateDevice: function () {

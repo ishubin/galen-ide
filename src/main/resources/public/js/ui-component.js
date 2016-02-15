@@ -322,6 +322,15 @@ $Model.Group = function (fieldName, fieldBuilders) {
     this.subModel = new $Model.Model(fieldBuilders);
 };
 $Model.Group.prototype.setDataValue = function(component, dataValue) {
+    var $groupDiv = component.$find("*[data-model-group='" + this.fieldName + "']");
+    var subComponent = {
+        $find: function (locator) {
+            return $groupDiv.find(locator);
+        }
+    };
+    if (dataValue !== null) {
+        this.subModel.setData(subComponent, dataValue);
+    }
 };
 $Model.Group.prototype.collectDataValue = function(component) {
     var $groupDiv = component.$find("*[data-model-group='" + this.fieldName + "']");

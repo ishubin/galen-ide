@@ -129,6 +129,32 @@ var APIMock = {
                 "lastErrorMessage": null,
                 "browserType": "firefox",
                 "active": true
+            },{
+                "deviceId": "03529981-6673-4f41-94b5-b060efc51a3f",
+                "tags": [
+                    "desktop"
+                ],
+                "name": "asdsd",
+                "supportsResizing": true,
+                "sizeProvider": {
+                    "sizeVariation": {
+                        "start": {
+                            "width": 400,
+                            "height": 800
+                        },
+                        "end": {
+                            "width": 500,
+                            "height": 600
+                        },
+                        "iterations": 5,
+                        "random": false
+                    },
+                    "type": "range"
+                },
+                "status": "READY",
+                "lastErrorMessage": null,
+                "browserType": "firefox",
+                "active": true
             }]);
         }
     },
