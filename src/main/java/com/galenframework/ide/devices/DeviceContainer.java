@@ -16,6 +16,7 @@
 package com.galenframework.ide.devices;
 
 import com.galenframework.ide.Settings;
+import com.galenframework.ide.Size;
 import com.galenframework.ide.TestResultContainer;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -35,20 +36,9 @@ public class DeviceContainer implements TestResultsListener {
 
 
     public DeviceContainer() {
-
-        //masterDriver = new FirefoxDriver();
-        //masterDriver.get("http://localhost:8080");
-        //masterDriver.manage().window().maximize();
-
-        /*devices.add(new DeviceThread(new Device("Firefox mobile", "firefox", asList("mobile"), new SizeProviderCustom(asList(size(450, 600), size(480, 600), size(500, 600))))));
-        devices.add(new DeviceThread(new Device("Firefox tablet", "firefox", asList("tablet"), asList(size(600, 600), size(700, 600), size(800, 600)))));
-        devices.add(new DeviceThread(new Device("Firefox desktop", "firefox", asList("desktop"), asList(size(1024, 768), size(1100, 768), size(1200, 768)))));
-        devices.forEach((device -> {
-            device.start();
-            device.createDriverFromClass(FirefoxDriver.class);
-            //device.openUrl("http://localhost:8080");
-        }));
-        */
+        masterDriver = new FirefoxDriver();
+        masterDriver.get("http://localhost:8080");
+        masterDriver.manage().window().maximize();
     }
 
     public List<TestResultContainer> getTestResults() {
@@ -102,8 +92,8 @@ public class DeviceContainer implements TestResultsListener {
         }
     }
 
-    private Dimension size(int w, int h) {
-        return new Dimension(w, h);
+    private Size size(int w, int h) {
+        return new Size(w, h);
     }
 
     public void addDeviceThread(DeviceThread deviceThread) {

@@ -31,7 +31,6 @@ import static spark.Spark.*;
 public class Main extends Application {
 
     public static void main(String[] args) throws IOException {
-        //launch(args);
         new Main().initWebServer();
     }
 
