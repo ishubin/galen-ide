@@ -191,32 +191,32 @@
                             </td>
                             <td>
                                 {{#if testResult}}
-                                {{formatDurationHumanReadable testResult/duration}}
+                                    {{formatDurationHumanReadable testResult/duration}}
                                 {{/if}}
                             </td>
                             <td>
                                 {{#if testResult}}
-                                {{#with testResult}}
-                                        <span class="test-status-{{status}}">
-                                            {{errors}} errors, {{warnings}} warnings
-                                        </span>
-                                <ul class="error-messages">
-                                    {{#each errorMessages}}
-                                    <li>
-                                        {{this}}
-                                    </li>
-                                    {{/each}}
-                                </ul>
-                                {{/with}}
+                                    {{#with testResult}}
+                                            <span class="test-status-{{status}}">
+                                                {{errors}} errors, {{warnings}} warnings
+                                            </span>
+                                    <ul class="error-messages">
+                                        {{#each errorMessages}}
+                                        <li>
+                                            {{this}}
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                    {{/with}}
                                 {{/if}}
                             </td>
                             <td>
                                 {{#if testResult}}
-                                {{#with testResult}}
-                                {{#if externalReport}}
-                                <a href="/reports/{{externalReport}}" target="_blank">Report</a>
-                                {{/if}}
-                                {{/with}}
+                                    {{#with testResult}}
+                                        {{#if externalReport}}
+                                            <a href="/reports/{{externalReport}}" target="_blank">Report</a>
+                                        {{/if}}
+                                    {{/with}}
                                 {{/if}}
                             </td>
                         </tr>
@@ -230,7 +230,7 @@
 
 
         <script id="tpl-file-browser" type="text/x-handlebars-template">
-            <table class="table table-striped">
+            <table class="table table-striped file-browser">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -239,35 +239,35 @@
                 </thead>
                 <tbody>
                     {{#each items}}
-                            <tr>
-                                <td>
-                                    {{#if directory}}
-                                        <a class="link-with-icon directory-item" data-file-path="{{path}}" href="#">
-                                            <span class="link-icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                                            <span class="link-text">{{name}}</span>
-                                        </a>
-                                    {{else}}
-                                        <a class="link-with-icon file-item" data-file-path="{{path}}" href="#">
-                                            <span class="link-icon glyphicon glyphicon-file" aria-hidden="true"></span>
-                                            <span class="link-text">{{name}}</span>
-                                        </a>
-                                    {{/if}}
-                                </td>
-                                <td>
-                                    {{#if executable}}
-                                        <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-file-name="{{name}}" data-file-path="{{path}}">
-                                            Test
-                                        </button>
-                                    {{/if}}
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                {{#if directory}}
+                                    <a class="link-with-icon directory-item" data-file-path="{{path}}" href="#">
+                                        <span class="link-icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                                        <span class="link-text">{{name}}</span>
+                                    </a>
+                                {{else}}
+                                    <a class="link-with-icon file-item" data-file-path="{{path}}" href="#">
+                                        <span class="link-icon glyphicon glyphicon-file" aria-hidden="true"></span>
+                                        <span class="link-text">{{name}}</span>
+                                    </a>
+                                {{/if}}
+                            </td>
+                            <td class="text-right">
+                                {{#if executable}}
+                                    <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-file-name="{{name}}" data-file-path="{{path}}">
+                                        Test
+                                    </button>
+                                {{/if}}
+                            </td>
+                        </tr>
                     {{/each}}
                 </tbody>
             </table>
         </script>
 
         <script id="tpl-file-editor" type="text/x-handlebars-template">
-            <div class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal fade file-editor" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         {{#with fileItem}}

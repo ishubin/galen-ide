@@ -108,7 +108,7 @@ nav a.navbar-brand {
     color: red;
 }
 
-#file-editor .modal-dialog {
+.file-editor .modal-dialog {
     width: 95%;
 }
 pre.code {
@@ -121,21 +121,24 @@ pre.code code {
     white-space: pre;
 }
 
-#file-browser .file-item {
+.file-browser .file-item {
     font-size: 0.9em;
     color: black;
 }
-#file-browser a .link-icon {
+.file-browser a .link-icon {
     color: #428bca;
 }
-#file-browser a.file-item .link-icon {
+.file-browser a.file-item .link-icon {
     color: #777;
 }
-
-#file-browser button {
+.file-browser button {
     padding-top: 1px;
     padding-bottom: 1px;
 }
+
+
+
+
 
 .device-status-SHUTDOWN {
     opacity: 0.2;
