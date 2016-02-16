@@ -67,7 +67,8 @@ FileBrowser.prototype.showFileEditor = function (fileItem) {
 
 
 function FileEditor(app) {
-    FileEditor._super(this, "#file-editor", "#tpl-file-editor");
+    FileEditor._super(this, "#global-modal", "#tpl-file-editor");
+    this.app = app;
     this.fileItem = null;
 }
 extend(FileEditor, UIModal);

@@ -51,7 +51,7 @@ var SizeConverter = {
 
 
 function DeviceModal(app) {
-    UIModal._super(this, "#global-modal", "#tpl-device-modal");
+    DeviceModal._super(this, "#global-modal", "#tpl-device-modal");
     this.app = app;
     this.device = null;
     this.model = new $Model.Model({

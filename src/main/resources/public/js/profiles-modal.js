@@ -1,5 +1,5 @@
 function LoadProfilesModal(app) {
-    UIModal._super(this, "#global-modal", "#tpl-load-profiles-modal");
+    SaveProfilesModal._super(this, "#global-modal", "#tpl-load-profiles-modal");
     this.app = app;
 }
 extend(LoadProfilesModal, UIModal);
@@ -29,7 +29,7 @@ LoadProfilesModal.prototype.show = function() {
 
 
 function SaveProfilesModal(app) {
-    UIModal._super(this, "#global-modal", "#tpl-save-profiles-modal");
+    SaveProfilesModal._super(this, "#global-modal", "#tpl-save-profiles-modal");
     this.app = app;
 }
 extend(SaveProfilesModal, UIModal);
