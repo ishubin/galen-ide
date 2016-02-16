@@ -1,5 +1,5 @@
 function SettingsModal(app) {
-    UIModal._super(this, "#settings-modal", "#tpl-settings-modal");
+    UIModal._super(this, "#global-modal", "#tpl-settings-modal");
     this.model = new $Model.Model({
         makeScreenshots: $Model.checkbox(),
         homeDirectory: $Model.text(),
