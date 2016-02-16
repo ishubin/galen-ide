@@ -80,7 +80,7 @@
             <div id="file-editor"></div>
 
             <div id="load-profiles-modal"></div>
-            <div id="save-profiles-modal">
+            <div id="save-profiles-modal"></div>
             <div id="settings-modal"></div>
             <div id="test-results"></div>
             <div id="device-modal"></div>
@@ -444,7 +444,13 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Add New Device</h4>
+                            <h4 class="modal-title">
+                                {{#if device}}
+                                    Add New Device
+                                {{else}}
+                                    Update Device
+                                {{/if}}
+                            </h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -457,7 +463,7 @@
                                 <div class="col-lg-4">
                                     <div class="text-left">
                                         <h5>Browser</h5>
-                                        <select class="form-control" name="browserType">
+                                        <select class="form-control" name="browserType" {{#if device}}disabled="disabled"{{/if}}>
                                             <option value="firefox">Firefox</option>
                                             <option value="chrome">Chrome</option>
                                             <option value="edge">Edge</option>

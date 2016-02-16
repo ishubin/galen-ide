@@ -3,16 +3,18 @@ function LoadProfilesModal(app) {
     this.app = app;
 }
 extend(LoadProfilesModal, UIModal);
-LoadProfilesModal.prototype.$behavior = {
-    click: {
-        ".profile-file-item": function (element) {
-            var path = element.attr("data-file-name");
-            if (!isBlank(path)) {
-                var that = this;
-                API.profiles.load(path, function () {
-                    that.hideModal();
-                    that.app.updateDevices();
-                });
+LoadProfilesModal.prototype.$behavior = function () {
+    return {
+        click: {
+            ".profile-file-item": function (element) {
+                var path = element.attr("data-file-name");
+                if (!isBlank(path)) {
+                    var that = this;
+                    API.profiles.load(path, function () {
+                        that.hideModal();
+                        that.app.updateDevices();
+                    });
+                }
             }
         }
     }
@@ -32,17 +34,19 @@ function SaveProfilesModal(app) {
 }
 extend(SaveProfilesModal, UIModal);
 
-SaveProfilesModal.prototype.$behavior = {
-    click: {
-        ".action-profiles-submit-save": function () {
-            var profileName = this.getTextfieldText("profile-name", "Profile name");
-            if (!isBlank(profileName)) {
-                var that = this;
-                API.profiles.save(profileName, function (){
-                    that.hideModal();
-                });
-            } else {
-                alert("Profile name should not be empty");
+SaveProfilesModal.prototype.$behavior = function (){
+    return {
+        click: {
+            ".action-profiles-submit-save": function () {
+                var profileName = this.getTextfieldText("profile-name", "Profile name");
+                if (!isBlank(profileName)) {
+                    var that = this;
+                    API.profiles.save(profileName, function () {
+                        that.hideModal();
+                    });
+                } else {
+                    alert("Profile name should not be empty");
+                }
             }
         }
     }

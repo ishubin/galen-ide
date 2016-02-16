@@ -61,6 +61,9 @@ var API = {
         },
         list: function (callback) {
             getJSON("api/devices", callback);
+        },
+        update: function (deviceId, device, callback) {
+            putJSON("api/devices/" + deviceId, device, callback);
         }
     },
     settings: {
@@ -99,6 +102,7 @@ var API = {
 var APIMock = {
     devices: {
         submitNew: function (device, callback) {
+            console.log("API.devices.submitNew", device);
             callback();
         },
         list: function (callback) {
@@ -156,6 +160,10 @@ var APIMock = {
                 "browserType": "firefox",
                 "active": true
             }]);
+        },
+        update: function (deviceId, device, callback) {
+            console.log("API.devices.update", deviceId, device);
+            callback();
         }
     },
     settings: {
@@ -190,9 +198,11 @@ var APIMock = {
             }]);
         },
         load: function (path, callback) {
+            console.log("API.profiles.load", path);
             callback();
         },
         save: function (name, callback) {
+            console.log("API.profiles.save", name);
             callback();
         }
     },

@@ -132,18 +132,11 @@ var App = {
             sizeVariation: sizeVariation
         });
     },
-    submitUpdateDevice: function () {
-        try {
-            var request = this.collectDeviceRequest();
-            var deviceId = $("#add-device-modal input[name='device-id']").val();
-
-            putJSON("api/devices/" + deviceId, request, function () {
-                App.updateDevices();
-            });
-            $("#add-device-modal").modal("hide");
-        } catch (ex) {
-            alert(ex);
-        }
+    submitUpdateDevice: function (deviceId, device, callback) {
+        API.devices.update(deviceId, device, function () {
+            App.updateDevices();
+            callback();
+        });
     },
 
     updateDevices: function () {

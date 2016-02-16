@@ -8,7 +8,7 @@ var TagsConverter = {
     },
     write: function (value) {
         if (value !== null) {
-            return value.join(",");
+            return value.join(", ");
         } else {
             return "";
         }
@@ -25,7 +25,7 @@ var SizeArrayConverter = {
     },
     write: function (value) {
         if (value !== null && Array.isArray(value)) {
-            return value.map(sizeToText).join(",");
+            return value.map(sizeToText).join(", ");
         } else {
             return "";
         }
@@ -84,10 +84,12 @@ DeviceModal.prototype.$behavior = function () {
                     }
                     delete device.sizeProviderCustom;
 
+                    var that = this;
                     if (this.device !== null) {
-                        console.log("Editing device", device);
+                        this.app.submitUpdateDevice(this.device.deviceId, device, function () {
+                            that.hideModal();
+                        });
                     } else {
-                        var that = this;
                         this.app.submitNewDevice(device, function () {
                             that.hideModal();
                         });

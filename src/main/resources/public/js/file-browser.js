@@ -87,12 +87,14 @@ FileEditor.prototype.show = function (fileItem) {
     });
     this.showModal();
 };
-FileEditor.prototype.$behavior = {
-    click: {
-        ".action-file-editor-run-test": function () {
-            this.app.runTest(this.fileItem.path);
-            this.hideModal();
+FileEditor.prototype.$behavior = function (){
+    return {
+        click: {
+            ".action-file-editor-run-test": function () {
+                this.app.runTest(this.fileItem.path);
+                this.hideModal();
+            }
         }
-    }
+    };
 };
 
