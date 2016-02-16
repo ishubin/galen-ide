@@ -54,19 +54,19 @@ function DeviceModal(app) {
     DeviceModal._super(this, "#global-modal", "#tpl-device-modal");
     this.app = app;
     this.device = null;
-    this.model = new $Model.Model({
-        browserType: $Model.select(),
-        name: $Model.text().required("A name of a browser should not be empty"),
-        tags: $Model.text().converter(TagsConverter),
-        sizeType: $Model.radio(),
-        sizeProviderCustom: $Model.group({
-            sizes: $Model.text().required().converter(SizeArrayConverter),
+    this.model = new Model({
+        browserType: Model.select(),
+        name: Model.text().required("A name of a browser should not be empty"),
+        tags: Model.text().converter(TagsConverter),
+        sizeType: Model.radio(),
+        sizeProviderCustom: Model.group({
+            sizes: Model.text().required().converter(SizeArrayConverter)
         }),
-        sizeVariation: $Model.group({
-            start: $Model.property().required().converter(SizeConverter),
-            end: $Model.property().required().converter(SizeConverter),
-            iterations: $Model.number().required(),
-            random: $Model.checkbox()
+        sizeVariation: Model.group({
+            start: Model.property().required().converter(SizeConverter),
+            end: Model.property().required().converter(SizeConverter),
+            iterations: Model.number().required(),
+            random: Model.checkbox()
         })
     });
 }

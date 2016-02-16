@@ -138,104 +138,147 @@ UIModal.prototype.show = function () {
 
 
 
-var $Model = {
-    property: function () {
-        return new $Model.PropertyBuilder();
-    },
-    text: function () {
-        return this.property().converter($Model.defaultConverters.trim);
-    },
-    checkbox: function () {
-        return this.property();
-    },
-    number: function () {
-        return this.property().converter($Model.defaultConverters.number);
-    },
-    radio: function () {
-        return this.property();
-    },
-    select: function () {
-        return this.property();
-    },
-    group: function (propertyBuilders) {
-        return new $Model.GroupBuilder(propertyBuilders);
-    },
 
-    defaultConverters: {
-        number: {
-            read: function (text) {
-                return parseInt(text);
-            },
-            write: function (value) {
-                if (value !== null) {
-                    return "" + value;
-                } else {
-                    return "0";
-                }
-            }
+/* Model */
+function Model(fieldBuilders) {
+    this._init(fieldBuilders);
+}
+Model.prototype._init = function (fieldBuilders) {
+    this.fields = [];
+    for (var propName in fieldBuilders) {
+        if (fieldBuilders.hasOwnProperty(propName)) {
+            var fieldBuilder = fieldBuilders[propName];
+            this.fields.push(fieldBuilder.build(propName));
+        }
+    }
+};
+Model.prototype.setData = function (component, data) {
+    for (var i = 0; i < this.fields.length; i += 1) {
+        var dataValue = null;
+        if (data.hasOwnProperty(this.fields[i].fieldName)) {
+            dataValue = data[this.fields[i].fieldName];
+        }
+        this.fields[i].setDataValue(component, dataValue);
+    }
+};
+Model.prototype._collectAllFieldData = function (component) {
+    var result = {};
+    for (var i = 0; i < this.fields.length; i += 1) {
+        result[this.fields[i].fieldName] = this.fields[i].collectDataValue(component);
+    }
+    return result;
+};
+Model.prototype.collectModel = function (component, callback) {
+    var success = false;
+    try {
+        var result = this._collectAllFieldData(component);
+        success = true;
+    } catch (ex) {
+        if (ex.errorType === "ValidationError") {
+            ex.$element.addClass("invalid-form-value");
+        } else {
+            console.error(ex);
+        }
+    }
+    if (success) {
+        callback.call(component, result);
+    }
+};
+Model.property = function () {
+    return new Model.PropertyBuilder();
+};
+Model.text = function () {
+    return Model.property().converter(Model.defaultConverters.trim);
+};
+Model.checkbox = function () {
+    return Model.property();
+};
+Model.number = function () {
+    return Model.property().converter(Model.defaultConverters.number);
+};
+Model.radio = function () {
+    return Model.property();
+};
+Model.select = function () {
+    return Model.property();
+};
+Model.group = function (propertyBuilders) {
+    return new Model.GroupBuilder(propertyBuilders);
+};
+Model.defaultConverters = {
+    number: {
+        read: function (text) {
+            return parseInt(text);
         },
-        trim: {
-            read: function (text) {
-                return text.trim();
-            },
-            write: function (text) {
-                return text;
+        write: function (value) {
+            if (value !== null) {
+                return "" + value;
+            } else {
+                return "0";
             }
+        }
+    },
+    trim: {
+        read: function (text) {
+            return text.trim();
+        },
+        write: function (text) {
+            return text;
         }
     }
 };
 
 
 /* Validation Error */
-$Model.ValidationError = function (field, $element, message) {
+Model.ValidationError = function (field, $element, message) {
     this.field = field;
     this.$element = $element;
     this.message = message;
     this.errorType = "ValidationError";
 };
-$Model.ValidationError.prototype = Error.prototype;
+Model.ValidationError.prototype = Error.prototype;
 
 
 
 /* PropertyBuilder */
-$Model.PropertyBuilder = function () {
+Model.PropertyBuilder = function () {
     this.validations = [];
     this.converters = [];
 };
-$Model.PropertyBuilder.prototype.converter = function (converter) {
+Model.PropertyBuilder.prototype.converter = function (converter) {
     this.converters.push(converter);
     return this;
 };
-$Model.PropertyBuilder.prototype.required = function (errorMessage) {
+Model.PropertyBuilder.prototype.required = function (errorMessage) {
     var actualErrorMessage = errorMessage || "This field is required";
     this.validations.push(function ($element, value) {
         if (value === undefined || value === null || value === "") {
-            throw new $Model.ValidationError(this, $element, actualErrorMessage);
+            throw new Model.ValidationError(this, $element, actualErrorMessage);
         }
     });
     return this;
 };
-$Model.PropertyBuilder.prototype.build = function (fieldName) {
-    return new $Model.Property(fieldName, this.converters, this.validations);
+Model.PropertyBuilder.prototype.build = function (fieldName) {
+    return new Model.Property(fieldName, this.converters, this.validations);
 };
 
 
 /* GroupBuilder */
-$Model.GroupBuilder = function (propertyBuilders) {
+Model.GroupBuilder = function (propertyBuilders) {
     this.propertyBuilders = propertyBuilders;
 };
-$Model.GroupBuilder.prototype.build = function (fieldName) {
-    return new $Model.Group(fieldName, this.propertyBuilders);
+Model.GroupBuilder.prototype.build = function (fieldName) {
+    return new Model.Group(fieldName, this.propertyBuilders);
 };
 
 
 /* Property */
-$Model.Property = function (fieldName, converters, validations) {
+Model.Property = function (fieldName, converters, validations) {
     this.fieldName = fieldName;
     this.converters = converters || [];
     this.validations = validations || [];
 };
-$Model.Property.prototype.setDataValue = function (component, dataValue) {
+Model.Property.prototype.setDataValue = function (component, dataValue) {
     var $element = component.$find("*[name='" + this.fieldName + "']");
     if ($element.length > 0) {
         var attrType = $element.attr("type");
@@ -264,7 +307,7 @@ $Model.Property.prototype.setDataValue = function (component, dataValue) {
         console.error("Error couldn't find form element: " + this.fieldName);
     }
 };
-$Model.Property.prototype.collectDataValue = function (component) {
+Model.Property.prototype.collectDataValue = function (component) {
     var $element = component.$find("*[name='" + this.fieldName + "']");
 
     if ($element.length > 0) {
@@ -285,7 +328,7 @@ $Model.Property.prototype.collectDataValue = function (component) {
         throw new Error("Couldn't find form element: " + this.fieldName);
     }
 };
-$Model.Property.prototype.convertRead = function ($element, value) {
+Model.Property.prototype.convertRead = function ($element, value) {
     try {
         var newValue = value;
         for (var i = 0; i < this.converters.length; i++) {
@@ -296,18 +339,18 @@ $Model.Property.prototype.convertRead = function ($element, value) {
         if (error.errorType === "ValidationError") {
             throw error;
         } else {
-            throw new $Model.ValidationError(this, $element, error.message);
+            throw new Model.ValidationError(this, $element, error.message);
         }
     }
 };
-$Model.Property.prototype.convertWrite = function ($element, value){
+Model.Property.prototype.convertWrite = function ($element, value){
     var newValue = value;
     for (var i = 0; i < this.converters.length; i++) {
         newValue = this.converters[i].write(newValue);
     }
     return newValue;
 };
-$Model.Property.prototype.validate = function ($element, value) {
+Model.Property.prototype.validate = function ($element, value) {
     for (var i = 0; i < this.validations.length; i++) {
         this.validations[i].call(this, $element, value);
     }
@@ -317,11 +360,11 @@ $Model.Property.prototype.validate = function ($element, value) {
 
 
 /* Group */
-$Model.Group = function (fieldName, fieldBuilders) {
+Model.Group = function (fieldName, fieldBuilders) {
     this.fieldName = fieldName;
-    this.subModel = new $Model.Model(fieldBuilders);
+    this.subModel = new Model(fieldBuilders);
 };
-$Model.Group.prototype.setDataValue = function(component, dataValue) {
+Model.Group.prototype.setDataValue = function(component, dataValue) {
     var $groupDiv = component.$find("*[data-model-group='" + this.fieldName + "']");
     var subComponent = {
         $find: function (locator) {
@@ -332,7 +375,7 @@ $Model.Group.prototype.setDataValue = function(component, dataValue) {
         this.subModel.setData(subComponent, dataValue);
     }
 };
-$Model.Group.prototype.collectDataValue = function(component) {
+Model.Group.prototype.collectDataValue = function(component) {
     var $groupDiv = component.$find("*[data-model-group='" + this.fieldName + "']");
     if ($groupDiv.is(":visible")) {
         var subComponent = {
@@ -347,48 +390,3 @@ $Model.Group.prototype.collectDataValue = function(component) {
 };
 
 
-/* Model */
-$Model.Model = function (fieldBuilders) {
-    this._init(fieldBuilders);
-};
-$Model.Model.prototype._init = function (fieldBuilders) {
-    this.fields = [];
-    for (var propName in fieldBuilders) {
-        if (fieldBuilders.hasOwnProperty(propName)) {
-            var fieldBuilder = fieldBuilders[propName];
-            this.fields.push(fieldBuilder.build(propName));
-        }
-    }
-};
-$Model.Model.prototype.setData = function (component, data) {
-    for (var i = 0; i < this.fields.length; i += 1) {
-        var dataValue = null;
-        if (data.hasOwnProperty(this.fields[i].fieldName)) {
-            dataValue = data[this.fields[i].fieldName];
-        }
-        this.fields[i].setDataValue(component, dataValue);
-    }
-};
-$Model.Model.prototype._collectAllFieldData = function (component) {
-    var result = {};
-    for (var i = 0; i < this.fields.length; i += 1) {
-        result[this.fields[i].fieldName] = this.fields[i].collectDataValue(component);
-    }
-    return result;
-};
-$Model.Model.prototype.collectModel = function (component, callback) {
-    var success = false;
-    try {
-        var result = this._collectAllFieldData(component);
-        success = true;
-    } catch (ex) {
-        if (ex.errorType === "ValidationError") {
-            ex.$element.addClass("invalid-form-value");
-        } else {
-            console.error(ex);
-        }
-    }
-    if (success) {
-        callback.call(component, result);
-    }
-};

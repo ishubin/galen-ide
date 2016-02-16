@@ -31,6 +31,9 @@ LoadProfilesModal.prototype.show = function() {
 function SaveProfilesModal(app) {
     SaveProfilesModal._super(this, "#global-modal", "#tpl-save-profiles-modal");
     this.app = app;
+    this.model = new Model({
+        profileName: Model.text().required()
+    })
 }
 extend(SaveProfilesModal, UIModal);
 
@@ -38,15 +41,12 @@ SaveProfilesModal.prototype.$behavior = function (){
     return {
         click: {
             ".action-profiles-submit-save": function () {
-                var profileName = this.getTextfieldText("profile-name", "Profile name");
-                if (!isBlank(profileName)) {
-                    var that = this;
-                    API.profiles.save(profileName, function () {
+                var that = this;
+                this.collectModel(this.model, function (profile) {
+                    API.profiles.save(profile.profileName, function () {
                         that.hideModal();
                     });
-                } else {
-                    alert("Profile name should not be empty");
-                }
+                });
             }
         }
     }

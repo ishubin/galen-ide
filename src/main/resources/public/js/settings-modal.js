@@ -1,13 +1,13 @@
 function SettingsModal(app) {
     SettingsModal._super(this, "#global-modal", "#tpl-settings-modal");
-    this.model = new $Model.Model({
-        makeScreenshots: $Model.checkbox(),
-        homeDirectory: $Model.text(),
-        chromeDriverBinPath: $Model.text(),
-        safariDriverBinPath: $Model.text(),
-        edgeDriverBinPath: $Model.text(),
-        ieDriverBinPath: $Model.text(),
-        phantomjsDriverBinPath: $Model.text()
+    this.model = new Model({
+        makeScreenshots: Model.checkbox(),
+        homeDirectory: Model.text(),
+        chromeDriverBinPath: Model.text(),
+        safariDriverBinPath: Model.text(),
+        edgeDriverBinPath: Model.text(),
+        ieDriverBinPath: Model.text(),
+        phantomjsDriverBinPath: Model.text()
     });
 }
 extend(SettingsModal, UIModal);
