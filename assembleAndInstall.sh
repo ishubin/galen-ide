@@ -3,4 +3,6 @@
 set -e
 ./makeDist.sh
 
+cd dist
 
+sudo ./install.sh
