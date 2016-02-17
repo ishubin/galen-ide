@@ -85,9 +85,10 @@ var App = {
 
         this.deviceModal = new DeviceModal(this);
 
-        App.updateDevices();
-        App.updateTestResults();
+        this.testResultsPanel = new TestResultsPanel(this);
+        this.testResultsPanel.update();
 
+        App.updateDevices();
     },
     initProfilesPanel: function () {
         whenClick(".action-profiles-load", function () {
@@ -165,82 +166,14 @@ var App = {
 
     runTest: function (specPath) {
         postJSON("api/tester/test", {specPath: specPath}, function (result) {
-            App.waitForTestResults();
+            App.testResultsPanel.waitForTestResults();
         });
     },
 
-    _waitForTestResultsTimer: null,
-    waitForTestResults: function () {
-        this._waitForTestResultsTimer = setInterval(function () {
-            App.updateTestResults();
-        }, 1000);
+    loadFileInEditor: function (filePath) {
+        this.fileBrowser.loadFileInEditor(filePath);
     },
 
-    updateTestResults: function () {
-        getJSON("/api/tester/results", function (data) {
-            App.showResults(data);
-
-            var amountOfFinished = 0;
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].status === "finished") {
-                    amountOfFinished += 1;
-                }
-            }
-
-            if (amountOfFinished > 0 && amountOfFinished === data.length) {
-                clearInterval(App._waitForTestResultsTimer);
-            }
-        });
-    },
-    showResults: function (results) {
-        console.log("rendering results",  results);
-        this.templates.testResults.renderTo("#test-results", {
-            lastTestCommand: results.lastTestCommand,
-            tests: results.testResults,
-            overview: this._createTestsOverview(results.testResults)
-        });
-
-        whenClick("#test-results .action-rerun-test", function () {
-            var specPath = this.attr("data-file-path");
-            App.runTest(specPath);
-        });
-        whenClick("#test-results .file-item", function () {
-            var filePath = this.attr("data-file-path");
-            App.loadFileInEditor(filePath);
-        });
-    },
-    _createTestsOverview: function (results) {
-        var firstTimestamp = -1;
-        var lastTimestamp = -1;
-
-        var allTestsAreFinished = true;
-
-        for (var i = 0; i < results.length; i++) {
-            if (results[i].status === "finished" && results[i].testResult !== null && results[i].testResult !== undefined) {
-                if (firstTimestamp < 0 || firstTimestamp > results[i].testResult.startedAt) {
-                    firstTimestamp = results[i].testResult.startedAt;
-                }
-
-                if (lastTimestamp < 0 || lastTimestamp < results[i].testResult.endedAt) {
-                    lastTimestamp = results[i].testResult.endedAt;
-                }
-
-            } else {
-                allTestsAreFinished = false;
-            }
-        }
-
-        var totalDuration = null;
-        if (firstTimestamp > 0 && lastTimestamp > 0 && allTestsAreFinished) {
-            totalDuration = lastTimestamp - firstTimestamp;
-        }
-
-        return {
-            totalDuration: totalDuration,
-            startedAt: firstTimestamp,
-            endedAt: firstTimestamp
-        };
-    }
 };
 
 

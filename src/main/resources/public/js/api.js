@@ -94,6 +94,11 @@ var API = {
         getFile: function (path, callback) {
             getJSON("/api/file-content/" + path, callback);
         }
+    },
+    results: {
+        get: function (callback) {
+            getJSON("/api/tester/results", callback);
+        }
     }
 };
 
@@ -248,6 +253,50 @@ var APIMock = {
                 "path": "specs/addNotePage.gspec",
                 "executable": true,
                 "content": "@import common.gspec\n\n@objects\n    caption                 #content h2\n    title_textfield         input[name='note.title']\n    description_textfield   textarea\n    add_button              button.btn-primary\n    cancel_button           button.btn-default\n\n\n@groups\n    (add_note_form_element, add_note_form_elements)     caption, title_textfield, description_textfield\n    (add_note_form_button, add_note_form_buttons)       add_button, cancel_button\n    (add_note_element, add_note_elements)               &add_note_form_elements, &add_note_form_buttons\n\n\n@set\n    add_note_elements_vertical_margin   5 to 20px\n    description_height                  150 to 350px\n\n\n= Add note page =\n    | caption is at the top inside content with ${content_vertical_margin} margin\n\n    | every &add_note_element is more or less readable\n    | every &add_note_form_element stretches to content with ${content_horizontal_margin} margin\n    | every &add_note_form_button is tapable\n\n    @on desktop, tablet\n        | &add_note_form_elements are aligned vertically above each other with ${add_note_elements_vertical_margin} margin\n        | last &add_note_form_element is above add_button ${add_note_elements_vertical_margin}\n        | &add_note_form_buttons are aligned horizontally next to each other with 0 to 5px margin\n    @on mobile\n        | &add_note_elements are aligned vertically above each other with ${add_note_elements_vertical_margin} margin\n\n    title_textfield:\n        height ${form_textfield_height}\n    \n    description_textfield:\n        height ${description_height}\n"
+            });
+        }
+    },
+    results: {
+        get: function(callback) {
+            callback({
+                "testResults": [
+                    {
+                        "uniqueId": "f02b5d55-bfc8-4561-a7e0-5a8dd0af0036",
+                        "testResult": {
+                            "errorMessages": [
+                                "\"welcome_block\" is absent on page",
+                                "\"welcome_block\" is absent on page",
+                                "\"greeting\" is absent on page",
+                                "\"greeting\" is absent on page",
+                                "\"greeting\" is absent on page",
+                                "\"greeting\" is absent on page",
+                                "\"greeting\" is absent on page",
+                                "\"login_button\" is absent on page",
+                                "\"login_button\" is absent on page",
+                                "\"login_button\" is absent on page",
+                                "\"login_button\" is absent on page"
+                            ],
+                            "errors": 11,
+                            "warnings": 0,
+                            "hasCrashed": false,
+                            "status": "failed",
+                            "exception": null,
+                            "externalReport": "f02b5d55-bfc8-4561-a7e0-5a8dd0af0036-1455729714622/1-specs-welcomepage.gspec-on-some-desktop-with-size-1024x768.html",
+                            "startedAt": 1455729712981,
+                            "endedAt": 1455729714670,
+                            "duration": 1689
+                        },
+                        "status": "finished",
+                        "name": "Some desktop",
+                        "size": "1024x768",
+                        "tags": [
+                            "desktop"
+                        ]
+                    }
+                ],
+                "lastTestCommand": {
+                    "specPath": "specs/welcomePage.gspec"
+                }
             });
         }
     }
