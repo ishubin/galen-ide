@@ -28,9 +28,14 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
 
     @Override
     public void execute(Device device, DeviceThread deviceThread) {
-        ((JavascriptExecutor)device.getDriver()).executeScript("var source = arguments[0]; function injectBody() {document.write(source)}; setTimeout(injectBody, 10);", originSource);
+        ((JavascriptExecutor)device.getDriver()).executeScript("var source = arguments[0]; " +
+                "function injectBody() {" +
+                "document.write(source);" +
+                "setTimeout('window.stop();', 1000);" +
+                "}; setTimeout(injectBody, 10);", originSource);
         try {
-            Thread.sleep(2000);
+            //TODO Make a better way to wait for injected source
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
