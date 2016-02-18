@@ -39,56 +39,25 @@ Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
     }
 });
 
-var Data = {
-    devices: null,
-    findDevice: function (deviceId) {
-        if (this.devices) {
-            for (var i = 0; i < this.devices.length; i++) {
-                if (this.devices[i].deviceId === deviceId) {
-                    return this.devices[i];
-                }
-            }
-        }
-        return null;
-    }
-};
 
 var App = {
-    templates: {},
-    compileTemplate: function (id) {
-        var source = $("#" + id).html();
-        return new Template(Handlebars.compile(source));
-    },
-    initTemplates: function (pages) {
-        for (var name in pages) {
-            if (pages.hasOwnProperty(name)) {
-                this.templates[name] = this.compileTemplate(pages[name]);
-            }
-        }
-    },
-    
     init: function () {
-        this.initTemplates({
-            testResults: "tpl-test-results",
-            devices: "tpl-devices"
-        });
         App.initProfilesPanel();
         App.initSettingsPanel();
-        App.initDevicesPanel();
 
         this.fileBrowser = new FileBrowser(this);
         this.fileBrowser.update();
+
+        this.devicesPanel = new DevicesPanel(this);
+        this.devicesPanel.update();
 
         this.loadProfilesModal = new LoadProfilesModal(this);
         this.saveProfilesModal = new SaveProfilesModal(this);
         this.settingsModal = new SettingsModal(this);
 
-        this.deviceModal = new DeviceModal(this);
-
         this.testResultsPanel = new TestResultsPanel(this);
         this.testResultsPanel.update();
 
-        App.updateDevices();
     },
     initProfilesPanel: function () {
         whenClick(".action-profiles-load", function () {
@@ -103,11 +72,6 @@ var App = {
             App.settingsModal.show();
         });
     },
-    initDevicesPanel: function () {
-        whenClick(".action-devices-add-new", function () {
-            App.deviceModal.show();
-        });
-    },
 
     submitNewDevice: function (device, callback) {
         API.devices.submitNew(device, function () {
@@ -115,52 +79,10 @@ var App = {
             callback();
         });
     },
-    showEditDevicePopup: function (device) {
-        var sizes = null,
-            sizeVariation = null;
-        if (device.sizeProvider.type === "custom") {
-            sizes = device.sizeProvider.sizes;
-        } else if (device.sizeProvider.type === "range") {
-            sizeVariation = device.sizeProvider.sizeVariation;
-        }
-        this.deviceModal.show({
-            deviceId: device.deviceId,
-            browserType: device.browserType,
-            name: device.name,
-            tags: device.tags,
-            sizeType: device.sizeProvider.type,
-            sizes: sizes,
-            sizeVariation: sizeVariation
-        });
-    },
     submitUpdateDevice: function (deviceId, device, callback) {
         API.devices.update(deviceId, device, function () {
-            App.updateDevices();
+            this.devicesPanel.update();
             callback();
-        });
-    },
-
-    updateDevices: function () {
-        API.devices.list(function (devices) {
-            Data.devices = devices;
-            App.showDevices(devices);
-        });
-    },
-    showDevices: function (devices) {
-        this.templates.devices.renderTo("#devices-panel", {devices: devices});
-        whenClick("#devices-panel .action-edit-device", function () {
-            var deviceId = this.attr("data-device-id");
-            var device = Data.findDevice(deviceId);
-            if (device) {
-                App.showEditDevicePopup(device);
-            }
-        });
-
-        whenClick("#devices-panel .action-delete-device", function () {
-            var deviceId = this.attr("data-device-id");
-            deleteJSON("api/devices/" + deviceId, function (data) {
-                App.updateDevices();
-            });
         });
     },
 
@@ -172,12 +94,11 @@ var App = {
 
     loadFileInEditor: function (filePath) {
         this.fileBrowser.loadFileInEditor(filePath);
-    },
-
+    }
 };
 
 
 
 $(function () {
     App.init();
-})
+});

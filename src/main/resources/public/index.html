@@ -33,6 +33,7 @@
         <script src="js/profiles-modal.js"></script>
         <script src="js/settings-modal.js"></script>
         <script src="js/device-modal.js"></script>
+        <script src="js/devices-panel.js"></script>
         <script src="js/test-results-panel.js"></script>
         <script src="js/app.js"></script>
 
@@ -64,19 +65,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <span>devices</span>
-                            <div class="panel-buttons">
-                                <button type="button" class="btn btn-default action-devices-add-new">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div id="devices-panel" class="scrollable-panel-group-a"></div>
-                        </div>
-                    </div>
+                    <div id="devices-panel" class="scrollable-panel-group-a"></div>
                 </div>
             </div>
 
@@ -87,58 +76,70 @@
 
 
 
-        <script id="tpl-devices" type="text/x-handlebars-template">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Device</th>
-                        <th>Tags</th>
-                        <th>Sizes</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each devices}}
-                    <tr class="device-status-{{status}}">
-                        <td class="layout-whitespace-nowrap"><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"/></div> {{name}}</td>
-                        <td>
-                            <ul class="device-tags">
-                                {{#each tags}}
-                                <li>
-                                    {{this}}
-                                </li>
-                                {{/each}}
-                            </ul>
-                        </td>
-                        <td class="device-sizes">
-                            {{renderDeviceSizeProvider sizeProvider}}
-                            <ul class="device-sizes">
-                                {{#each sizes}}
-                                <li>
-                                <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
-                                </li>
-                                {{/each}}
-                            </ul>
-                        </td>
-                        <td>
-                            <span class="device-status-label">{{status}}</span>
-                            {{#if lastErrorMessage}}
-                            <divl class="device-error-message">{{lastErrorMessage}}</divl>
-                            {{/if}}
-                        </td>
-                        <td class="layout-whitespace-nowrap">
-                            <button type="button" class="btn btn-sm btn-default action-edit-device" data-device-id="{{deviceId}}">
-                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger action-delete-device" data-device-id="{{deviceId}}">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+        <script id="tpl-devices-panel" type="text/x-handlebars-template">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>devices</span>
+                    <div class="panel-buttons">
+                        <button type="button" class="btn btn-default action-devices-add-new">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Device</th>
+                            <th>Tags</th>
+                            <th>Sizes</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each devices}}
+                        <tr class="device-status-{{status}}">
+                            <td class="layout-whitespace-nowrap"><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"/></div> {{name}}</td>
+                            <td>
+                                <ul class="device-tags">
+                                    {{#each tags}}
+                                    <li>
+                                        {{this}}
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </td>
+                            <td class="device-sizes">
+                                {{renderDeviceSizeProvider sizeProvider}}
+                                <ul class="device-sizes">
+                                    {{#each sizes}}
+                                    <li>
+                                        <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </td>
+                            <td>
+                                <span class="device-status-label">{{status}}</span>
+                                {{#if lastErrorMessage}}
+                                <divl class="device-error-message">{{lastErrorMessage}}</divl>
+                                {{/if}}
+                            </td>
+                            <td class="layout-whitespace-nowrap">
+                                <button type="button" class="btn btn-sm btn-default action-edit-device" data-device-id="{{deviceId}}">
+                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger action-delete-device" data-device-id="{{deviceId}}">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </script>
 
         <script id="tpl-test-results" type="text/x-handlebars-template">

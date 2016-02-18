@@ -64,6 +64,9 @@ var API = {
         },
         update: function (deviceId, device, callback) {
             putJSON("api/devices/" + deviceId, device, callback);
+        },
+        deleteDevice: function (deviceId, callback) {
+            deleteJSON("api/devices/" + deviceId, callback);
         }
     },
     settings: {
@@ -168,6 +171,10 @@ var APIMock = {
         },
         update: function (deviceId, device, callback) {
             console.log("API.devices.update", deviceId, device);
+            callback();
+        },
+        deleteDevice: function (deviceId, callback) {
+            console.log("API.devices.deleteDevice", deviceId);
             callback();
         }
     },

@@ -102,9 +102,6 @@ UIComponent.prototype.whenClick = function (elementLocator, callback) {
         return false;
     });
 };
-UIComponent.prototype.getTextfieldText = function (name) {
-    return this.$find("input[name='" + name+"']").val();
-};
 UIComponent.prototype.collectModel = function (model, callback) {
     var that = this;
     model.collectModel(this, function (data) {
