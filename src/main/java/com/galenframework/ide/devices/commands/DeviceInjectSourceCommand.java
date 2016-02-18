@@ -31,7 +31,7 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
         ((JavascriptExecutor)device.getDriver()).executeScript("var source = arguments[0]; " +
                 "function injectBody() {" +
                 "document.write(source);" +
-                "setTimeout('window.stop();', 1000);" +
+                "setTimeout('window.stop();', 10000);" +
                 "}; setTimeout(injectBody, 10);", originSource);
         try {
             //TODO Make a better way to wait for injected source
