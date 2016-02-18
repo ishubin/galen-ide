@@ -86,11 +86,11 @@ DeviceModal.prototype.$behavior = function () {
 
                     var that = this;
                     if (this.device !== null) {
-                        this.app.submitUpdateDevice(this.device.deviceId, device, function () {
+                        this.submitUpdateDevice(this.device.deviceId, device, function () {
                             that.hideModal();
                         });
                     } else {
-                        this.app.submitNewDevice(device, function () {
+                        this.submitNewDevice(device, function () {
                             that.hideModal();
                         });
                     }
@@ -106,4 +106,18 @@ DeviceModal.prototype.show = function (device) {
         this.setModel(this.model, this.device);
     }
     this.showModal();
+};
+DeviceModal.prototype.submitNewDevice = function (device, callback) {
+    var that = this;
+    API.devices.submitNew(device, function () {
+        that.app.updateDevices();
+        callback();
+    });
+};
+DeviceModal.prototype.submitUpdateDevice = function (deviceId, device, callback) {
+    var that = this;
+    API.devices.update(deviceId, device, function () {
+        that.app.updateDevices();
+        callback();
+    });
 };

@@ -42,9 +42,6 @@ Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
 
 var App = {
     init: function () {
-        App.initProfilesPanel();
-        App.initSettingsPanel();
-
         this.fileBrowser = new FileBrowser(this);
         this.fileBrowser.update();
 
@@ -58,33 +55,17 @@ var App = {
         this.testResultsPanel = new TestResultsPanel(this);
         this.testResultsPanel.update();
 
-    },
-    initProfilesPanel: function () {
         whenClick(".action-profiles-load", function () {
             App.loadProfilesModal.show();
         });
         whenClick(".action-profiles-save", function () {
             App.saveProfilesModal.show();
         });
-    },
-    initSettingsPanel: function () {
         whenClick(".action-settings-panel", function () {
             App.settingsModal.show();
         });
     },
 
-    submitNewDevice: function (device, callback) {
-        API.devices.submitNew(device, function () {
-            App.updateDevices();
-            callback();
-        });
-    },
-    submitUpdateDevice: function (deviceId, device, callback) {
-        API.devices.update(deviceId, device, function () {
-            this.devicesPanel.update();
-            callback();
-        });
-    },
 
     runTest: function (specPath) {
         postJSON("api/tester/test", {specPath: specPath}, function (result) {
@@ -94,6 +75,9 @@ var App = {
 
     loadFileInEditor: function (filePath) {
         this.fileBrowser.loadFileInEditor(filePath);
+    },
+    updateDevices: function () {
+        this.devicesPanel.update();
     }
 };
 
