@@ -35,90 +35,6 @@ function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
 
-function FormHandler(locator) {
-    this.$form = $(locator);
-}
-FormHandler.prototype.showModal = function () {
-    this.$form.modal("show");
-};
-FormHandler.prototype.hideModal = function () {
-    this.$form.modal("hide");
-};
-FormHandler.prototype.setCheck = function (name, isChecked) {
-    if (isChecked) {
-        this.check(name);
-    } else {
-        this.uncheck(name);
-    }
-};
-FormHandler.prototype.check = function (name) {
-    this.$form.find("input[name='" + name + "']").prop("checked", true);
-};
-FormHandler.prototype.uncheck = function (name) {
-    this.$form.find("input[name='" + name + "']").prop("checked", false);
-};
-FormHandler.prototype.select = function (name) {
-    return this.$form.find("select[name='" + name +"']").val();
-};
-FormHandler.prototype.mandatorySelect = function (name, readableName) {
-    var value = this.$form.find("select[name='" + name +"']").val();
-    if (isBlank(value)) {
-        throw new Error(readableName + " should not be empty");
-    }
-    return value;
-};
-FormHandler.prototype.mandatoryTextfield = function (name, readableName) {
-    var value = this.textfield(name);
-    if (isBlank(value)) {
-        throw new Error(readableName + " should not be empty");
-    }
-    return value;
-};
-FormHandler.prototype.textfield = function (name) {
-    return this.get(name);
-};
-FormHandler.prototype.isChecked = function(name) {
-    return this.$form.find("input[name='" + name +"']").is(":checked");
-};
-FormHandler.prototype.radio = function (name) {
-    return this.$form.find("input:radio[name='size-type']:checked").val();
-};
-FormHandler.prototype.disable = function (name) {
-    return this.$form.find("*[name='" + name +"']").prop("disabled", true);
-};
-FormHandler.prototype.enable = function (name) {
-    return this.$form.find("*[name='" + name +"']").prop("disabled", false);
-};
-FormHandler.prototype.set = function (name, value) {
-    this.$form.find("input[name='" + name +"']").val(value);
-};
-FormHandler.prototype.get = function (name) {
-    return this.$form.find("input[name='" + name +"']").val();
-};
-FormHandler.prototype.showSubPanel = function (groupLocator, dataType) {
-    this.$form.find(groupLocator).each(function () {
-        var $this = $(this);
-        if ($this.attr("data-type") === dataType) {
-            $this.show();
-        } else {
-            $this.hide();
-        }
-    });
-};
-FormHandler.prototype.selectBootstrapRadioGroup = function (containerLocator, value) {
-    var $container = this.$form.find(containerLocator);
-    $container.find("input:radio").each(function () {
-        var $this = $(this);
-        if ($this.val() === value) {
-            $this.prop("checked", true);
-            $this.parent().addClass("active");
-        } else {
-            $this.prop("checked", false);
-            $this.parent().removeClass("active");
-        }
-    });
-};
-
 
 function toCommaSeparated(elements) {
     var text = "";
@@ -153,6 +69,31 @@ function sizeToText(size) {
     return size.width + "x" + size.height;
 }
 
+Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
+    if (sizeProvider.type === "unsupported") {
+        return new Handlebars.SafeString("<i>unsupported</i>")
+
+    } else if (sizeProvider.type === "custom") {
+        var html = '<ul>';
+        for (var i = 0; i < sizeProvider.sizes.length; i++) {
+            html += '<li>';
+            html += '<code>' + sizeProvider.sizes[i].width + '<span class="size-splitter">x</span>'
+                + sizeProvider.sizes[i].height + '</code>';
+            html += '</li>';
+        }
+        html += '</ul>';
+        return new Handlebars.SafeString(html);
+
+    } else if (sizeProvider.type === "range") {
+        html = '<div class="layout-whitespace-nowrap"><code>' + sizeProvider.sizeVariation.iterations + "</code> x ( ";
+        html += '<code>' + sizeProvider.sizeVariation.start.width + '<span class="size-splitter">x</span>'
+            + sizeProvider.sizeVariation.start.height + '</code>';
+        html += ' until <code>' + sizeProvider.sizeVariation.end.width + '</span><span class="size-splitter">x</span>'
+            + sizeProvider.sizeVariation.end.height + '</code> )';
+        html += '</div>';
+        return new Handlebars.SafeString(html);
+    }
+});
 
 Handlebars.registerHelper("formatDurationHumanReadable", function (durationInMillis) {
     var durationInSeconds = Math.floor(durationInMillis / 1000);

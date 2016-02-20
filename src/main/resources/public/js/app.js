@@ -13,32 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-Handlebars.registerHelper("renderDeviceSizeProvider", function (sizeProvider) {
-    if (sizeProvider.type === "unsupported") {
-        return new Handlebars.SafeString("<i>unsupported</i>")
-
-    } else if (sizeProvider.type === "custom") {
-        var html = '<ul>';
-        for (var i = 0; i < sizeProvider.sizes.length; i++) {
-            html += '<li>';
-            html += '<code>' + sizeProvider.sizes[i].width + '<span class="size-splitter">x</span>'
-                + sizeProvider.sizes[i].height + '</code>';
-            html += '</li>';
-        }
-        html += '</ul>';
-        return new Handlebars.SafeString(html);
-
-    } else if (sizeProvider.type === "range") {
-        html = '<div class="layout-whitespace-nowrap"><code>' + sizeProvider.sizeVariation.iterations + "</code> x ( ";
-        html += '<code>' + sizeProvider.sizeVariation.start.width + '<span class="size-splitter">x</span>'
-            + sizeProvider.sizeVariation.start.height + '</code>';
-        html += ' until <code>' + sizeProvider.sizeVariation.end.width + '</span><span class="size-splitter">x</span>'
-            + sizeProvider.sizeVariation.end.height + '</code> )';
-        html += '</div>';
-        return new Handlebars.SafeString(html);
-    }
-});
-
 
 var App = {
     init: function () {
