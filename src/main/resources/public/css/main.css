@@ -23,8 +23,9 @@ nav a.navbar-brand {
     position: relative;
 }
 
-#content {
-    margin: 5px;
+.container {
+    width: auto;
+    padding-top: 5px;
 }
 
 .panel-heading {

@@ -54,23 +54,20 @@
 
         <div id="global-modal"></div>
 
-        <div id="content">
+        <div id="content" class="container">
             <div class="row">
-                <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">specs</div>
-                        <div class="panel-body">
-                            <div id="file-browser" class="scrollable-panel-group-a"></div>
-                        </div>
-                    </div>
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
+                    <div id="file-browser"></div>
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                    <div id="devices-panel" class="scrollable-panel-group-a"></div>
+                <div class="col-md-8 col-lg-8 col-sm-8 col-xs-12">
+                    <div id="devices-panel"></div>
                 </div>
             </div>
-
-            <div id="test-results"></div>
-
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="test-results"></div>
+                </div>
+            </div>
         </div>
 
 
@@ -87,57 +84,59 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Device</th>
-                            <th>Tags</th>
-                            <th>Sizes</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each devices}}
-                        <tr class="device-status-{{status}}">
-                            <td class="layout-whitespace-nowrap"><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"/></div> {{name}}</td>
-                            <td>
-                                <ul class="device-tags">
-                                    {{#each tags}}
-                                    <li>
-                                        {{this}}
-                                    </li>
-                                    {{/each}}
-                                </ul>
-                            </td>
-                            <td class="device-sizes">
-                                {{renderDeviceSizeProvider sizeProvider}}
-                                <ul class="device-sizes">
-                                    {{#each sizes}}
-                                    <li>
-                                        <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
-                                    </li>
-                                    {{/each}}
-                                </ul>
-                            </td>
-                            <td>
-                                <span class="device-status-label">{{status}}</span>
-                                {{#if lastErrorMessage}}
-                                <divl class="device-error-message">{{lastErrorMessage}}</divl>
-                                {{/if}}
-                            </td>
-                            <td class="layout-whitespace-nowrap">
-                                <button type="button" class="btn btn-sm btn-default action-edit-device" data-device-id="{{deviceId}}">
-                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger action-delete-device" data-device-id="{{deviceId}}">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
+                    <div class="scrollable-panel-group-a">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Device</th>
+                                <th>Tags</th>
+                                <th>Sizes</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each devices}}
+                            <tr class="device-status-{{status}}">
+                                <td class="layout-whitespace-nowrap"><div class="device-icon device-icon-{{icon}}"><img src="/images/icon-{{icon}}.png"/></div> {{name}}</td>
+                                <td>
+                                    <ul class="device-tags">
+                                        {{#each tags}}
+                                        <li>
+                                            {{this}}
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                </td>
+                                <td class="device-sizes">
+                                    {{renderDeviceSizeProvider sizeProvider}}
+                                    <ul class="device-sizes">
+                                        {{#each sizes}}
+                                        <li>
+                                            <span class="size-value">{{width}}</span><span class="size-splitter">x</span><span class="size-value">{{height}}</span>
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <span class="device-status-label">{{status}}</span>
+                                    {{#if lastErrorMessage}}
+                                    <divl class="device-error-message">{{lastErrorMessage}}</divl>
+                                    {{/if}}
+                                </td>
+                                <td class="layout-whitespace-nowrap">
+                                    <button type="button" class="btn btn-sm btn-default action-edit-device" data-device-id="{{deviceId}}">
+                                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger action-delete-device" data-device-id="{{deviceId}}">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </script>
@@ -234,40 +233,48 @@
 
 
         <script id="tpl-file-browser" type="text/x-handlebars-template">
-            <table class="table table-striped file-browser">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each items}}
-                        <tr>
-                            <td>
-                                {{#if directory}}
+            <div class="panel panel-default">
+                <div class="panel-heading">specs</div>
+                <div class="panel-body">
+                    <div class="scrollable-panel-group-a">
+                        <table class="table table-striped file-browser">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each items}}
+                            <tr>
+                                <td>
+                                    {{#if directory}}
                                     <a class="link-with-icon directory-item" data-file-path="{{path}}" href="#">
                                         <span class="link-icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                                         <span class="link-text">{{name}}</span>
                                     </a>
-                                {{else}}
+                                    {{else}}
                                     <a class="link-with-icon file-item" data-file-path="{{path}}" href="#">
                                         <span class="link-icon glyphicon glyphicon-file" aria-hidden="true"></span>
                                         <span class="link-text">{{name}}</span>
                                     </a>
-                                {{/if}}
-                            </td>
-                            <td class="text-right">
-                                {{#if executable}}
+                                    {{/if}}
+                                </td>
+                                <td class="text-right">
+                                    {{#if executable}}
                                     <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-file-name="{{name}}" data-file-path="{{path}}">
                                         Test
                                     </button>
-                                {{/if}}
-                            </td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+                                    {{/if}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
         </script>
 
         <script id="tpl-file-editor" type="text/x-handlebars-template">
