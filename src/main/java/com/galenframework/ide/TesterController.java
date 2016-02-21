@@ -32,8 +32,6 @@ public class TesterController {
 
     ObjectMapper mapper = new ObjectMapper();
 
-
-
     public TesterController(String reportStoragePath) {
         this.reportStoragePath = reportStoragePath;
         this.deviceContainer = new DeviceContainer();
@@ -44,6 +42,19 @@ public class TesterController {
     }
 
     private void initRoutes() {
+        get("/api/dom/:domId", (req, res) -> {
+            res.header("Content-Type", "text/html");
+            String domId = req.params("domId");
+            if (domId != null && !domId.trim().isEmpty()) {
+                DomSnapshot domSnapshot = testerService.getDomSnapshots().get(domId);
+                if (domSnapshot != null) {
+                    return domSnapshot.getOriginSource();
+                } else {
+                    return "Can't find DOM snapshot for key: " + domId;
+                }
+            } else throw new RuntimeException("Incorrect request, missing domId");
+        });
+
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
             testerService.runtTest(testCommand);

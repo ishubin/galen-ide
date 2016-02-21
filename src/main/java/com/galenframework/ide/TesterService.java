@@ -31,6 +31,8 @@ public class TesterService {
     private final String reportStoragePath;
     private TestCommand lastTestCommand;
 
+    private Map<String, DomSnapshot> domSnapshots = new HashMap<>();
+
     public TesterService(DeviceContainer deviceContainer, String reportStoragePath) {
         this.deviceContainer = deviceContainer;
         this.reportStoragePath = reportStoragePath;
@@ -40,16 +42,20 @@ public class TesterService {
         String originSource = deviceContainer.getMasterDriver().getPageSource();
         String url = deviceContainer.getMasterDriver().getCurrentUrl();
 
+        String uniqueDomId = UUID.randomUUID().toString();
+        domSnapshots.put(uniqueDomId, new DomSnapshot(originSource));
+
         deviceContainer.getDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
+        //deviceContainer.getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom/" + uniqueDomId));
     }
 
     public void testAllBrowsers(String spec, String reportStoragePath) {
         deviceContainer.clearAllTestResults();
         deviceContainer.getDeviceThreads().forEach(dt ->
-            dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                TestResultContainer testResultContainer = deviceContainer.registerNewTestResultContainer(dt, size);
-                dt.checkLayout(deviceContainer.getSettings(), testResultContainer.getUniqueId(), size, spec, deviceContainer, reportStoragePath);
-            })
+                        dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
+                            TestResultContainer testResultContainer = deviceContainer.registerNewTestResultContainer(dt, size);
+                            dt.checkLayout(deviceContainer.getSettings(), testResultContainer.getUniqueId(), size, spec, deviceContainer, reportStoragePath);
+                        })
         );
     }
 
@@ -129,5 +135,9 @@ public class TesterService {
 
     public TestCommand getLastTestCommand() {
         return lastTestCommand;
+    }
+
+    public Map<String, DomSnapshot> getDomSnapshots() {
+        return domSnapshots;
     }
 }
