@@ -19,6 +19,11 @@
         <![endif]-->
         <script src="js/handlebars-v4.0.5.js"></script>
         <script src="js/galen-highlight-v2.js"></script>
+        <script src="js/codemirror.js"></script>
+        <script src="js/modes/javascript.js"></script>
+        <script src="js/modes/galenspecs.js"></script>
+        <link rel="stylesheet" href="css/codemirror.css">
+        <link rel="stylesheet" href="css/theme/ambiance.css">
     </head>
     </head>
     <body>
@@ -149,7 +154,7 @@
                         {{#if lastTestCommand}}
                             {{#with lastTestCommand}}
                                 <div class="last-test-command">
-                                    <button type="button" class="btn btn-sm btn-primary action-rerun-test" data-file-path="{{specPath}}">
+                                    <button type="button" class="btn btn-sm btn-success action-rerun-test" data-file-path="{{specPath}}">
                                         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                     </button>
                                     <a class="file-item" data-file-path="{{specPath}}" href="#">{{specPath}}</a>
@@ -260,7 +265,7 @@
                                 </td>
                                 <td class="text-right">
                                     {{#if executable}}
-                                    <button type="button" class="btn btn-sm btn-primary action-launch-spec" data-file-name="{{name}}" data-file-path="{{path}}">
+                                    <button type="button" class="btn btn-sm btn-success action-launch-spec" data-file-name="{{name}}" data-file-path="{{path}}">
                                         Test
                                     </button>
                                     {{/if}}
@@ -276,7 +281,7 @@
         </script>
 
         <script id="tpl-file-editor" type="text/x-handlebars-template">
-            <div class="modal fade file-editor" tabindex="-1" role="dialog">
+            <div class="modal file-editor" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         {{#with fileItem}}
@@ -285,12 +290,13 @@
                                 <h4 class="modal-title">{{name}}</h4>
                             </div>
                             <div class="modal-body">
-                                <pre class="code code-gspec"><code>{{asHtml content}}</code></pre>
+                                <textarea id="file-editor-textarea" class="code-editor">{{content}}</textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary action-file-editor-save-changes" disabled="disabled">Save</button>
                                 {{#if executable}}
-                                    <button type="button" class="btn btn-primary action-file-editor-run-test" data-dismiss="modal">Run Test</button>
+                                    <button type="button" class="btn btn-success action-file-editor-run-test" data-dismiss="modal">Run Test</button>
                                 {{/if}}
                             </div>
                         {{/with}}

@@ -21,7 +21,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileContent extends FileItem {
-    private final String content;
+    private String content;
+
+    public FileContent() {
+    }
 
     public FileContent(String name, String path, String content) {
         this.setName(name);

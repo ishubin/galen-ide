@@ -15,7 +15,11 @@
 ******************************************************************************/
 package com.galenframework.ide;
 
+
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,5 +73,14 @@ public class FileBrowserService {
 
     public FileContent showFileContent(String path) {
         return FileContent.fromFile(path);
+    }
+
+    public void saveFile(String path, FileContent fileContent) throws IOException {
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.isFile()) {
+                FileUtils.writeStringToFile(file, fileContent.getContent());
+            } else throw new RuntimeException("Not a file: " + path);
+        } else throw new RuntimeException("File doesn't exist: " + path);
     }
 }

@@ -14,12 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 function getJSON(resource, callback) {
-    console.log("get  " + resource);
     $.getJSON(resource, callback);
 }
 
 function postJSON(resource, jsonObject, callback) {
-    console.log("post  " + resource, jsonObject);
     sendJSON(resource, "post", jsonObject, callback);
 }
 function putJSON(resource, jsonObject, callback) {
@@ -96,6 +94,9 @@ var API = {
         },
         getFile: function (path, callback) {
             getJSON("/api/file-content/" + path, callback);
+        },
+        saveFile: function (path, fileItem, callback) {
+            putJSON("/api/file-content/" + path, fileItem, callback);
         }
     },
     results: {
@@ -261,6 +262,10 @@ var APIMock = {
                 "executable": true,
                 "content": "@import common.gspec\n\n@objects\n    caption                 #content h2\n    title_textfield         input[name='note.title']\n    description_textfield   textarea\n    add_button              button.btn-primary\n    cancel_button           button.btn-default\n\n\n@groups\n    (add_note_form_element, add_note_form_elements)     caption, title_textfield, description_textfield\n    (add_note_form_button, add_note_form_buttons)       add_button, cancel_button\n    (add_note_element, add_note_elements)               &add_note_form_elements, &add_note_form_buttons\n\n\n@set\n    add_note_elements_vertical_margin   5 to 20px\n    description_height                  150 to 350px\n\n\n= Add note page =\n    | caption is at the top inside content with ${content_vertical_margin} margin\n\n    | every &add_note_element is more or less readable\n    | every &add_note_form_element stretches to content with ${content_horizontal_margin} margin\n    | every &add_note_form_button is tapable\n\n    @on desktop, tablet\n        | &add_note_form_elements are aligned vertically above each other with ${add_note_elements_vertical_margin} margin\n        | last &add_note_form_element is above add_button ${add_note_elements_vertical_margin}\n        | &add_note_form_buttons are aligned horizontally next to each other with 0 to 5px margin\n    @on mobile\n        | &add_note_elements are aligned vertically above each other with ${add_note_elements_vertical_margin} margin\n\n    title_textfield:\n        height ${form_textfield_height}\n    \n    description_textfield:\n        height ${description_height}\n"
             });
+        },
+        saveFile: function (path, fileItem, callback) {
+            console.log("Save file", path, fileItem);
+            callback();
         }
     },
     results: {

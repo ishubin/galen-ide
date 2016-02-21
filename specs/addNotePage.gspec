@@ -1,5 +1,5 @@
 @import common.gspec
-
+# this is changed from file editor
 @objects
     caption                 #content h2
     title_textfield         input[name='note.title']
