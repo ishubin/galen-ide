@@ -50,15 +50,18 @@ var $UIComponent = {
 
 function UIComponent(locator, templateLocator) {
     this._locator = locator;
-    this._templateLocator = templateLocator;
+    this._templateLocator = templateLocator || null;
+    this._tpl = null;
     this.compile();
 }
 
 UIComponent.prototype._tpl = null;
 
 UIComponent.prototype.compile = function () {
-    var source = $(this._templateLocator).html();
-    this._tpl = new Template(Handlebars.compile(source));
+    if (this._templateLocator !== null) {
+        var source = $(this._templateLocator).html();
+        this._tpl = new Template(Handlebars.compile(source));
+    }
 };
 
 UIComponent.prototype.$self = function () {
@@ -68,7 +71,9 @@ UIComponent.prototype.$find = function (childLocator) {
     return this.$self().find(childLocator);
 };
 UIComponent.prototype.render = function (data) {
-    this._tpl.renderTo(this._locator, data);
+    if (this._tpl !== null) {
+        this._tpl.renderTo(this._locator, data);
+    }
     this.reassignBehavior(this.$behavior());
 };
 UIComponent.prototype.$behavior = function () {

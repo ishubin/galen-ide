@@ -14,49 +14,55 @@
  * limitations under the License.
  ******************************************************************************/
 
-var App = {
-    init: function () {
-        this.fileBrowser = new FileBrowser(this);
-        this.fileBrowser.update();
+function App() {
+    App._super(this, "body");
+    this.fileBrowser = new FileBrowser(this);
+    this.devicesPanel = new DevicesPanel(this);
+    this.loadProfilesModal = new LoadProfilesModal(this);
+    this.saveProfilesModal = new SaveProfilesModal(this);
+    this.settingsModal = new SettingsModal(this);
+    this.testResultsPanel = new TestResultsPanel(this);
 
-        this.devicesPanel = new DevicesPanel(this);
-        this.devicesPanel.update();
-
-        this.loadProfilesModal = new LoadProfilesModal(this);
-        this.saveProfilesModal = new SaveProfilesModal(this);
-        this.settingsModal = new SettingsModal(this);
-
-        this.testResultsPanel = new TestResultsPanel(this);
-        this.testResultsPanel.update();
-
-        whenClick(".action-profiles-load", function () {
-            App.loadProfilesModal.show();
-        });
-        whenClick(".action-profiles-save", function () {
-            App.saveProfilesModal.show();
-        });
-        whenClick(".action-settings-panel", function () {
-            App.settingsModal.show();
-        });
-    },
-
-
-    runTest: function (specPath) {
-        postJSON("api/tester/test", {specPath: specPath}, function (result) {
-            App.testResultsPanel.waitForTestResults();
-        });
-    },
-
-    loadFileInEditor: function (filePath) {
-        this.fileBrowser.loadFileInEditor(filePath);
-    },
-    updateDevices: function () {
-        this.devicesPanel.update();
-    }
+    this.render();
+    this.init();
+}
+extend(App, UIComponent);
+App.prototype.$behavior = function () {
+    return {
+        click: {
+            ".action-profiles-load": function () {
+                this.loadProfilesModal.show();
+            },
+            ".action-profiles-save": function () {
+                this.saveProfilesModal.show();
+            },
+            ".action-settings-panel": function () {
+                this.settingsModal.show();
+            }
+        }
+    };
+};
+App.prototype.init = function () {
+    this.fileBrowser.update();
+    this.devicesPanel.update();
+    this.testResultsPanel.update();
+};
+App.prototype.runTest = function (specPath) {
+    var that = this;
+    postJSON("api/tester/test", {specPath: specPath}, function (result) {
+        that.testResultsPanel.waitForTestResults();
+    });
+};
+App.prototype.loadFileInEditor = function (filePath) {
+    this.fileBrowser.loadFileInEditor(filePath);
+};
+App.prototype.updateDevices = function () {
+    this.devicesPanel.update();
 };
 
 
+var app = null;
 
 $(function () {
-    App.init();
+    app = new App();
 });
