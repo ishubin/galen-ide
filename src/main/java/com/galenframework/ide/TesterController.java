@@ -17,6 +17,9 @@ package com.galenframework.ide;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.devices.DeviceContainer;
+import com.galenframework.ide.filebrowser.FileBrowserService;
+import com.galenframework.ide.filebrowser.FileBrowserServiceImpl;
+import com.galenframework.ide.filebrowser.FileContent;
 
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -24,19 +27,17 @@ import static spark.Spark.*;
 
 public class TesterController {
     private static final String APPLICATION_JSON = "application/json";
-    private final String reportStoragePath;
     private DeviceContainer deviceContainer;
     private TesterService testerService;
-    private FileBrowserService fileBrowserService;
+    private FileBrowserService fileBrowserService = new FileBrowserServiceImpl();
     private ProfilesService profilesService;
 
     ObjectMapper mapper = new ObjectMapper();
 
     public TesterController(String reportStoragePath) {
-        this.reportStoragePath = reportStoragePath;
         this.deviceContainer = new DeviceContainer();
         this.testerService  = new TesterService(deviceContainer, reportStoragePath);
-        this.fileBrowserService = new FileBrowserService();
+        this.fileBrowserService = new FileBrowserServiceImpl();
         this.profilesService = new ProfilesService(deviceContainer, testerService);
         initRoutes();
     }

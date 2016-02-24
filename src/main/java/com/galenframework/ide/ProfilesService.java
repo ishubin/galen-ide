@@ -16,8 +16,8 @@
 package com.galenframework.ide;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceContainer;
+import com.galenframework.ide.filebrowser.FileItem;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

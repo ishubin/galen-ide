@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.filebrowser;
 
 
 import org.apache.commons.io.FileUtils;
@@ -25,8 +25,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class FileBrowserService {
+public class FileBrowserServiceImpl  implements FileBrowserService {
 
+    @Override
     public List<FileItem> getFilesInPath(String path) {
         if (path.isEmpty()) {
             path = ".";
@@ -42,8 +43,23 @@ public class FileBrowserService {
                 fileItems.add(FileItem.createFrom(file));
             }
         }
-        Collections.sort(fileItems, FileBrowserService::sortOrderForFileItems);
+        Collections.sort(fileItems, FileBrowserServiceImpl::sortOrderForFileItems);
         return fileItems;
+    }
+
+    @Override
+    public FileContent showFileContent(String path) {
+        return FileContent.fromFile(path);
+    }
+
+    @Override
+    public void saveFile(String path, FileContent fileContent) throws IOException {
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.isFile()) {
+                FileUtils.writeStringToFile(file, fileContent.getContent());
+            } else throw new RuntimeException("Not a file: " + path);
+        } else throw new RuntimeException("File doesn't exist: " + path);
     }
 
     private static int sortOrderForFileItems(FileItem left, FileItem right) {
@@ -71,16 +87,4 @@ public class FileBrowserService {
 
     }
 
-    public FileContent showFileContent(String path) {
-        return FileContent.fromFile(path);
-    }
-
-    public void saveFile(String path, FileContent fileContent) throws IOException {
-        File file = new File(path);
-        if (file.exists()) {
-            if (file.isFile()) {
-                FileUtils.writeStringToFile(file, fileContent.getContent());
-            } else throw new RuntimeException("Not a file: " + path);
-        } else throw new RuntimeException("File doesn't exist: " + path);
-    }
 }
