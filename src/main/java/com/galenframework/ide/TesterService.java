@@ -43,10 +43,15 @@ public class TesterService {
         String url = deviceContainer.getMasterDriver().getCurrentUrl();
 
         String uniqueDomId = UUID.randomUUID().toString();
-        domSnapshots.put(uniqueDomId, new DomSnapshot(originSource));
+        try {
+            domSnapshots.put(uniqueDomId, DomSnapshot.createSnapshotAndReplaceUrls(originSource, url));
+        } catch (Exception ex) {
+            throw new RuntimeException("Couldn't parse url: " + url, ex);
+        }
+        deviceContainer.getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom/" + uniqueDomId));
 
-        deviceContainer.getDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
-        //deviceContainer.getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom/" + uniqueDomId));
+
+        //deviceContainer.getDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
     }
 
     public void testAllBrowsers(String spec, String reportStoragePath) {
