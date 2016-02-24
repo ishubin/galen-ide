@@ -20,6 +20,7 @@ import java.io.File;
 public class Settings {
     private boolean makeScreenshots = true;
     private String homeDirectory = System.getProperty("user.home") + File.separator + ".galen";
+    private String domSyncMethod;
     private String chromeDriverBinPath;
     private String safariDriverBinPath;
     private String phantomjsDriverBinPath;
@@ -81,5 +82,13 @@ public class Settings {
 
     public void setIeDriverBinPath(String ieDriverBinPath) {
         this.ieDriverBinPath = ieDriverBinPath;
+    }
+
+    public String getDomSyncMethod() {
+        return domSyncMethod;
+    }
+
+    public void setDomSyncMethod(String domSyncMethod) {
+        this.domSyncMethod = domSyncMethod;
     }
 }

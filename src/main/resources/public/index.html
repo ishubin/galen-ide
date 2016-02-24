@@ -398,6 +398,23 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="text-left">
+                                            <span class="text-left">
+                                                <h5>DOM Sync Method</h5>
+                                                <p>Choose the way it will sync the DOM in all browsers.
+                                                    Different websites might have to use different sync methods</p>
+                                                <select class="form-control" name="domSyncMethod">
+                                                    <option value="proxy">Proxy (default)</option>
+                                                    <option value="inject">JS Injection</option>
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-section">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="text-left">
                                             <h5>Chrome driver</h5>
                                             {{formTextfield 'chromeDriverBinPath'  'Type a path to chrome driver bin'}}
                                         </div>

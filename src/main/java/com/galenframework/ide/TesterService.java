@@ -42,6 +42,16 @@ public class TesterService {
         String originSource = deviceContainer.getMasterDriver().getPageSource();
         String url = deviceContainer.getMasterDriver().getCurrentUrl();
 
+        String domSyncMethod = getSettings().getDomSyncMethod();
+
+        if ("inject".equals(domSyncMethod)) {
+            syncAllBrowsersUsingInjection(originSource, url);
+        } else {
+            syncAllBrowsersUsingProxy(originSource, url);
+        }
+    }
+
+    private void syncAllBrowsersUsingProxy(String originSource, String url) {
         String uniqueDomId = UUID.randomUUID().toString();
         try {
             domSnapshots.put(uniqueDomId, DomSnapshot.createSnapshotAndReplaceUrls(originSource, url));
@@ -49,9 +59,14 @@ public class TesterService {
             throw new RuntimeException("Couldn't parse url: " + url, ex);
         }
         deviceContainer.getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom/" + uniqueDomId));
+    }
 
+    private void syncAllBrowsersUsingInjection(String originSource, String url) {
+        deviceContainer.getDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
+    }
 
-        //deviceContainer.getDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
+    private Settings getSettings() {
+        return deviceContainer.getSettings();
     }
 
     public void testAllBrowsers(String spec, String reportStoragePath) {

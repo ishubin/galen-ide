@@ -3,6 +3,7 @@ function SettingsModal(app) {
     this.model = new Model({
         makeScreenshots: Model.checkbox(),
         homeDirectory: Model.text(),
+        domSyncMethod: Model.select(),
         chromeDriverBinPath: Model.text(),
         safariDriverBinPath: Model.text(),
         edgeDriverBinPath: Model.text(),
