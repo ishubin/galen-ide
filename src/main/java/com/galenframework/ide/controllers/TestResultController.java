@@ -1,5 +1,6 @@
 package com.galenframework.ide.controllers;
 
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.results.TestResultService;
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -16,7 +17,7 @@ public class TestResultController {
     private void initRoutes() {
         get("/api/results", (request, response) -> {
             response.header("Content-Type", APPLICATION_JSON);
-            return testResultService.getTestResultsOverview();
+            return testResultService.getTestResultsOverview(new RequestData(request));
         }, toJson());
     }
 }

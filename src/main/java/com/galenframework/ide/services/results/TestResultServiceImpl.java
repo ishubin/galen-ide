@@ -3,6 +3,7 @@ package com.galenframework.ide.services.results;
 import com.galenframework.ide.TestResultContainer;
 import com.galenframework.ide.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.tester.TesterService;
 import org.openqa.selenium.Dimension;
@@ -27,13 +28,13 @@ public class TestResultServiceImpl implements TestResultService{
     }
 
     @Override
-    public List<TestResultContainer> getTestResults() {
+    public List<TestResultContainer> getTestResults(RequestData requestData) {
         return testResults;
     }
 
     @Override
-    public TestResultsOverview getTestResultsOverview() {
-        return new TestResultsOverview(testResults, serviceProvider.testerService().getLastTestCommand());
+    public TestResultsOverview getTestResultsOverview(RequestData requestData) {
+        return new TestResultsOverview(testResults, serviceProvider.testerService().getLastTestCommand(requestData));
     }
 
     @Override
@@ -46,12 +47,12 @@ public class TestResultServiceImpl implements TestResultService{
     }
 
     @Override
-    public void clearAllTestResults() {
+    public void clearAllTestResults(RequestData requestData) {
         this.testResults.clear();
     }
 
     @Override
-    public String registerNewTestResultContainer(String deviceName, List<String> tags, Dimension size) {
+    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags, Dimension size) {
         TestResultContainer testResultContainer = new TestResultContainer(deviceName, tags, size);
         testResults.add(testResultContainer);
         return testResultContainer.getUniqueId();

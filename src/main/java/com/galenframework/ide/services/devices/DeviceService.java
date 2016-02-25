@@ -17,23 +17,24 @@ package com.galenframework.ide.services.devices;
 
 import com.galenframework.ide.DeviceRequest;
 import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 
 import java.util.List;
 
 public interface DeviceService extends  Service {
 
-    void createDevice(DeviceRequest createDeviceRequest);
+    void createDevice(RequestData requestData, DeviceRequest createDeviceRequest);
 
-    List<Device> getAllDevices();
+    List<Device> getAllDevices(RequestData requestData);
 
-    void syncAllBrowsers();
+    void syncAllBrowsers(RequestData requestData);
 
-    void testAllBrowsers(String spec, String reportStoragePath);
+    void testAllBrowsers(RequestData requestData, String spec, String reportStoragePath);
 
-    void shutdownDevice(String deviceId);
+    void shutdownDevice(RequestData requestData, String deviceId);
 
-    void changeDevice(String deviceId, DeviceRequest deviceRequest);
+    void changeDevice(RequestData requestData, String deviceId, DeviceRequest deviceRequest);
 
-    void shutdownAllDevices();
+    void shutdownAllDevices(RequestData requestData);
 }

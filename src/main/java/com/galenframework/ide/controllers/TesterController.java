@@ -13,9 +13,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galenframework.ide.TestCommand;
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.tester.TesterService;
 
 import static spark.Spark.*;
@@ -34,7 +36,7 @@ public class TesterController {
     private void initRoutes() {
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
-            testerService.runtTest(testCommand);
+            testerService.runtTest(new RequestData(request), testCommand);
             return "Started testing: " + testCommand.getSpecPath();
         });
     }

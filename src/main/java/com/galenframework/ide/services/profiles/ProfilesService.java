@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services.profiles;
 
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 import com.galenframework.ide.services.filebrowser.FileItem;
 
@@ -22,9 +23,9 @@ import java.util.List;
 
 public interface ProfilesService extends Service {
 
-    List<FileItem> getProfiles();
+    List<FileItem> getProfiles(RequestData requestData);
 
-    void saveProfile(String name);
+    void saveProfile(RequestData requestData, String name);
 
-    void loadProfile(String path);
+    void loadProfile(RequestData requestData, String path);
 }

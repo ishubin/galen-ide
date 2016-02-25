@@ -1,6 +1,7 @@
 package com.galenframework.ide.services.settings;
 
 import com.galenframework.ide.Settings;
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 
 public class SettingsServiceImpl implements SettingsService {
@@ -13,12 +14,12 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public Settings getSettings() {
+    public Settings getSettings(RequestData requestData) {
         return settings;
     }
 
     @Override
-    public void changeSettings(Settings settings) {
+    public void changeSettings(RequestData requestData, Settings settings) {
         if (settings == null) {
             throw new IllegalArgumentException("Settings should not be null");
         }

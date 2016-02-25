@@ -16,6 +16,7 @@
 package com.galenframework.ide.services.tester;
 
 import com.galenframework.ide.*;
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 
 public class TesterServiceImpl implements TesterService {
@@ -30,14 +31,14 @@ public class TesterServiceImpl implements TesterService {
     }
 
     @Override
-    public void runtTest(TestCommand testCommand) {
+    public void runtTest(RequestData requestData, TestCommand testCommand) {
         this.lastTestCommand = testCommand;
-        serviceProvider.deviceService().syncAllBrowsers();
-        serviceProvider.deviceService().testAllBrowsers(testCommand.getSpecPath(), reportStoragePath);
+        serviceProvider.deviceService().syncAllBrowsers(requestData);
+        serviceProvider.deviceService().testAllBrowsers(requestData, testCommand.getSpecPath(), reportStoragePath);
     }
 
     @Override
-    public TestCommand getLastTestCommand() {
+    public TestCommand getLastTestCommand(RequestData requestData) {
         return lastTestCommand;
     }
 

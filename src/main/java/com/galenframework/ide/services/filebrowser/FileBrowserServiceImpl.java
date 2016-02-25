@@ -16,6 +16,7 @@
 package com.galenframework.ide.services.filebrowser;
 
 
+import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import org.apache.commons.io.FileUtils;
 
@@ -35,7 +36,7 @@ public class FileBrowserServiceImpl  implements FileBrowserService {
     }
 
     @Override
-    public List<FileItem> getFilesInPath(String path) {
+    public List<FileItem> getFilesInPath(RequestData requestData, String path) {
         if (path.isEmpty()) {
             path = ".";
         }
@@ -55,12 +56,12 @@ public class FileBrowserServiceImpl  implements FileBrowserService {
     }
 
     @Override
-    public FileContent showFileContent(String path) {
+    public FileContent showFileContent(RequestData requestData, String path) {
         return FileContent.fromFile(path);
     }
 
     @Override
-    public void saveFile(String path, FileContent fileContent) throws IOException {
+    public void saveFile(RequestData requestData, String path, FileContent fileContent) throws IOException {
         File file = new File(path);
         if (file.exists()) {
             if (file.isFile()) {
