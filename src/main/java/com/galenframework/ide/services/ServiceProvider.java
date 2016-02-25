@@ -1,6 +1,7 @@
 package com.galenframework.ide.services;
 
 import com.galenframework.ide.services.devices.DeviceService;
+import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.profiles.ProfilesService;
 import com.galenframework.ide.services.results.TestResultService;
@@ -14,4 +15,5 @@ public interface ServiceProvider {
     SettingsService settingsService();
     ProfilesService profilesService();
     TestResultService testResultService();
+    DomSnapshotService domSnapshotService();
 }

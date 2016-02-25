@@ -4,11 +4,8 @@ import com.galenframework.ide.*;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.ide.devices.SizeProvider;
-import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
-import com.galenframework.ide.services.settings.SettingsService;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -24,8 +21,6 @@ public class DeviceServiceImpl implements DeviceService {
     private final ServiceProvider serviceProvider;
     private WebDriver masterDriver;
     private List<DeviceThread> devices = new LinkedList<>();
-    private Map<String, DomSnapshot> domSnapshots = new HashMap<>();
-
 
     public DeviceServiceImpl(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
@@ -86,13 +81,6 @@ public class DeviceServiceImpl implements DeviceService {
         );
     }
 
-    @Override
-    public Map<String, DomSnapshot> getDomSnapshots() {
-        return domSnapshots;
-    }
-
-
-
     public void addDeviceThread(DeviceThread deviceThread) {
         devices.add(deviceThread);
         deviceThread.start();
@@ -146,13 +134,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     private void syncAllBrowsersUsingProxy(String originSource, String url) {
-        String uniqueDomId = UUID.randomUUID().toString();
-        try {
-            domSnapshots.put(uniqueDomId, DomSnapshot.createSnapshotAndReplaceUrls(originSource, url));
-        } catch (Exception ex) {
-            throw new RuntimeException("Couldn't parse url: " + url, ex);
-        }
-        getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom/" + uniqueDomId));
+        String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(originSource, url);
+        getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
     }
 
     private void syncAllBrowsersUsingInjection(String originSource, String url) {

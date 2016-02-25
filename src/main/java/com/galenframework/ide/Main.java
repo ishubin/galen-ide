@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide;
 
+import com.galenframework.ide.controllers.*;
 import com.galenframework.ide.services.DefaultServiceProvider;
 import com.galenframework.ide.services.ServiceProvider;
 import javafx.application.Application;
@@ -58,14 +59,14 @@ public class Main extends Application {
         externalStaticFileLocation(REPORT_FOLDER_FOR_SPARK);
         System.out.println("Reports are in: " + REPORT_FOLDER_FOR_SPARK);
         ServiceProvider serviceProvider = new DefaultServiceProvider(REPORT_FOLDER_STORAGE);
-        new TesterController(
-                serviceProvider.deviceService(),
-                serviceProvider.testerService(),
-                serviceProvider.fileBrowserService(),
-                serviceProvider.profilesService(),
-                serviceProvider.settingsService(),
-                serviceProvider.testResultService()
-        );
+
+        new DeviceController(serviceProvider.deviceService());
+        new DomSnapshotController(serviceProvider.domSnapshotService());
+        new FileBrowserController(serviceProvider.fileBrowserService());
+        new SettingsController(serviceProvider.settingsService());
+        new ProfilesController(serviceProvider.profilesService());
+        new TestResultController(serviceProvider.testResultService());
+        new TesterController(serviceProvider.testerService());
     }
 
 

@@ -17,7 +17,6 @@ package com.galenframework.ide.services.tester;
 
 import com.galenframework.ide.*;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.devices.DeviceService;
 
 public class TesterServiceImpl implements TesterService {
     private final String reportStoragePath;

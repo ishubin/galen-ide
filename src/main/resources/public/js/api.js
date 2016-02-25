@@ -101,7 +101,7 @@ var API = {
     },
     results: {
         get: function (callback) {
-            getJSON("/api/tester/results", callback);
+            getJSON("/api/results", callback);
         }
     }
 };

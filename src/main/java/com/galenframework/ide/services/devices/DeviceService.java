@@ -16,13 +16,10 @@
 package com.galenframework.ide.services.devices;
 
 import com.galenframework.ide.DeviceRequest;
-import com.galenframework.ide.DomSnapshot;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.TestResultsListener;
 import com.galenframework.ide.services.Service;
 
 import java.util.List;
-import java.util.Map;
 
 public interface DeviceService extends  Service {
 
@@ -33,8 +30,6 @@ public interface DeviceService extends  Service {
     void syncAllBrowsers();
 
     void testAllBrowsers(String spec, String reportStoragePath);
-
-    Map<String, DomSnapshot> getDomSnapshots();
 
     void shutdownDevice(String deviceId);
 

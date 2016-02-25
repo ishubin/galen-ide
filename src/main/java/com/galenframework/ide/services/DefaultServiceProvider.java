@@ -2,6 +2,8 @@ package com.galenframework.ide.services;
 
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.devices.DeviceServiceImpl;
+import com.galenframework.ide.services.domsnapshot.DomSnapshotServiceImpl;
+import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileBrowserServiceImpl;
 import com.galenframework.ide.services.profiles.ProfilesService;
@@ -20,6 +22,7 @@ public class DefaultServiceProvider implements ServiceProvider {
     private final SettingsService settingsService;
     private final ProfilesService profilesService;
     private final TestResultService testResultService;
+    private final DomSnapshotService domSnapshotService;
 
     public DefaultServiceProvider(String reportStoragePath) {
         this.testerService = new TesterServiceImpl(this, reportStoragePath);
@@ -28,6 +31,7 @@ public class DefaultServiceProvider implements ServiceProvider {
         this.settingsService = new SettingsServiceImpl(this);
         this.profilesService = new ProfilesServiceImpl(this);
         this.testResultService = new TestResultServiceImpl(this);
+        this.domSnapshotService = new DomSnapshotServiceImpl(this);
     }
     @Override
     public TesterService testerService() {
@@ -57,5 +61,10 @@ public class DefaultServiceProvider implements ServiceProvider {
     @Override
     public TestResultService testResultService() {
         return this.testResultService;
+    }
+
+    @Override
+    public DomSnapshotService domSnapshotService() {
+        return this.domSnapshotService;
     }
 }
