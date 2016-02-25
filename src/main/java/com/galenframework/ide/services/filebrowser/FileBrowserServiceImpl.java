@@ -13,9 +13,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.filebrowser;
+package com.galenframework.ide.services.filebrowser;
 
 
+import com.galenframework.ide.services.ServiceProvider;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -26,6 +27,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class FileBrowserServiceImpl  implements FileBrowserService {
+
+    private final ServiceProvider serviceProvider;
+
+    public FileBrowserServiceImpl(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+    }
 
     @Override
     public List<FileItem> getFilesInPath(String path) {
@@ -84,7 +91,10 @@ public class FileBrowserServiceImpl  implements FileBrowserService {
         } else {
             return Optional.empty();
         }
-
     }
 
+    @Override
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
 }

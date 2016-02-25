@@ -15,6 +15,8 @@
 ******************************************************************************/
 package com.galenframework.ide;
 
+import com.galenframework.ide.services.DefaultServiceProvider;
+import com.galenframework.ide.services.ServiceProvider;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -55,7 +57,15 @@ public class Main extends Application {
         staticFileLocation("/public");
         externalStaticFileLocation(REPORT_FOLDER_FOR_SPARK);
         System.out.println("Reports are in: " + REPORT_FOLDER_FOR_SPARK);
-        new TesterController(REPORT_FOLDER_STORAGE);
+        ServiceProvider serviceProvider = new DefaultServiceProvider(REPORT_FOLDER_STORAGE);
+        new TesterController(
+                serviceProvider.deviceService(),
+                serviceProvider.testerService(),
+                serviceProvider.fileBrowserService(),
+                serviceProvider.profilesService(),
+                serviceProvider.settingsService(),
+                serviceProvider.testResultService()
+        );
     }
 
 

@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.filebrowser;
+package com.galenframework.ide.services.filebrowser;
 
 import java.io.File;
 

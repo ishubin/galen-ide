@@ -16,10 +16,13 @@
 package com.galenframework.ide;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.devices.DeviceContainer;
-import com.galenframework.ide.filebrowser.FileBrowserService;
-import com.galenframework.ide.filebrowser.FileBrowserServiceImpl;
-import com.galenframework.ide.filebrowser.FileContent;
+import com.galenframework.ide.services.devices.DeviceService;
+import com.galenframework.ide.services.filebrowser.FileBrowserService;
+import com.galenframework.ide.services.filebrowser.FileContent;
+import com.galenframework.ide.services.profiles.ProfilesService;
+import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.settings.SettingsService;
+import com.galenframework.ide.services.tester.TesterService;
 
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -27,18 +30,24 @@ import static spark.Spark.*;
 
 public class TesterController {
     private static final String APPLICATION_JSON = "application/json";
-    private DeviceContainer deviceContainer;
-    private TesterService testerService;
-    private FileBrowserService fileBrowserService = new FileBrowserServiceImpl();
-    private ProfilesService profilesService;
+    private final DeviceService deviceService;
+    private final TesterService testerService;
+    private final FileBrowserService fileBrowserService;
+    private final ProfilesService profilesService;
+    private final SettingsService settingsService;
+    private final TestResultService testResultService;
 
     ObjectMapper mapper = new ObjectMapper();
 
-    public TesterController(String reportStoragePath) {
-        this.deviceContainer = new DeviceContainer();
-        this.testerService  = new TesterService(deviceContainer, reportStoragePath);
-        this.fileBrowserService = new FileBrowserServiceImpl();
-        this.profilesService = new ProfilesService(deviceContainer, testerService);
+    public TesterController(DeviceService deviceService, TesterService testerService,
+                            FileBrowserService fileBrowserService, ProfilesService profilesService,
+                            SettingsService settingsService, TestResultService testResultService) {
+        this.deviceService = deviceService;
+        this.testerService  = testerService;
+        this.fileBrowserService = fileBrowserService;
+        this.profilesService = profilesService;
+        this.settingsService = settingsService;
+        this.testResultService = testResultService;
         initRoutes();
     }
 
@@ -47,7 +56,7 @@ public class TesterController {
             res.header("Content-Type", "text/html");
             String domId = req.params("domId");
             if (domId != null && !domId.trim().isEmpty()) {
-                DomSnapshot domSnapshot = testerService.getDomSnapshots().get(domId);
+                DomSnapshot domSnapshot = deviceService.getDomSnapshots().get(domId);
                 if (domSnapshot != null) {
                     return domSnapshot.getOriginSource();
                 } else {
@@ -64,7 +73,7 @@ public class TesterController {
 
         get("/api/tester/results", (request, response) -> {
             response.header("Content-Type", APPLICATION_JSON);
-            return testerService.getTestResultsOverview();
+            return testResultService.getTestResultsOverview();
         }, toJson());
 
         get("/api/files", (req, res) -> {
@@ -94,11 +103,11 @@ public class TesterController {
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
-        get("api/devices", (request, response) -> testerService.getAllDevices(), toJson());
+        get("api/devices", (request, response) -> deviceService.getAllDevices(), toJson());
 
         post("api/devices", (req, res) -> {
             DeviceRequest createDeviceRequest = mapper.readValue(req.body(), DeviceRequest.class);
-            testerService.createDevice(createDeviceRequest);
+            deviceService.createDevice(createDeviceRequest);
             return "created";
         });
 
@@ -106,7 +115,7 @@ public class TesterController {
             String deviceId = req.params("deviceId");
             if (deviceId != null && !deviceId.trim().isEmpty()) {
                 DeviceRequest createDeviceRequest = mapper.readValue(req.body(), DeviceRequest.class);
-                testerService.changeDevice(deviceId, createDeviceRequest);
+                deviceService.changeDevice(deviceId, createDeviceRequest);
                 return "modified";
             } else throw new RuntimeException("Incorrect request, missing device id");
         });
@@ -114,20 +123,18 @@ public class TesterController {
         delete("api/devices/:deviceId", (req, res) -> {
             String deviceId = req.params("deviceId");
             if (deviceId != null && !deviceId.trim().isEmpty()) {
-                testerService.shutdownDevice(deviceId);
+                deviceService.shutdownDevice(deviceId);
                 return "Delete device " + deviceId;
             } else throw new RuntimeException("Incorrect request, missing device id");
         }, toJson());
 
-        get("api/settings", (request, response) -> deviceContainer.getSettings(), toJson());
+        get("api/settings", (request, response) -> settingsService.getSettings(), toJson());
 
         post("api/settings", (request, response) -> {
             Settings settings = mapper.readValue(request.body(), Settings.class);
-            testerService.applySettings(settings);
+            settingsService.changeSettings(settings);
             return "saved";
         });
-
-
 
         get("api/profiles", (req, res) -> {
             return profilesService.getProfiles();
@@ -146,7 +153,5 @@ public class TesterController {
                 return "loaded";
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
-
     }
-
 }

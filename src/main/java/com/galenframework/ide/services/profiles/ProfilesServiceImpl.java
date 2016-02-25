@@ -1,23 +1,13 @@
-/*******************************************************************************
-* Copyright 2016 Ivan Shubin http://galenframework.com
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.services.profiles;
 
+import com.galenframework.ide.services.devices.DeviceService;
+import com.galenframework.ide.services.ServiceProvider;
+import com.galenframework.ide.services.settings.SettingsService;
+import com.galenframework.ide.services.tester.TesterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.devices.DeviceContainer;
-import com.galenframework.ide.filebrowser.FileItem;
+import com.galenframework.ide.DeviceRequest;
+import com.galenframework.ide.ProfileContent;
+import com.galenframework.ide.services.filebrowser.FileItem;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -26,18 +16,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProfilesService {
-    public static final String GALEN_EXTENSION = ".galen";
-    private final DeviceContainer deviceContainer;
-    private final TesterService testerService;
 
-    public ProfilesService(DeviceContainer deviceContainer, TesterService testerService) {
-        this.deviceContainer = deviceContainer;
-        this.testerService = testerService;
+public class ProfilesServiceImpl implements ProfilesService {
+    public static final String GALEN_EXTENSION = ".galen";
+    private final ServiceProvider serviceProvider;
+
+    public ProfilesServiceImpl(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
     }
 
     public File obtainRootFolder() {
-        File root = new File(deviceContainer.getSettings().getHomeDirectory());
+        File root = new File(serviceProvider.settingsService().getSettings().getHomeDirectory());
         if (root.exists()) {
             if (!root.isDirectory()) {
                 throw new RuntimeException("Home is not a directory: " + root.getAbsolutePath());
@@ -49,6 +38,8 @@ public class ProfilesService {
         }
         return root;
     }
+
+    @Override
     public List<FileItem> getProfiles() {
         File[] filesInFolder = obtainRootFolder().listFiles();
 
@@ -65,6 +56,7 @@ public class ProfilesService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Override
     public void saveProfile(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new RuntimeException("Name should not be empty");
@@ -77,8 +69,8 @@ public class ProfilesService {
 
         File profileFile = new File(obtainRootFolder().getAbsolutePath() + File.separator + fileName);
         ProfileContent profileContent = new ProfileContent();
-        profileContent.setSettings(deviceContainer.getSettings());
-        profileContent.setDevices(deviceContainer.getAllDevices().stream().map(DeviceRequest::fromDevice).collect(Collectors.toList()));
+        profileContent.setSettings(serviceProvider.settingsService().getSettings());
+        profileContent.setDevices(serviceProvider.deviceService().getAllDevices().stream().map(DeviceRequest::fromDevice).collect(Collectors.toList()));
 
         try {
             FileUtils.writeStringToFile(profileFile, objectMapper.writeValueAsString(profileContent));
@@ -87,6 +79,7 @@ public class ProfilesService {
         }
     }
 
+    @Override
     public void loadProfile(String path) {
         File file = new File(obtainRootFolder().getAbsolutePath() + File.separator + path);
         if (file.exists() && !file.isDirectory()) {
@@ -105,12 +98,17 @@ public class ProfilesService {
     }
 
     private void loadProfile(ProfileContent profileContent) {
-        deviceContainer.setSettings(profileContent.getSettings());
-        deviceContainer.shutdownAllDevices();
+        serviceProvider.settingsService().changeSettings(profileContent.getSettings());
+        serviceProvider.deviceService().shutdownAllDevices();
 
         List<DeviceRequest> deviceRequests = profileContent.getDevices();
         if (deviceRequests != null) {
-            deviceRequests.stream().forEach(testerService::createDevice);
+            deviceRequests.stream().forEach(serviceProvider.deviceService()::createDevice);
         }
+    }
+
+    @Override
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
     }
 }
