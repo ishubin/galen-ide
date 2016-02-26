@@ -5,7 +5,6 @@ import com.galenframework.ide.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.tester.TesterService;
 import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
@@ -25,11 +24,6 @@ public class TestResultServiceImpl implements TestResultService{
     @Override
     public ServiceProvider getServiceProvider() {
         return serviceProvider;
-    }
-
-    @Override
-    public List<TestResultContainer> getTestResults(RequestData requestData) {
-        return testResults;
     }
 
     @Override

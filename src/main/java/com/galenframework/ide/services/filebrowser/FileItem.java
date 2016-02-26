@@ -23,6 +23,16 @@ public class FileItem {
     private String path;
     private boolean executable;
 
+    public FileItem() {
+    }
+
+    public FileItem(boolean directory, String name, String path, boolean executable) {
+        this.directory = directory;
+        this.name = name;
+        this.path = path;
+        this.executable = executable;
+    }
+
     public String getName() {
         return name;
     }

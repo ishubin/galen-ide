@@ -18,10 +18,6 @@ package com.galenframework.ide;
 import com.galenframework.ide.controllers.*;
 import com.galenframework.ide.services.DefaultServiceProvider;
 import com.galenframework.ide.services.ServiceProvider;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -31,34 +27,27 @@ import java.nio.file.Files;
 import static spark.Spark.*;
 
 
-public class Main extends Application {
+public class Main {
 
-    public static void main(String[] args) throws IOException {
-        new Main().initWebServer();
-    }
 
-    private final String REPORT_FOLDER_FOR_SPARK;
-    private final String REPORT_FOLDER_STORAGE;
+    protected final String REPORT_FOLDER_FOR_SPARK;
+    protected final String REPORT_FOLDER_STORAGE;
 
-    public Main() throws IOException {
+    protected Main() throws IOException {
         REPORT_FOLDER_FOR_SPARK = createTempReportFolder();
         REPORT_FOLDER_STORAGE = createFolder(REPORT_FOLDER_FOR_SPARK + File.separator + "reports");
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        initWebServer();
-        stage.setTitle("Galen IDE");
-        Scene scene = new Scene(new CustomBrowser(), 1024, 500, Color.web("#666970"));
-        stage.setScene(scene);
-        stage.show();
+    public static void main(String[] args) throws IOException {
+        Main main = new Main();
+        ServiceProvider serviceProvider = new DefaultServiceProvider(main.REPORT_FOLDER_STORAGE);
+        main.initWebServer(serviceProvider);
     }
 
-    private void initWebServer() {
+    protected void initWebServer(ServiceProvider serviceProvider) {
         staticFileLocation("/public");
         externalStaticFileLocation(REPORT_FOLDER_FOR_SPARK);
         System.out.println("Reports are in: " + REPORT_FOLDER_FOR_SPARK);
-        ServiceProvider serviceProvider = new DefaultServiceProvider(REPORT_FOLDER_STORAGE);
 
         new DeviceController(serviceProvider.deviceService());
         new DomSnapshotController(serviceProvider.domSnapshotService());
