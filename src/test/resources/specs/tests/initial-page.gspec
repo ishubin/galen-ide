@@ -1,0 +1,6 @@
+@import ../skeleton.gspec
+
+= File Browser =
+    file_browser_panel:
+        component ../components/file_browser_panel.gspec, items "[{'type': 'dir', 'name':'folder1'}, {'type':'spec', 'name':'home.gspec'}]"
+

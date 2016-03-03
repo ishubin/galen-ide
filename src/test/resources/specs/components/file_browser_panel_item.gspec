@@ -1,0 +1,33 @@
+@import ../rules.gspec
+
+@objects
+    icon                    .link-icon
+    title                   .link-text
+    test_button             button.action-launch-spec
+
+@set
+    test_button_width           20 to 40px
+    test_button_height          ${test_button_width}
+    icon_width                  16 to 26px
+    icon_height                 12 to 26px
+
+
+= File Browser Items =
+    |icon, title are placed next to each other with ${small} margin
+    icon:
+        inside parent ${tiny_margin} left, ${small_margin} top bottom
+        width ${icon_width}
+        height ${icon_height}
+
+    title:
+        |is more or less readable
+        text is "${itemName}"
+        inside parent ${small_margin} top bottom
+
+    test_button:
+        @if ${itemType === "spec"}
+            inside parent ${tiny_margin} top right bottom
+            width ${test_button_width}
+            width ${test_button_height}
+        @else
+            absent

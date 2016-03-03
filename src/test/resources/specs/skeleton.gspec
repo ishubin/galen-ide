@@ -1,0 +1,26 @@
+@import common.gspec
+
+= Skeleton =
+    header:
+        |located on the top side of screen and takes 100 % of its width
+        height ${header_height}
+
+    main:
+        below header ${minimal_margin}
+        |stretches to screen
+        height > 100px
+
+    | every &panel has height > 50px
+
+    |file_browser_panel should be located on the top left side of main with ${small} margin and take ~ 30% of its width
+
+    |file_browser_panel, devices_panel are aligned horizontally next to each other with ${normal} margin
+
+    |devices_panel should be located on the top right side of main with ${small} margin and take 62 to 75% of its width
+
+    test_results_panel:
+        below file_browser_panel ${normal_margin}
+        |stretches to main with ${normal} margin
+        aligned vertically left file_browser_panel
+        aligned vertically right devices_panel
+

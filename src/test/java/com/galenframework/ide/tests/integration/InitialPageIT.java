@@ -29,10 +29,9 @@ public class InitialPageIT extends GalenTestBase {
         when(deviceService.getAllDevices(any())).thenReturn(Collections.<Device>emptyList());
         when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
 
-        load("http://localhost:4567");
-
-
-        Thread.sleep(120000);
+        onEveryDevice(device -> {
+            checkLayout("/specs/tests/initial-page.gspec", device.getTags());
+        });
     }
 
 }

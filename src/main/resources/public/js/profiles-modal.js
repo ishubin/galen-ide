@@ -7,7 +7,7 @@ LoadProfilesModal.prototype.$behavior = function () {
     return {
         click: {
             ".profile-file-item": function (element) {
-                var path = element.attr("data-file-name");
+                var path = element.attr("data-file-path");
                 if (!isBlank(path)) {
                     var that = this;
                     API.profiles.load(path, function () {

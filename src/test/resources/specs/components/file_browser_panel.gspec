@@ -1,0 +1,22 @@
+@import ../rules.gspec
+
+# converting items argument into js object
+@script
+    this.items = JSON.parse(this["items"].replace(/'/g, '"'));
+
+@objects
+    table_header            table.file-browser thead tr
+    item-*                  table.file-browser tbody tr
+
+@groups
+    (item, items)           item-#
+
+
+= File Items =
+    | amount of visible &items should be ${items.length}
+
+    |table_header,&items are aligned vertically above each other
+
+    @for [1 - ${items.length}] as i
+        item-${i}:
+            component file_browser_panel_item.gspec, itemType "${items[i - 1].type}", itemName "${items[i - 1].name}"

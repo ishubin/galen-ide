@@ -1,0 +1,41 @@
+@import ../skeleton.gspec
+
+@objects
+    load_profiles_modal         [data-modal='load-profiles']
+        profile_item-*              a.profile-file-item
+        close_button                .modal-footer   button
+
+
+@groups
+    (profile_item, profile_items)           load_profiles_modal.profile_item-*
+
+
+= Load profiles modal =
+    load_profiles_modal:
+        |located at the top inside screen with ${vertical_modal_margin} margin
+        centered horizontally inside screen
+        width ${small_modal_width}
+        height > 100px
+
+    modal.title:
+        text is "Load profile"
+        |located at the top left inside modal with ${normal} margin
+        height ${modal_title_height}
+
+    modal.close_cross:
+        inside modal ${small_margin} top, ${normal_margin} right
+        width ${modal_close_cross_width}
+        height ${modal_close_cross_height}
+
+
+    load_profiles_modal.close_button:
+        |located at the bottom right inside modal with ${normal} margin
+        |is tapable
+
+
+    |amount of visible &profile_items should be 3
+    |&profile_items are placed above each other with ${small} margin
+    |&profile_items should be located at the left inside load_profiles_modal with ${normal} margin
+    |&profile_items should be more or less readable
+
+    |text of all &profile_items should be ["profile-1.gspec", "profile-2.gspec", "profile-3.gspec"]
