@@ -11,7 +11,6 @@ public class MockKey {
     public MockKey(String uniqueKey, Class<?> mockClass) {
         this.uniqueKey = uniqueKey;
         this.mockClass = mockClass.getName();
-        System.out.println("Created mock key " + uniqueKey + " " + mockClass);
     }
 
     public String getUniqueKey() {
