@@ -1,0 +1,16 @@
+@import ../../rules.gspec
+
+@objects
+    label                       h5
+    form_control                [data-element='form-control']
+
+
+= Simple group =
+    label:
+        above form_control ${small_margin}
+        inside parent ${small_margin} top left
+
+    form_control:
+        inside parent ${small_margin} left, ${minimal_margin} bottom
+        aligned vertically all label
+

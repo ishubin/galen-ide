@@ -132,9 +132,10 @@ pre.code code {
 .file-browser a.file-item .link-icon {
     color: #777;
 }
-.file-browser button {
-    padding-top: 1px;
-    padding-bottom: 1px;
+.file-browser button.action-launch-spec {
+    padding: 1px 4px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 

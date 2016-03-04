@@ -18,9 +18,12 @@ public class IdePage extends GalenPage<IdePage> {
 
     public final Header header = new Header(this, cssSelector("nav.navbar"));
     public final LoadProfilesModal loadProfilesModal = new LoadProfilesModal(this, cssSelector("#global-modal .modal .modal-dialog"));
+    public final DevicePanel devicesPanel = new DevicePanel(this, cssSelector("#devices-panel"));
+
+    public final DeviceModal deviceModal = new DeviceModal(this, cssSelector(".modal-dialog[data-modal='device-modal']"));
 
     @Override
     public List<WebComponent> availabilityElements() {
-        return asList(header);
+        return asList(header, devicesPanel);
     }
 }

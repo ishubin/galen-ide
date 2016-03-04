@@ -1,0 +1,31 @@
+@import rules.gspec
+
+@objects
+    modal                       #global-modal .modal .modal-dialog
+        title                       h4.modal-title
+        close_cross                 .modal-header button.close
+
+
+@set
+    small_modal_width               ~ 600px
+    normal_modal_width              ~ 900px
+    modal_title_height              ~ 25px
+    modal_close_cross_width         10 to 15px
+    modal_close_cross_height        15 to 25px
+    vertical_modal_margin           15 to 30px
+
+= Modal Generic =
+    modal:
+        |located at the top inside screen with ${vertical_modal_margin} margin
+        centered horizontally inside screen
+        width > 200px
+        height > 100px
+
+    modal.title:
+        |located at the top left inside modal with ${normal} margin
+        height ${modal_title_height}
+
+    modal.close_cross:
+        inside modal ${small_margin} top, ${normal_margin} right
+        width ${modal_close_cross_width}
+        height ${modal_close_cross_height}

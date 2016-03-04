@@ -1,0 +1,47 @@
+@import ../../rules.gspec
+
+@objects
+    title                       h4.modal-title
+    control_group-*             [data-element='control-group']
+        label                       h5
+        form_control                [data-element='form-control']
+
+    close_button                .modal-footer   button.btn-default
+    submit_button               .modal-footer   button.action-device-submit
+
+@groups
+    first_3_groups                  control_group-1, control_group-2, control_group-3
+    first_3_group_labels            control_group-1.label, control_group-2.label, control_group-3.label
+    first_3_group_controls          control_group-1.form_control, control_group-2.form_control, control_group-3.form_control
+    all_groups                      control_group-#
+    all_group_labels                control_group-#.label
+    all_group_controls              control_group-#.form_control
+    size_provider_group             control_group-4
+
+= Device Modal =
+    = Generic =
+        |&all_group_labels, &all_group_controls should be more or less readable
+        |amount of visible &all_groups should be 4
+        |text of all &all_group_labels should be ["Name", "Browser", "Tags", "Size Provider"]
+        |test all &first_3_groups with simple_group.gspec
+
+        title:
+            text is "${modal_title}"
+
+    = First 3 groups =
+        @on desktop
+            |&first_3_groups are aligned horizontally next to each other with ${minimal} margin
+            |&first_3_group_labels are aligned horizontally next to each other with ${normal} margin
+            |&first_3_group_controls are aligned horizontally next to each other with ${normal} margin
+        @on tablet
+            |&first_3_groups are aligned vertically above each other with ${small} margin
+
+    = Size provider =
+        &size_provider_group:
+            component size_provider_group.gspec, size_provider "${size_provider}"
+
+    = Buttons =
+        submit_button:
+            text is "${submit_button_text}"
+        |close_button,submit_button are aligned horizontally next to each other with ${small} margin
+

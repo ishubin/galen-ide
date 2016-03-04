@@ -16,7 +16,7 @@ public abstract class WebComponent<T extends GalenComponent> extends GalenCompon
     }
 
     protected WebLocatorComponent link(String name, By locator) {
-        return new WebLocatorComponent(name, this, locator);
+        return new WebLocatorComponent(name + " link", this, locator);
     }
 
     public void click() {

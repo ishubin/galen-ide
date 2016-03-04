@@ -24,6 +24,7 @@ public class ProfilesModalIT extends GalenTestBase {
 
     @Test
     public void loadProfilesModal_isDisplayedCorrectly() throws InterruptedException {
+        int j = 0;
         configureDefaultMocks();
 
         onEveryDevice(device -> {

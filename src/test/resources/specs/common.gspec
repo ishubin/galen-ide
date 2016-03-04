@@ -7,19 +7,10 @@
     devices_panel               #devices-panel
     test_results_panel          #test-results
 
-    modal                       #global-modal .modal .modal-dialog
-        title                       h4.modal-title
-        close_cross                 .modal-header button.close
 
 @groups
     (panel, panels)                   file_browser_panel, devices_panel, test_results_panel
 
 @set
     header_height                   ~ 50px
-    vertical_modal_margin           15 to 30px
-    small_modal_width               580 to 620px
-    modal_title_height              ~ 25px
-    modal_close_cross_width         10 to 15px
-    modal_close_cross_height        15 to 25px
-
 
