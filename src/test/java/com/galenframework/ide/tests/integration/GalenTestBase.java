@@ -12,10 +12,7 @@ import org.mockito.Mockito;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -38,9 +35,17 @@ public class GalenTestBase extends GalenTestNgTestBase {
 
     private List<Object> mocks = new LinkedList<>();
 
-    private TestDevice desktopDevice = new TestDevice("Desktop", new Dimension(1224, 800), singletonList("desktop"));
+    private  TestDevice desktopDevice = new TestDevice("Desktop", new Dimension(1224, 800), singletonList("desktop"));
     private TestDevice tabletDevice = new TestDevice("Tablet", new Dimension(800, 800), singletonList("tablet"));
     private List<TestDevice> allTestDevices = asList(desktopDevice, tabletDevice);
+
+    @DataProvider
+    public Object[][] allDevices() {
+        return new Object[][] {
+                {desktopDevice},
+                {tabletDevice}
+        };
+    }
 
     protected <T> T registerMock(T mock, Class<T> mockClass) {
         MockRegistry.registerMock(mockUniqueKey, mock, mockClass);
@@ -99,7 +104,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
             getReport().sectionStart("Testing on device " + testDevice.getName());
             loadDefaultTestUrl();
             try {
-                resize(testDevice.getSize().width, testDevice.getSize().height);
+                resizeFor(testDevice);
                 Thread.sleep(500);
                 deviceRunner.run(testDevice);
             } catch (Exception ex) {
@@ -108,5 +113,9 @@ public class GalenTestBase extends GalenTestNgTestBase {
                 getReport().sectionEnd();
             }
         }
+    }
+
+    public void resizeFor(TestDevice testDevice) {
+        resize(testDevice.getSize().width, testDevice.getSize().height);
     }
 }

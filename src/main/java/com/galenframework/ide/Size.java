@@ -15,6 +15,9 @@
 ******************************************************************************/
 package com.galenframework.ide;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Dimension;
 
 public class Size {
@@ -47,5 +50,38 @@ public class Size {
 
     public Dimension toSeleniumDimension() {
         return new Dimension(width, height);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(width)
+                .append(height)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof Size)) {
+            return false;
+        } else {
+            Size rhs = (Size) obj;
+            return new EqualsBuilder()
+                    .append(rhs.width, this.width)
+                    .append(rhs.height, this.height)
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("width", this.width)
+                .append("height", this.height)
+                .toString();
     }
 }

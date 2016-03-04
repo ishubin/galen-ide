@@ -15,9 +15,22 @@ public abstract class WebComponent<T extends GalenComponent> extends GalenCompon
         this.parent = parent;
     }
 
-    protected WebLocatorComponent link(String name, By locator) {
-        return new WebLocatorComponent(name + " link", this, locator);
+    protected WebLocatorComponent<WebLocatorComponent> link(String name, By locator) {
+        return new WebLocatorComponent<>(name + " link", this, locator);
     }
+
+    protected WebLocatorComponent<WebLocatorComponent> textfield(String name, By locator) {
+        return new WebLocatorComponent<>(name + " textfield", this, locator);
+    }
+
+    protected WebLocatorComponent<WebLocatorComponent> dropdown(String name, By locator) {
+        return new WebLocatorComponent<>(name + " dropdown", this, locator);
+    }
+
+    protected WebLocatorComponent<WebLocatorComponent> button(String name, By locator) {
+        return new WebLocatorComponent<>(name + " button", this, locator);
+    }
+
 
     public void click() {
         getWebElement().click();
@@ -65,4 +78,29 @@ public abstract class WebComponent<T extends GalenComponent> extends GalenCompon
         return parent;
     }
 
+    @SuppressWarnings("unchecked")
+    public T typeText(String text) {
+        getWebElement().sendKeys(text);
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T selectByText(String text) {
+        WebElement webElement = getWebElement();
+
+        try {
+            WebElement optionElement = webElement.findElement(By.xpath(".//option[normalize-space(.)=\"" + text + "\"]"));
+            optionElement.click();
+        } catch (NoSuchElementException ex) {
+            throw new RuntimeException("Couldn't find option with text \"" + text + "\" for " + getName(), ex);
+        }
+
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T clear() {
+        getWebElement().clear();
+        return (T) this;
+    }
 }

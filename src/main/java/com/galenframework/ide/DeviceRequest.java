@@ -19,7 +19,9 @@ package com.galenframework.ide;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.SizeProviderCustom;
 import com.galenframework.ide.devices.SizeProviderRange;
-import com.galenframework.ide.devices.SizeProviderUnsupported;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
@@ -35,48 +37,54 @@ public class DeviceRequest {
         return browserType;
     }
 
-    public void setBrowserType(String browserType) {
+    public DeviceRequest setBrowserType(String browserType) {
         this.browserType = browserType;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public DeviceRequest setName(String name) {
         this.name = name;
+        return this;
     }
 
     public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public DeviceRequest setTags(List<String> tags) {
         this.tags = tags;
+        return this;
     }
 
     public List<Size> getSizes() {
         return sizes;
     }
 
-    public void setSizes(List<Size> sizes) {
+    public DeviceRequest setSizes(List<Size> sizes) {
         this.sizes = sizes;
+        return this;
     }
 
     public SizeVariation getSizeVariation() {
         return sizeVariation;
     }
 
-    public void setSizeVariation(SizeVariation sizeVariation) {
+    public DeviceRequest setSizeVariation(SizeVariation sizeVariation) {
         this.sizeVariation = sizeVariation;
+        return this;
     }
 
     public String getSizeType() {
         return sizeType;
     }
 
-    public void setSizeType(String sizeType) {
+    public DeviceRequest setSizeType(String sizeType) {
         this.sizeType = sizeType;
+        return this;
     }
 
     public static DeviceRequest fromDevice(Device device) {
@@ -91,5 +99,50 @@ public class DeviceRequest {
             dr.setSizeVariation(((SizeProviderRange) device.getSizeProvider()).getSizeVariation());
         }
         return dr;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(this.name)
+                .append(this.browserType)
+                .append(this.tags)
+                .append(this.sizes)
+                .append(this.sizeType)
+                .append(this.sizeVariation)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceRequest)) {
+            return false;
+        } else {
+            DeviceRequest rhs = (DeviceRequest) obj;
+            return new EqualsBuilder()
+                    .append(this.name, rhs.name)
+                    .append(this.browserType, rhs.browserType)
+                    .append(this.tags, rhs.tags)
+                    .append(this.sizes, rhs.sizes)
+                    .append(this.sizeType, rhs.sizeType)
+                    .append(this.sizeVariation, rhs.sizeVariation)
+                    .isEquals();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("name", this.name)
+                .append("browserType", this.browserType)
+                .append("tags", this.tags)
+                .append("sizes", this.sizes)
+                .append("sizeType", this.sizeType)
+                .append("sizeVariation", this.sizeVariation)
+                .toString();
     }
 }

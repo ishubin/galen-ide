@@ -15,13 +15,14 @@
 ******************************************************************************/
 package com.galenframework.ide;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openqa.selenium.Dimension;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 
 public class SizeVariation {
     private Size start;
@@ -92,5 +93,35 @@ public class SizeVariation {
 
     public void setRandom(boolean random) {
         this.random = random;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(this.start)
+                .append(this.end)
+                .append(this.iterations)
+                .append(this.random)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof SizeVariation)) {
+            return false;
+        } else {
+            SizeVariation rhs = (SizeVariation) obj;
+            return new EqualsBuilder()
+                    .append(rhs.start, this.start)
+                    .append(rhs.end, this.end)
+                    .append(rhs.iterations, this.iterations)
+                    .append(rhs.random, this.random)
+                    .isEquals();
+        }
     }
 }
