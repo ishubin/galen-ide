@@ -1,0 +1,14 @@
+@import ../skeleton.gspec
+@import ../modal-generic.gspec
+
+@objects
+    device_modal                [data-modal='device-modal']
+        control_group-*             [data-element='control-group']
+
+@groups
+    size_provider_group             device_modal.control_group-4
+
+= Size Provider Test =
+    &size_provider_group:
+        component ../components/device_modal/size_provider_group.gspec, size_provider "${size_provider}"
+

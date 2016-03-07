@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
@@ -49,10 +48,23 @@ public class DevicesModalIT extends GalenTestBase {
             page.devicesPanel.addNewDeviceLink.click();
             page.deviceModal.waitForIt();
 
+            checkLayout("/specs/tests/add-new-device-modal.gspec", device.getTags());
+        });
+    }
+
+    @Test
+    public void allSizeProvidersPanels_shouldLookGood() {
+        configureDefaultMocks();
+
+        onEveryDevice(device -> {
+            IdePage page = new IdePage(getDriver()).waitForIt();
+            page.devicesPanel.addNewDeviceLink.click();
+            page.deviceModal.waitForIt();
+
             for (String sizeProviderType: asList("custom", "range", "unsupported")) {
                 page.deviceModal.chooseSizeProvider(sizeProviderType);
 
-                checkLayout("/specs/tests/add-new-device-modal.gspec", device.getTags(), new HashMap<String, Object>() {{
+                checkLayout("/specs/tests/device_modal_only_size_provider.gspec", device.getTags(), new HashMap<String, Object>() {{
                     put("size_provider", sizeProviderType);
                 }});
             }

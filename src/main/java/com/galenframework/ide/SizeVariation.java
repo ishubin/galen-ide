@@ -30,6 +30,16 @@ public class SizeVariation {
     private int iterations;
     private boolean random = false;
 
+    public SizeVariation() {
+    }
+
+    public SizeVariation(Size start, Size end, int iterations, boolean random) {
+        this.start = start;
+        this.end = end;
+        this.iterations = iterations;
+        this.random = random;
+    }
+
     public Size getStart() {
         return start;
     }

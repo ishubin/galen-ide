@@ -36,10 +36,6 @@
         @on tablet
             |&first_3_groups are aligned vertically above each other with ${small} margin
 
-    = Size provider =
-        &size_provider_group:
-            component size_provider_group.gspec, size_provider "${size_provider}"
-
     = Buttons =
         submit_button:
             text is "${submit_button_text}"

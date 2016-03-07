@@ -15,9 +15,13 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration;
 
+import com.galenframework.ide.Size;
+import com.galenframework.ide.SizeVariation;
 import com.galenframework.ide.TestResultContainer;
 import com.galenframework.ide.TestResultsOverview;
 import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.SizeProviderCustom;
+import com.galenframework.ide.devices.SizeProviderRange;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
@@ -29,7 +33,7 @@ import java.util.Collections;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
-public class InitialPageIT extends GalenTestBase {
+public class MainPageIT extends GalenTestBase {
 
     FileBrowserService fileBrowserService = registerMock(FileBrowserService.class);
     DeviceService deviceService = registerMock(DeviceService.class);
@@ -45,6 +49,20 @@ public class InitialPageIT extends GalenTestBase {
         when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
 
         onEveryDevice(device -> checkLayout("/specs/tests/initial-page.gspec", device.getTags()));
+    }
+
+    @Test(enabled = false)
+    public void tableWithDevices_shouldLookGood() throws InterruptedException {
+        when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
+        when(deviceService.getAllDevices(any())).thenReturn(asList(
+                new Device("Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
+                new Device("Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
+        ));
+        when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
+        loadDefaultTestUrl();
+
+        throw new RuntimeException("Not finished");
+
     }
 
 }
