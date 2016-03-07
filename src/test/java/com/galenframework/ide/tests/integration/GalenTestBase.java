@@ -21,6 +21,7 @@ import com.galenframework.ide.tests.integration.components.MockedWebApp;
 import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.mocks.MockRegistry;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.suite.actions.GalenPageActionRunJavascript;
 import com.galenframework.testng.GalenTestNgTestBase;
 import org.mockito.Mockito;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.reset;
 import static spark.Spark.stop;
@@ -112,6 +114,10 @@ public class GalenTestBase extends GalenTestNgTestBase {
     @AfterSuite
     public void closeWebServer() {
         stop();
+    }
+
+    public void checkLayout(String specPath, List<String> tags, HashMap<String, Object> specVariables) throws IOException {
+        checkLayout(specPath, new SectionFilter(tags, emptyList()), new Properties(), specVariables);
     }
 
     public void onEveryDevice(DeviceRunner deviceRunner) {

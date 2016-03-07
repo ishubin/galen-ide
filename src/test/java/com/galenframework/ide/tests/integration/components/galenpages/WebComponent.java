@@ -30,22 +30,25 @@ public abstract class WebComponent<T extends GalenComponent> extends GalenCompon
         this.parent = parent;
     }
 
-    protected WebLocatorComponent<WebLocatorComponent> link(String name, By locator) {
-        return new WebLocatorComponent<>(name + " link", this, locator);
+    protected FinalElement link(String name, By locator) {
+        return new FinalElement(name + " link", this, locator);
     }
 
-    protected WebLocatorComponent<WebLocatorComponent> textfield(String name, By locator) {
-        return new WebLocatorComponent<>(name + " textfield", this, locator);
+    protected FinalElement textfield(String name, By locator) {
+        return new FinalElement(name + " textfield", this, locator);
     }
 
-    protected WebLocatorComponent<WebLocatorComponent> dropdown(String name, By locator) {
-        return new WebLocatorComponent<>(name + " dropdown", this, locator);
+    protected FinalElement dropdown(String name, By locator) {
+        return new FinalElement(name + " dropdown", this, locator);
     }
 
-    protected WebLocatorComponent<WebLocatorComponent> button(String name, By locator) {
-        return new WebLocatorComponent<>(name + " button", this, locator);
+    protected FinalElement button(String name, By locator) {
+        return new FinalElement(name + " button", this, locator);
     }
 
+    protected FinalElement label(String name, By locator) {
+        return new FinalElement(name + " label", this, locator);
+    }
 
     public void click() {
         getWebElement().click();

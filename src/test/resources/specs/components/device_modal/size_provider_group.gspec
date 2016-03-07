@@ -3,6 +3,15 @@
 @objects
     label                       h5
     form_control                [data-element='form-control']
+    size_provider-*             .settings-form-group-size
+
+
+@groups
+    (size_provider, size_providers)     size_provider-#
+    custom_size_provider                size_provider-1
+    range_size_provider                 size_provider-2
+    unsupported_size_provider           size_provider-3
+
 
 = Size Provider Group =
     label:
@@ -12,3 +21,25 @@
     form_control:
         inside parent ${small_margin} left
         aligned vertically left label
+
+    |amount of any &size_providers should be 3
+    |amount of visible &size_providers should be 1
+
+
+@if ${size_provider === "custom"}
+    = Custom Size Provider =
+        &custom_size_provider:
+            below form_control ${small_margin}
+
+@elseif ${size_provider === "range"}
+    = Range Size Provider =
+        &range_size_provider:
+            below form_control ${small_margin}
+
+@else
+    = Unsupported Size Provider =
+        &unsupported_size_provider:
+            below form_control ${small_margin}
+            height 10 to 50px
+            text is "Should be used in case a device does not support resizing (e.g. mobile devices)"
+

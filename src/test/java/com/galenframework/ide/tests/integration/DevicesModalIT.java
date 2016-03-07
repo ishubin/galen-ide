@@ -25,10 +25,11 @@ import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.results.TestResultService;
 import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
@@ -48,9 +49,14 @@ public class DevicesModalIT extends GalenTestBase {
             page.devicesPanel.addNewDeviceLink.click();
             page.deviceModal.waitForIt();
 
-            checkLayout("/specs/tests/add-new-device-modal.gspec", device.getTags());
-        });
+            for (String sizeProviderType: asList("custom", "range", "unsupported")) {
+                page.deviceModal.chooseSizeProvider(sizeProviderType);
 
+                checkLayout("/specs/tests/add-new-device-modal.gspec", device.getTags(), new HashMap<String, Object>() {{
+                    put("size_provider", sizeProviderType);
+                }});
+            }
+        });
     }
 
     @Test(dataProvider = "allDevices")
