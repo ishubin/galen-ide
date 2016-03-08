@@ -15,13 +15,13 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration;
 
-import com.galenframework.ide.DeviceRequest;
-import com.galenframework.ide.Size;
-import com.galenframework.ide.TestResultContainer;
-import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.*;
 import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.SizeProviderCustom;
+import com.galenframework.ide.devices.SizeProviderRange;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
+import com.galenframework.ide.services.filebrowser.FileItem;
 import com.galenframework.ide.services.results.TestResultService;
 import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
@@ -29,11 +29,20 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
 public class DevicesModalIT extends GalenTestBase {
+    private static final List<Device> SAMPLE_DEVICE_LIST = asList(
+            new Device("123qweasd", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
+            new Device("zxcvbnm", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
+    );
+    private static final TestResultsOverview EMPTY_TEST_RESULTS = new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null);
+    private static final List<FileItem> EMPTY_FILES = Collections.emptyList();
+    private static final List<Device> EMPTY_DEVICES = Collections.emptyList();
+
     FileBrowserService fileBrowserService = registerMock(FileBrowserService.class);
     DeviceService deviceService = registerMock(DeviceService.class);
     TestResultService testResultService = registerMock(TestResultService.class);
@@ -41,7 +50,7 @@ public class DevicesModalIT extends GalenTestBase {
 
     @Test
     public void addNewDeviceModal_shouldLookGood() {
-        configureDefaultMocks();
+        configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
 
         onEveryDevice(device -> {
             IdePage page = new IdePage(getDriver()).waitForIt();
@@ -54,7 +63,7 @@ public class DevicesModalIT extends GalenTestBase {
 
     @Test
     public void allSizeProvidersPanels_shouldLookGood() {
-        configureDefaultMocks();
+        configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
 
         onEveryDevice(device -> {
             IdePage page = new IdePage(getDriver()).waitForIt();
@@ -73,8 +82,8 @@ public class DevicesModalIT extends GalenTestBase {
 
     @Test(dataProvider = "allDevices")
     public void whenAddingNewDevice_itShouldInvoke_deviceService_createDevice(TestDevice device) {
+        configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
         resizeFor(device);
-        configureDefaultMocks();
         loadDefaultTestUrl();
 
         IdePage page = new IdePage(getDriver()).waitForIt();
@@ -100,10 +109,49 @@ public class DevicesModalIT extends GalenTestBase {
         verifyNoMoreInteractions(deviceService);
     }
 
+    @Test
+    public void tableWithDevices_shouldLookGood() throws InterruptedException {
+        configureInitialMockCalls(EMPTY_FILES, SAMPLE_DEVICE_LIST, EMPTY_TEST_RESULTS);
 
-    private void configureDefaultMocks() {
-        when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
-        when(deviceService.getAllDevices(any())).thenReturn(Collections.<Device>emptyList());
-        when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
+        onEveryDevice(device -> {
+            loadDefaultTestUrl();
+            IdePage page = new IdePage(getDriver()).waitForIt();
+            page.devicesPanel.devices.get(0).editButton.click();
+            page.deviceModal.waitForIt();
+
+            checkLayout("/specs/tests/edit-device-modal.gspec", device.getTags());
+        });
+    }
+
+    @Test
+    public void whenEditingDevice_itShouldInvoke_deviceService_changeDevice() throws InterruptedException {
+        configureInitialMockCalls(EMPTY_FILES, SAMPLE_DEVICE_LIST, EMPTY_TEST_RESULTS);
+
+        loadDefaultTestUrl();
+        IdePage page = new IdePage(getDriver()).waitForIt();
+        page.devicesPanel.devices.get(0).editButton.click();
+        page.deviceModal.waitForIt();
+
+        page.deviceModal.name.clear().typeText("Changed device name");
+        page.deviceModal.submitButton.click();
+        page.deviceModal.waitUntilHidden();
+
+        verify(deviceService, atLeastOnce()).getAllDevices(any());
+        verify(deviceService).changeDevice(any(), eq("123qweasd"), eq(new DeviceRequest()
+                .setName("Changed device name")
+                .setBrowserType("firefox")
+                .setTags(asList("mobile", "iphone"))
+                .setSizeType("custom")
+                .setSizes(asList(new Size(450, 700), new Size(500, 700)))
+        ));
+        verifyNoMoreInteractions(deviceService);
+    }
+
+    protected void configureInitialMockCalls(List<FileItem> fileBrowserServiceReturn,
+                                             List<Device> deviceServiceReturn,
+                                             TestResultsOverview testResultsServiceReturn) {
+        when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(fileBrowserServiceReturn);
+        when(deviceService.getAllDevices(any())).thenReturn(deviceServiceReturn);
+        when(testResultService.getTestResultsOverview(any())).thenReturn(testResultsServiceReturn);
     }
 }

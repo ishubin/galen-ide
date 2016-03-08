@@ -122,7 +122,7 @@ var APIMock = {
                 "supportsResizing": true,
                 "sizeProvider": {
                     "sizes": [
-                        {"width": 1024, "height": 768}
+                        {"width": 450, "height": 800}
                     ],
                     "type": "custom"
                 },

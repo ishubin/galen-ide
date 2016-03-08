@@ -19,10 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Device {
-    private String deviceId = UUID.randomUUID().toString();
+    private String deviceId;
 
     private List<String> tags;
     private String name;
@@ -37,12 +36,17 @@ public class Device {
     private String lastErrorMessage;
     private String browserType;
 
-    public Device(String name, String browserType, List<String> tags, SizeProvider sizeProvider) {
+    public Device() {
+    }
+
+    public Device(String deviceId, String name, String browserType, List<String> tags, SizeProvider sizeProvider) {
+        this.deviceId = deviceId;
         this.name = name;
         this.tags = tags;
         this.browserType = browserType;
         this.sizeProvider = sizeProvider;
     }
+
 
     public List<String> getTags() {
         return tags;
@@ -96,8 +100,9 @@ public class Device {
         return deviceId;
     }
 
-    public void setDeviceId(String deviceId) {
+    public Device setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+        return this;
     }
 
     public boolean isSupportsResizing() {

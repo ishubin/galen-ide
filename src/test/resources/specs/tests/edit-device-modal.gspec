@@ -1,0 +1,18 @@
+@import ../skeleton.gspec
+@import ../modal-generic.gspec
+
+@objects
+    device_modal                [data-modal='device-modal']
+
+
+= Add New Device Modal =
+
+    device_modal:
+        @on desktop
+            width ${normal_modal_width}
+        @on tablet
+            width 70 to 80 % of screen/width
+
+    device_modal:
+        component ../components/device_modal/device_modal.gspec, modal_title "Update Device", submit_button_text "Update"
+

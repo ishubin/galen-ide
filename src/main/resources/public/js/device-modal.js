@@ -103,7 +103,10 @@ DeviceModal.prototype.show = function (device) {
     this.device = device || null;
     this.render({device: this.device});
     if (this.device !== null) {
-        this.setModel(this.model, this.device);
+        if (this.device.sizeType === "custom") {
+            this.device.sizeProviderCustom = {sizes: this.device.sizes};
+        }
+        this.setModel(this.model, device);
     }
     this.showModal();
 };

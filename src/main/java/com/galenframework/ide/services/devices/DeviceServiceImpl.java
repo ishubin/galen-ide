@@ -72,7 +72,9 @@ public class DeviceServiceImpl implements DeviceService {
     public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
         Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
 
-        Device device = new Device(createDeviceRequest.getName(),
+        String uniqueId = UUID.randomUUID().toString();
+
+        Device device = new Device(uniqueId, createDeviceRequest.getName(),
                 createDeviceRequest.getBrowserType(),
                 createDeviceRequest.getTags(),
                 SizeProvider.readFrom(createDeviceRequest)

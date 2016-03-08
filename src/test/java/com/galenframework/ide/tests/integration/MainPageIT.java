@@ -55,8 +55,8 @@ public class MainPageIT extends GalenTestBase {
     public void tableWithDevices_shouldLookGood() throws InterruptedException {
         when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
         when(deviceService.getAllDevices(any())).thenReturn(asList(
-                new Device("Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
-                new Device("Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
+                new Device("id1", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
+                new Device("id2", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
         ));
         when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
         loadDefaultTestUrl();

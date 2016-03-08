@@ -17,6 +17,7 @@ package com.galenframework.ide.tests.integration.components.pages;
 
 import com.galenframework.ide.tests.integration.components.galenpages.GalenComponent;
 import com.galenframework.ide.tests.integration.components.galenpages.WebComponent;
+import com.galenframework.ide.tests.integration.components.galenpages.WebList;
 import com.galenframework.ide.tests.integration.components.galenpages.WebLocatorComponent;
 import org.openqa.selenium.By;
 
@@ -30,4 +31,6 @@ public class DevicePanel extends WebLocatorComponent<DevicePanel> {
     }
 
     public final WebComponent addNewDeviceLink = link("Add New Device", cssSelector(".action-devices-add-new"));
+
+    public final WebList<DeviceRow> devices = new WebList<>("Profiles", this, DeviceRow.class, cssSelector("table tbody tr"));
 }
