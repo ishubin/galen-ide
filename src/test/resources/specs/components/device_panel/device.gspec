@@ -1,0 +1,41 @@
+@import ../../rules.gspec
+
+
+@objects
+    column-*            td
+    edit_button         button.action-edit-device
+    delete_button       button.action-delete-device
+
+@groups
+    columns                 column-#
+    (button, buttons)       edit_button, delete_button
+
+@set
+    button_size         ~ 22px
+
+= Device =
+    |&columns are aligned horizontally next to each other
+    |&columns sides are horizontally inside parent
+
+    column-1:
+        text is "${name}"
+
+    column-2:
+        component tags.gspec, tags "${tags}"
+
+    column-3:
+        @if ${size_provider === "custom"}
+            component tags.gspec, tags "${sizes}"
+        @elseif ${size_provider === "range"}
+            text is "${iterations} x ( ${size_start} until ${size_end} )"
+        @else
+            text is "unsupported"
+
+    column-4:
+        text is "${status}"
+
+
+= Controls =
+    |&buttons are aligned horizontally next to each other with ${small} margin
+    |&buttons should be squared with ${button_size} size
+    |every &button is inside column-5

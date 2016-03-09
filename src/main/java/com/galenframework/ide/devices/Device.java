@@ -40,11 +40,16 @@ public class Device {
     }
 
     public Device(String deviceId, String name, String browserType, List<String> tags, SizeProvider sizeProvider) {
+        this(deviceId, name, browserType, tags, sizeProvider, DeviceStatus.STARTING);
+    }
+
+    public Device(String deviceId, String name, String browserType, List<String> tags, SizeProvider sizeProvider, DeviceStatus status) {
         this.deviceId = deviceId;
         this.name = name;
         this.tags = tags;
         this.browserType = browserType;
         this.sizeProvider = sizeProvider;
+        this.status = status;
     }
 
 

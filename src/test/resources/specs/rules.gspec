@@ -1,4 +1,5 @@
 @import galen-extras/galen-extras-rules.gspec
+@script commons.gspec.js
 
 @set
     minimal                     -1 to 1px

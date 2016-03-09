@@ -36,7 +36,7 @@ public class CookieBasedMockedService<T extends Service> {
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),
                 new Class<?>[] {serviceClass},
-                new ProxyServiceInvokationHandler(serviceClass, defaultMock)
+                new ProxyServiceInvocationHandler(serviceClass, defaultMock)
         );
     }
 

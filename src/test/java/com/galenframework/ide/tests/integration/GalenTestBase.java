@@ -116,23 +116,35 @@ public class GalenTestBase extends GalenTestNgTestBase {
         stop();
     }
 
+    public void checkLayout(String specPath) throws IOException {
+        checkLayout(specPath, emptyList());
+    }
+
     public void checkLayout(String specPath, List<String> tags, HashMap<String, Object> specVariables) throws IOException {
         checkLayout(specPath, new SectionFilter(tags, emptyList()), new Properties(), specVariables);
     }
 
+    public void onDesktopDevice(DeviceRunner deviceRunner) {
+        runOnDevice(desktopDevice, deviceRunner);
+    }
+
+    private void runOnDevice(TestDevice testDevice, DeviceRunner deviceRunner) {
+        getReport().sectionStart("Testing on device " + testDevice.getName());
+        loadDefaultTestUrl();
+        try {
+            resizeFor(testDevice);
+            Thread.sleep(500);
+            deviceRunner.run(testDevice);
+        } catch (Exception ex) {
+            throw new RuntimeException("Exception in device " + testDevice.getName(), ex);
+        } finally {
+            getReport().sectionEnd();
+        }
+    }
+
     public void onEveryDevice(DeviceRunner deviceRunner) {
         for (TestDevice testDevice : allTestDevices) {
-            getReport().sectionStart("Testing on device " + testDevice.getName());
-            loadDefaultTestUrl();
-            try {
-                resizeFor(testDevice);
-                Thread.sleep(500);
-                deviceRunner.run(testDevice);
-            } catch (Exception ex) {
-                throw new RuntimeException("Exception in device " + testDevice.getName(), ex);
-            } finally {
-                getReport().sectionEnd();
-            }
+            runOnDevice(testDevice, deviceRunner);
         }
     }
 

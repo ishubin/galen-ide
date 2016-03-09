@@ -22,14 +22,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import static java.lang.String.format;
-
-public class ProxyServiceInvokationHandler<T extends Service> implements InvocationHandler {
+public class ProxyServiceInvocationHandler<T extends Service> implements InvocationHandler {
 
     private final Class<T> serviceClass;
     private final T defaultMock;
 
-    public  ProxyServiceInvokationHandler(Class<T> serviceClass, T defaultMock) {
+    public ProxyServiceInvocationHandler(Class<T> serviceClass, T defaultMock) {
         this.serviceClass = serviceClass;
         this.defaultMock = defaultMock;
     }

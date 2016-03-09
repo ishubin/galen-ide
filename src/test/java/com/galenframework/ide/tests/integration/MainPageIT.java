@@ -19,15 +19,14 @@ import com.galenframework.ide.Size;
 import com.galenframework.ide.SizeVariation;
 import com.galenframework.ide.TestResultContainer;
 import com.galenframework.ide.TestResultsOverview;
-import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.SizeProviderCustom;
-import com.galenframework.ide.devices.SizeProviderRange;
+import com.galenframework.ide.devices.*;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
 import com.galenframework.ide.services.results.TestResultService;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
@@ -51,18 +50,21 @@ public class MainPageIT extends GalenTestBase {
         onEveryDevice(device -> checkLayout("/specs/tests/initial-page.gspec", device.getTags()));
     }
 
-    @Test(enabled = false)
-    public void tableWithDevices_shouldLookGood() throws InterruptedException {
+    @Test
+    public void tableWithDevices_shouldLookGood() throws InterruptedException, IOException {
         when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
         when(deviceService.getAllDevices(any())).thenReturn(asList(
-                new Device("id1", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
-                new Device("id2", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
+                new Device("id1", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700))), DeviceStatus.STARTING),
+                new Device("id2", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)), DeviceStatus.READY),
+                new Device("id3", "Desktop device", "phantomjs", asList("desktop"), new SizeProviderUnsupported(), DeviceStatus.BUSY),
+                new Device("id4", "Temp", "firefox", asList("desktop"), new SizeProviderUnsupported(), DeviceStatus.SHUTDOWN)
         ));
         when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
-        loadDefaultTestUrl();
 
-        throw new RuntimeException("Not finished");
-
+        onDesktopDevice(testDevice -> {
+            loadDefaultTestUrl();
+            checkLayout("/specs/tests/devices-panel.gspec");
+        });
     }
 
 }

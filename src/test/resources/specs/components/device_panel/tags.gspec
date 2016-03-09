@@ -1,0 +1,21 @@
+@import ../../rules.gspec
+
+@objects
+    tag-*           ul li
+
+
+@groups
+    (tag, tags)             tag-*
+
+@set
+    tag_height              ~ 21px
+    expected_amount         ${tags.split(',').length}
+    expected_text_json      ${commaSeparatedTextToJSON(tags)}
+
+= Tag Labels =
+    |&tags are aligned horizontally next to each other with ${small} margin
+    |every &tag has height ${tag_height} and has width > 20px
+    |amount of visible &tags should be ${expected_amount}
+    |text of all &tags should be ${expected_text_json}
+
+

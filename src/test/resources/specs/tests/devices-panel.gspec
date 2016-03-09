@@ -1,0 +1,29 @@
+@import ../skeleton.gspec
+
+
+@objects
+    device_column-*          #devices-panel table thead th
+    device-*                 #devices-panel table tbody tr
+
+@groups
+    devices                 device-#
+    device_columns          device_column-#
+
+
+= Devices panel =
+    |amount of visible &devices should be 4
+    |amount of visible &device_columns should be 5
+    |text of all &device_columns should be ["Device", "Tags", "Sizes", "Status", ""]
+
+
+    device-1:
+        component ../components/device_panel/device.gspec, name "Mobile device", tags "mobile, iphone", sizes "450x700, 500x700", size_provider "custom", status "STARTING"
+
+    device-2:
+        component ../components/device_panel/device.gspec, name "Tablet device", tags "tablet", size_start "700x800", size_end "900x800", iterations 10, size_provider "range", status "READY"
+
+    device-3:
+        component ../components/device_panel/device.gspec, name "Desktop device", tags "desktop", size_provider "unsupported", status "BUSY"
+
+    device-4:
+        component ../components/device_panel/device.gspec, name "Temp", tags "desktop", size_provider "unsupported", status "SHUTDOWN"
