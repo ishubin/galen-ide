@@ -16,7 +16,8 @@
 package com.galenframework.ide.tests.integration.components;
 
 
-import java.awt.*;
+import org.openqa.selenium.Dimension;
+
 import java.util.List;
 
 public class TestDevice {

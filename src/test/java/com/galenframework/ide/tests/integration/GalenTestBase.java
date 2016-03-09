@@ -26,11 +26,9 @@ import com.galenframework.suite.actions.GalenPageActionRunJavascript;
 import com.galenframework.testng.GalenTestNgTestBase;
 import org.mockito.Mockito;
 
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.testng.annotations.*;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -79,6 +77,9 @@ public class GalenTestBase extends GalenTestNgTestBase {
     public WebDriver createDriver(Object[] args) {
         WebDriver driver = WebDriverSingleInstance.getDriver();
         driver.get(getTestUrl());
+
+        driver.manage().window().setSize(desktopDevice.getSize());
+
         driver.manage().deleteAllCookies();
         driver.manage().addCookie(new Cookie(MockedServiceProvider.MOCK_KEY_COOKIE_NAME, mockUniqueKey, "/", new Date(new Date().getTime() + ONE_YEAR)));
         return driver;
