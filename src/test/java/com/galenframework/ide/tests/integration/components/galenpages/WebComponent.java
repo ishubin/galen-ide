@@ -121,4 +121,31 @@ public abstract class WebComponent<T extends GalenComponent> extends GalenCompon
         getWebElement().clear();
         return (T) this;
     }
+
+    public String getAttribute(String attributeName) {
+        return getWebElement().getAttribute(attributeName);
+    }
+
+    public String getAttributeOrElse(String attributeName, String defaultValue) {
+        String value = getAttribute(attributeName);
+        if (value != null) {
+            return value;
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public void waitForAttributeToChange(String attributeName, String originalValue) {
+        new Wait(getName() + " attribute \"" + attributeName +"\" to change from \"" + originalValue +"\"")
+                .until(() -> !convertNullStringToEmpty(originalValue).equals(getAttributeOrElse(attributeName, "")));
+    }
+
+    private String convertNullStringToEmpty(String original) {
+        if (original != null) {
+            return original;
+        } else {
+            return "";
+        }
+    }
+
 }

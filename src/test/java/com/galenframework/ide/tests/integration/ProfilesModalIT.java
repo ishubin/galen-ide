@@ -42,7 +42,7 @@ public class ProfilesModalIT extends GalenTestBase {
         int j = 0;
         configureDefaultMocks();
 
-        onEveryDevice(device -> {
+        onEveryTestDevice(device -> {
             IdePage page = new IdePage(getDriver()).waitForIt();
             page.header.loadProfileLink.click();
             page.loadProfilesModal.waitForIt();

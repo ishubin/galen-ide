@@ -18,9 +18,22 @@ function Template(tpl) {
     this._tpl = tpl;
 }
 Template.prototype.renderTo = function (elementLocator, data) {
-    $(elementLocator).html(this._tpl(data));
+    $(elementLocator).html(this._tpl(data)).attr("data-generation-marker", generateUniqueId());
 };
 
+
+function generateUniqueId() {
+    var max = 10000,
+        str = "",
+        randomNumber = 0;
+    str += new Date().getTime();
+
+    for (var i = 0; i < 5; i++) {
+        randomNumber = Math.round(Math.random() * max) + max;
+        str += "-" + randomNumber;
+    }
+    return str;
+}
 
 var $UIComponent = {
     behaviors: {

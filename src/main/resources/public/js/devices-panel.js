@@ -21,11 +21,13 @@ DevicesPanel.prototype.$behavior = function () {
             },
             ".action-delete-device": function ($element) {
                 var deviceId = $element.attr("data-device-id");
-
-                var that = this;
-                API.devices.deleteDevice(deviceId, function () {
-                    that.update();
-                });
+                var device = this.findDevice(deviceId);
+                if (device.status !== "SHUTDOWN") {
+                    var that = this;
+                    API.devices.deleteDevice(deviceId, function () {
+                        that.update();
+                    });
+                }
             }
         }
     };

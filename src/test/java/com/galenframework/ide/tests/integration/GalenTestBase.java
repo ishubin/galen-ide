@@ -15,14 +15,12 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration;
 
-import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.ide.tests.integration.components.DeviceRunner;
 import com.galenframework.ide.tests.integration.components.MockedWebApp;
 import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.mocks.MockRegistry;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
 import com.galenframework.speclang2.pagespec.SectionFilter;
-import com.galenframework.suite.actions.GalenPageActionRunJavascript;
 import com.galenframework.testng.GalenTestNgTestBase;
 import org.mockito.Mockito;
 
@@ -125,11 +123,11 @@ public class GalenTestBase extends GalenTestNgTestBase {
         checkLayout(specPath, new SectionFilter(tags, emptyList()), new Properties(), specVariables);
     }
 
-    public void onDesktopDevice(DeviceRunner deviceRunner) {
-        runOnDevice(desktopDevice, deviceRunner);
+    public void onDesktopTestDevice(DeviceRunner deviceRunner) {
+        runOnTestDevice(desktopDevice, deviceRunner);
     }
 
-    private void runOnDevice(TestDevice testDevice, DeviceRunner deviceRunner) {
+    private void runOnTestDevice(TestDevice testDevice, DeviceRunner deviceRunner) {
         getReport().sectionStart("Testing on device " + testDevice.getName());
         loadDefaultTestUrl();
         try {
@@ -143,9 +141,9 @@ public class GalenTestBase extends GalenTestNgTestBase {
         }
     }
 
-    public void onEveryDevice(DeviceRunner deviceRunner) {
+    public void onEveryTestDevice(DeviceRunner deviceRunner) {
         for (TestDevice testDevice : allTestDevices) {
-            runOnDevice(testDevice, deviceRunner);
+            runOnTestDevice(testDevice, deviceRunner);
         }
     }
 
