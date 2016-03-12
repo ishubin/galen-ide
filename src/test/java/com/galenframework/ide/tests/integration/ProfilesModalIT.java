@@ -62,7 +62,7 @@ public class ProfilesModalIT extends GalenTestBase {
         page.loadProfilesModal.profiles.get(1).click();
         page.loadProfilesModal.waitUntilHidden();
 
-        verify(profilesService).loadProfile(any(), eq("somepath/profile-2.gspec"));
+        verify(profilesService).loadProfile(any(), eq("profile-2.gspec"));
     }
 
 

@@ -17,24 +17,27 @@
 @set
     login_box_elements_vertical_margin  5 to 20px
     login_box_elements_side_margin      ~ 40px
-    login_box_desktop_width             380px
+    login_box_desktop_width             400px
     login_caption_text                  Login
     login_button_text                   Login
     cancel_button_text                  Cancel
 
 @on mobile
-    @set
-        login_box_elements_side_margin      0px
+    @set login_box_elements_side_margin 0px
 
 
 = Login box =
     login_box:
-        | at the top inside content with ${content_vertical_margin} margin
+        | located at the top inside content with ${content_vertical_margin} margin
         centered horizontally inside content 1px
 
-    | every &login_box_element is more or less readable
+    | &login_box_elements should be more or less readable
     | every &login_box_textfield has height ${form_textfield_height}
-    | every &login_box_button is tapable
+    | &login_box_buttons should be tapable
+
+    = Styling =
+        | login_button should look like a primary button
+        | cancel_button should look like a secondary button
 
     @on desktop, tablet
         | &login_box_form_elements are aligned vertically above each other with ${login_box_elements_vertical_margin} margin

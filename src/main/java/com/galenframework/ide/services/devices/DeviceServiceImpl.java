@@ -17,6 +17,7 @@ package com.galenframework.ide.services.devices;
 
 import com.galenframework.ide.*;
 import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.ide.devices.SizeProvider;
 import com.galenframework.ide.services.RequestData;
@@ -47,11 +48,15 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<Device> getAllDevices(RequestData requestData) {
-        return devices.stream().map(d -> d.getDevice()).collect(Collectors.toList());
+        return devices.stream().map(DeviceThread::getDevice).collect(Collectors.toList());
     }
 
     public List<DeviceThread> getDeviceThreads() {
         return devices;
+    }
+
+    private List<DeviceThread> getActiveDeviceThreads() {
+        return getDeviceThreads().stream().filter(d -> d.getDevice().getStatus() != DeviceStatus.SHUTDOWN).collect(Collectors.toList());
     }
 
     @Override
@@ -153,11 +158,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     private void syncAllBrowsersUsingProxy(RequestData requestData, String originSource, String url) {
         String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(requestData, originSource, url);
-        getDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
+        getActiveDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
     }
+
 
     private void syncAllBrowsersUsingInjection(String originSource, String url) {
-        getDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
+        getActiveDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
     }
-
 }

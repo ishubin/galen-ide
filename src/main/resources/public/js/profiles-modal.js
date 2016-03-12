@@ -7,10 +7,10 @@ LoadProfilesModal.prototype.$behavior = function () {
     return {
         click: {
             ".profile-file-item": function (element) {
-                var path = element.attr("data-file-path");
-                if (!isBlank(path)) {
+                var profileName = element.attr("data-profile-name");
+                if (!isBlank(profileName)) {
                     var that = this;
-                    API.profiles.load(path, function () {
+                    API.profiles.load(profileName, function () {
                         that.hideModal();
                         that.app.updateDevices();
                     });
