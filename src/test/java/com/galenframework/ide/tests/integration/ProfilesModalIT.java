@@ -26,6 +26,7 @@ import com.galenframework.ide.services.results.TestResultService;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
@@ -38,17 +39,14 @@ public class ProfilesModalIT extends GalenTestBase {
     ProfilesService profilesService = registerMock(ProfilesService.class);
 
     @Test
-    public void loadProfilesModal_isDisplayedCorrectly() throws InterruptedException {
-        int j = 0;
+    public void loadProfilesModal_isDisplayedCorrectly() throws InterruptedException, IOException {
         configureDefaultMocks();
 
-        onEveryTestDevice(device -> {
-            IdePage page = new IdePage(getDriver()).waitForIt();
-            page.header.loadProfileLink.click();
-            page.loadProfilesModal.waitForIt();
+        IdePage page = new IdePage(getDriver()).waitForIt();
+        page.header.loadProfileLink.click();
+        page.loadProfilesModal.waitForIt();
 
-            checkLayout("/specs/tests/load-profiles-modal.gspec", device.getTags());
-        });
+        checkLayout("/specs/tests/load-profiles-modal.gspec");
     }
 
     @Test

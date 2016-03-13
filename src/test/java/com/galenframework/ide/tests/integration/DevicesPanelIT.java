@@ -34,25 +34,20 @@ public class DevicesPanelIT extends GalenTestBase {
     public void tableWithDevices_shouldLookGood() throws InterruptedException, IOException {
         configureMocks();
 
-        onDesktopTestDevice(testDevice -> {
-            loadDefaultTestUrl();
-            checkLayout("/specs/tests/devices-panel.gspec");
-        });
+        loadDefaultTestUrl();
+        checkLayout("/specs/tests/devices-panel.gspec");
     }
 
     @Test
     public void itShouldInvoke_deviceService_shutdownDevice_onlyWhenClicking_activeDeleteButton() throws InterruptedException, IOException {
         configureMocks();
+        loadDefaultTestUrl();
 
-        onDesktopTestDevice(testDevice -> {
-            loadDefaultTestUrl();
-
-            IdePage page = new IdePage(getDriver()).waitForIt();
-            String timeMarker = page.devicesPanel.getAttribute("data-generation-marker");
-            page.devicesPanel.devices.get(3).deleteButton.click();
-            page.devicesPanel.devices.get(1).deleteButton.click();
-            page.devicesPanel.waitForAttributeToChange("data-generation-marker", timeMarker);
-        });
+        IdePage page = new IdePage(getDriver()).waitForIt();
+        String timeMarker = page.devicesPanel.getAttribute("data-generation-marker");
+        page.devicesPanel.devices.get(3).deleteButton.click();
+        page.devicesPanel.devices.get(1).deleteButton.click();
+        page.devicesPanel.waitForAttributeToChange("data-generation-marker", timeMarker);
 
         verify(deviceService, atLeast(2)).getAllDevices(any());
         verify(deviceService).shutdownDevice(any(), eq("id2"));

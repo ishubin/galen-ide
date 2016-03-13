@@ -27,6 +27,7 @@ import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -49,41 +50,36 @@ public class DevicesModalIT extends GalenTestBase {
 
 
     @Test
-    public void addNewDeviceModal_shouldLookGood() {
+    public void addNewDeviceModal_shouldLookGood() throws IOException {
         configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
 
-        onEveryTestDevice(device -> {
-            IdePage page = new IdePage(getDriver()).waitForIt();
-            page.devicesPanel.addNewDeviceLink.click();
-            page.deviceModal.waitForIt();
+        IdePage page = new IdePage(getDriver()).waitForIt();
+        page.devicesPanel.addNewDeviceLink.click();
+        page.deviceModal.waitForIt();
 
-            checkLayout("/specs/tests/add-new-device-modal.gspec", device.getTags());
-        });
+        checkLayout("/specs/tests/add-new-device-modal.gspec");
     }
 
     @Test
-    public void allSizeProvidersPanels_shouldLookGood() {
+    public void allSizeProvidersPanels_shouldLookGood() throws IOException {
         configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
 
-        onEveryTestDevice(device -> {
-            IdePage page = new IdePage(getDriver()).waitForIt();
-            page.devicesPanel.addNewDeviceLink.click();
-            page.deviceModal.waitForIt();
+        IdePage page = new IdePage(getDriver()).waitForIt();
+        page.devicesPanel.addNewDeviceLink.click();
+        page.deviceModal.waitForIt();
 
-            for (String sizeProviderType: asList("custom", "range", "unsupported")) {
-                page.deviceModal.chooseSizeProvider(sizeProviderType);
+        for (String sizeProviderType: asList("custom", "range", "unsupported")) {
+            page.deviceModal.chooseSizeProvider(sizeProviderType);
 
-                checkLayout("/specs/tests/device_modal_only_size_provider.gspec", device.getTags(), new HashMap<String, Object>() {{
-                    put("size_provider", sizeProviderType);
-                }});
-            }
-        });
+            checkLayout("/specs/tests/device_modal_only_size_provider.gspec", Collections.<String>emptyList(), new HashMap<String, Object>() {{
+                put("size_provider", sizeProviderType);
+            }});
+        }
     }
 
-    @Test(dataProvider = "allDevices")
-    public void whenAddingNewDevice_itShouldInvoke_deviceService_createDevice(TestDevice device) {
+    @Test
+    public void whenAddingNewDevice_itShouldInvoke_deviceService_createDevice() {
         configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
-        resizeFor(device);
         loadDefaultTestUrl();
 
         IdePage page = new IdePage(getDriver()).waitForIt();
@@ -110,17 +106,15 @@ public class DevicesModalIT extends GalenTestBase {
     }
 
     @Test
-    public void tableWithDevices_shouldLookGood() throws InterruptedException {
+    public void tableWithDevices_shouldLookGood() throws InterruptedException, IOException {
         configureInitialMockCalls(EMPTY_FILES, SAMPLE_DEVICE_LIST, EMPTY_TEST_RESULTS);
 
-        onEveryTestDevice(device -> {
-            loadDefaultTestUrl();
-            IdePage page = new IdePage(getDriver()).waitForIt();
-            page.devicesPanel.devices.get(0).editButton.click();
-            page.deviceModal.waitForIt();
+        loadDefaultTestUrl();
+        IdePage page = new IdePage(getDriver()).waitForIt();
+        page.devicesPanel.devices.get(0).editButton.click();
+        page.deviceModal.waitForIt();
 
-            checkLayout("/specs/tests/edit-device-modal.gspec", device.getTags());
-        });
+        checkLayout("/specs/tests/edit-device-modal.gspec");
     }
 
     @Test

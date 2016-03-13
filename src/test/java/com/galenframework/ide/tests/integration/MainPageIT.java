@@ -24,6 +24,7 @@ import com.galenframework.ide.services.filebrowser.FileItem;
 import com.galenframework.ide.services.results.TestResultService;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
@@ -36,7 +37,7 @@ public class MainPageIT extends GalenTestBase {
     TestResultService testResultService = registerMock(TestResultService.class);
 
     @Test
-    public void initialPage_isDisplayedCorrectly() throws InterruptedException {
+    public void initialPage_isDisplayedCorrectly() throws InterruptedException, IOException {
         when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(asList(
                 new FileItem(true, "folder1", "/folder1", false),
                 new FileItem(false, "home.gspec", "/home.gspec", true)
@@ -44,7 +45,8 @@ public class MainPageIT extends GalenTestBase {
         when(deviceService.getAllDevices(any())).thenReturn(Collections.<Device>emptyList());
         when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
 
-        onEveryTestDevice(device -> checkLayout("/specs/tests/initial-page.gspec", device.getTags()));
+        loadDefaultTestUrl();
+        checkLayout("/specs/tests/initial-page.gspec");
     }
 
 }
