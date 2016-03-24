@@ -21,26 +21,26 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class MockKey {
     private final String uniqueKey;
-    private final String mockClass;
+    private final String mockName;
 
-    public MockKey(String uniqueKey, Class<?> mockClass) {
+    public MockKey(String uniqueKey, String mockName) {
         this.uniqueKey = uniqueKey;
-        this.mockClass = mockClass.getName();
+        this.mockName = mockName;
     }
 
     public String getUniqueKey() {
         return uniqueKey;
     }
 
-    public String getMockClass() {
-        return mockClass;
+    public String getMockName() {
+        return mockName;
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(uniqueKey)
-                .append(mockClass)
+                .append(mockName)
                 .toHashCode();
     }
 
@@ -57,7 +57,7 @@ public class MockKey {
 
         return new EqualsBuilder()
                 .append(uniqueKey, rhs.uniqueKey)
-                .append(mockClass, rhs.mockClass)
+                .append(mockName, rhs.mockName)
                 .isEquals();
     }
 
@@ -65,7 +65,7 @@ public class MockKey {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("uniqueKey", uniqueKey)
-                .append("mockClass", mockClass)
+                .append("mockName", mockName)
                 .toString();
     }
 }

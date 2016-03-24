@@ -23,10 +23,18 @@ import java.util.Optional;
 public class CookieBasedMockedService<T extends Service> {
     private final Class<T> serviceClass;
     private final T defaultMock;
+    private final String serviceName;
 
     private Optional<T> service = Optional.empty();
 
+    public CookieBasedMockedService(String serviceName, Class<T> serviceClass, T defaultMock) {
+        this.serviceName = serviceName;
+        this.serviceClass = serviceClass;
+        this.defaultMock = defaultMock;
+    }
+
     public CookieBasedMockedService(Class<T> serviceClass, T defaultMock) {
+        this.serviceName = serviceClass.getName();
         this.serviceClass = serviceClass;
         this.defaultMock = defaultMock;
     }
@@ -36,7 +44,7 @@ public class CookieBasedMockedService<T extends Service> {
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),
                 new Class<?>[] {serviceClass},
-                new ProxyServiceInvocationHandler(serviceClass, defaultMock)
+                new CookieBasedProxyServiceInvocationHandler(serviceName, defaultMock)
         );
     }
 

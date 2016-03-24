@@ -61,7 +61,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
     }
 
     protected <T> T registerMock(T mock, Class<T> mockClass) {
-        MockRegistry.registerMock(mockUniqueKey, mock, mockClass);
+        MockRegistry.registerMock(mockUniqueKey, mock, mockClass.getName());
         mocks.add(mock);
         return mock;
     }

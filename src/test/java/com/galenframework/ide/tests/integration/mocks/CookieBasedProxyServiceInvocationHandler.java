@@ -22,13 +22,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-public class ProxyServiceInvocationHandler<T extends Service> implements InvocationHandler {
+class CookieBasedProxyServiceInvocationHandler<T extends Service> implements InvocationHandler {
 
-    private final Class<T> serviceClass;
     private final T defaultMock;
+    private final String serviceName;
 
-    public ProxyServiceInvocationHandler(Class<T> serviceClass, T defaultMock) {
-        this.serviceClass = serviceClass;
+    CookieBasedProxyServiceInvocationHandler(String serviceName, T defaultMock) {
+        this.serviceName = serviceName;
         this.defaultMock = defaultMock;
     }
 
@@ -40,7 +40,7 @@ public class ProxyServiceInvocationHandler<T extends Service> implements Invocat
             Optional<String> cookie = requestData.get().cookie(MockedServiceProvider.MOCK_KEY_COOKIE_NAME);
             if (cookie.isPresent()) {
                 String mockUniqueKey = cookie.get();
-                Optional<T> mock = MockRegistry.pickMock(mockUniqueKey, serviceClass);
+                Optional<T> mock = MockRegistry.pickMock(mockUniqueKey, serviceName);
                 if (mock.isPresent()) {
                     return method.invoke(mock.get(), args);
                 }

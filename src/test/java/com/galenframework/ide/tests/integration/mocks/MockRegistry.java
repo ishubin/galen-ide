@@ -24,25 +24,26 @@ public enum MockRegistry {
 
     private Map<MockKey, Object> mocks = new HashMap<>();
 
-    private <T> void register(String mockUniqueKey, T mock, Class<T> mockClass) {
-        MockKey mockKey = new MockKey(mockUniqueKey, mockClass);
+    private <T> void register(String mockUniqueKey, T mock, String mockName) {
+        MockKey mockKey = new MockKey(mockUniqueKey, mockName);
         mocks.put(mockKey, mock);
     }
 
-    private synchronized <T> Optional<T> pick(String mockUniqueKey, Class<T> mockClass) {
-        MockKey mockKey = new MockKey(mockUniqueKey, mockClass);
+    @SuppressWarnings("unchecked")
+    private synchronized <T> Optional<T> pick(String mockUniqueKey, String mockName) {
+        MockKey mockKey = new MockKey(mockUniqueKey, mockName);
         if (mocks.containsKey(mockKey)) {
             return Optional.ofNullable((T) mocks.get(mockKey));
         }
         return Optional.empty();
     }
 
-    public static <T> void registerMock(String mockUniqueKey, T mock, Class<T> mockClass) {
-        MockRegistry.INSTANCE.register(mockUniqueKey, mock, mockClass);
+    public static <T> void registerMock(String mockUniqueKey, T mock, String mockName) {
+        MockRegistry.INSTANCE.register(mockUniqueKey, mock, mockName);
     }
 
-    public static <T> Optional<T> pickMock(String mockUniqueKey, Class<T> mockClass) {
-        return MockRegistry.INSTANCE.pick(mockUniqueKey, mockClass);
+    public static <T> Optional<T> pickMock(String mockUniqueKey, String mockName) {
+        return MockRegistry.INSTANCE.pick(mockUniqueKey, mockName);
     }
 
 }
