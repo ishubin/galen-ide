@@ -29,9 +29,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.galenframework.ide.controllers.ProfilesController.GALEN_EXTENSION;
+
 
 public class ProfilesServiceImpl implements ProfilesService {
-    public static final String GALEN_EXTENSION = ".galen";
     private final ServiceProvider serviceProvider;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,8 +41,8 @@ public class ProfilesServiceImpl implements ProfilesService {
     }
 
     @Override
-    public List<FileItem> getProfiles(RequestData requestData) {
-        File[] filesInFolder = obtainRootFolder(requestData).listFiles();
+    public List<FileItem> getProfiles(RequestData requestData, String folderPath) {
+        File[] filesInFolder = new File(folderPath).listFiles();
 
         List<FileItem> fileItems = new LinkedList<>();
         if (filesInFolder != null) {
@@ -56,17 +57,10 @@ public class ProfilesServiceImpl implements ProfilesService {
 
 
     @Override
-    public void saveProfile(RequestData requestData, String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new RuntimeException("Name should not be empty");
-        }
-        String fileName = name.replace("/", "");
+    public void saveProfile(RequestData requestData, String path) {
 
-        if (!fileName.endsWith(GALEN_EXTENSION)) {
-            fileName = fileName + GALEN_EXTENSION;
-        }
 
-        File profileFile = new File(obtainRootFolder(requestData).getAbsolutePath() + File.separator + fileName);
+        File profileFile = new File(path);
         ProfileContent profileContent = new ProfileContent();
         profileContent.setSettings(serviceProvider.settingsService().getSettings(requestData));
         profileContent.setDevices(serviceProvider.deviceService().getAllDevices(requestData).stream().map(DeviceRequest::fromDevice).collect(Collectors.toList()));
@@ -80,7 +74,7 @@ public class ProfilesServiceImpl implements ProfilesService {
 
     @Override
     public void loadProfile(RequestData requestData, String path) {
-        File file = new File(obtainRootFolder(requestData).getAbsolutePath() + File.separator + path);
+        File file = new File(path);
         if (file.exists() && !file.isDirectory()) {
             try {
                 String content = FileUtils.readFileToString(file);
@@ -101,19 +95,6 @@ public class ProfilesServiceImpl implements ProfilesService {
         return serviceProvider;
     }
 
-    private File obtainRootFolder(RequestData requestData) {
-        File root = new File(serviceProvider.settingsService().getSettings(requestData).getHomeDirectory());
-        if (root.exists()) {
-            if (!root.isDirectory()) {
-                throw new RuntimeException("Home is not a directory: " + root.getAbsolutePath());
-            }
-        } else {
-            if (!root.mkdirs()) {
-                throw new RuntimeException("Cannot create a directory: " + root.getAbsolutePath());
-            }
-        }
-        return root;
-    }
 
     private void loadProfile(RequestData requestData, ProfileContent profileContent) {
         serviceProvider.settingsService().changeSettings(requestData, profileContent.getSettings());
@@ -122,7 +103,7 @@ public class ProfilesServiceImpl implements ProfilesService {
         List<DeviceRequest> deviceRequests = profileContent.getDevices();
         if (deviceRequests != null) {
             deviceRequests.stream().forEach(dr ->
-                            serviceProvider.deviceService().createDevice(requestData, dr)
+                serviceProvider.deviceService().createDevice(requestData, dr)
             );
         }
     }

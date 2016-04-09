@@ -17,8 +17,12 @@ package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.DeviceRequest;
+import com.galenframework.ide.controllers.actions.DeviceActionCheckLayoutRequest;
+import com.galenframework.ide.controllers.actions.DeviceActionOpenUrlRequest;
+import com.galenframework.ide.controllers.actions.DeviceActionResizeRequest;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.devices.DeviceService;
+import org.openqa.selenium.Dimension;
 
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -27,9 +31,11 @@ public class DeviceController {
 
     private final DeviceService deviceService;
     ObjectMapper mapper = new ObjectMapper();
+    private final String reportStoragePath;
 
-    public DeviceController(DeviceService deviceService) {
+    public DeviceController(DeviceService deviceService, String reportFolderStorage) {
         this.deviceService = deviceService;
+        this.reportStoragePath = reportFolderStorage;
         initRoutes();
     }
 
@@ -57,6 +63,28 @@ public class DeviceController {
                 deviceService.shutdownDevice(new RequestData(req), deviceId);
                 return "Delete device " + deviceId;
             } else throw new RuntimeException("Incorrect request, missing device id");
+        }, toJson());
+
+
+        post("api/devices/:deviceId/action/:actionName", (req, res) -> {
+            String deviceId = req.params("deviceId");
+            String actionName = req.params("actionName");
+            String requestBody = req.body();
+
+            if ("openUrl".equals(actionName)) {
+                DeviceActionOpenUrlRequest openUrlRequest = mapper.readValue(requestBody, DeviceActionOpenUrlRequest.class);
+                deviceService.openUrl(new RequestData(req), deviceId, openUrlRequest.getUrl());
+            } else if ("resize".equals(actionName)) {
+                DeviceActionResizeRequest resizeRequest = mapper.readValue(requestBody, DeviceActionResizeRequest.class);
+                deviceService.resize(new RequestData(req), deviceId, new Dimension(resizeRequest.getWidth(), resizeRequest.getHeight()));
+            } else if ("checkLayout".equals(actionName)) {
+                DeviceActionCheckLayoutRequest checkLayoutRequest = mapper.readValue(requestBody, DeviceActionCheckLayoutRequest.class);
+                String reportId = deviceService.checkLayout(new RequestData(req), deviceId, checkLayoutRequest.getPath(), checkLayoutRequest.getTags(), reportStoragePath);
+                return reportId;
+            } else {
+                throw new RuntimeException("Unknown action: " + actionName);
+            }
+            return "registered action: " + actionName;
         }, toJson());
     }
 }

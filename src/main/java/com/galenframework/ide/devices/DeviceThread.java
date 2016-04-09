@@ -69,42 +69,45 @@ public class DeviceThread extends Thread {
     }
 
     public void openUrl(String url) {
-        sendCommand(new DeviceOpenUrlCommand(url));
+        sendCommands(new DeviceOpenUrlCommand(url));
     }
     public void injectSource(String url, String originSource) {
-        sendCommand(new DeviceOpenUrlCommand(url));
-        sendCommand(new DeviceInjectSourceCommand(originSource));
+        sendCommands(new DeviceOpenUrlCommand(url));
+        sendCommands(new DeviceInjectSourceCommand(originSource));
     }
 
     public void checkLayout(Settings settings, String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
-        sendCommand(new DeviceCheckLayoutCommand(settings, uniqueId, size, spec, testResultsListener, reportStoragePath));
+        sendCommands(new DeviceCheckLayoutCommand(settings, uniqueId, size, spec, testResultsListener, reportStoragePath));
     }
 
     public void resize(Dimension size) {
-        sendCommand(new DeviceResizeCommand(size));
+        sendCommands(new DeviceResizeCommand(size));
     }
 
-    public void createDriverFromClass(Class<? extends WebDriver> driverClass) {
-        sendCommand(new DeviceCreateDriverFromClassCommand(driverClass));
+    public void initDriverFromClass(Class<? extends WebDriver> driverClass) {
+        sendCommands(new DeviceCreateDriverFromClassCommand(driverClass));
     }
 
     public void shutdownDevice() {
-        sendCommand(new DeviceShutdownCommand());
+        sendCommands(new DeviceShutdownCommand());
     }
 
     public void createDriver(DriverProvider driverProvider) {
-        sendCommand(new DeviceCreateDriverFromProvider(driverProvider));
+        sendCommands(new DeviceCreateDriverFromProvider(driverProvider));
     }
 
-    private void sendCommand(DeviceCommand command) {
+    public synchronized void sendCommands(DeviceCommand... commands) {
         try {
             if (device.isActive()) {
-                this.commands.put(command);
+                for (DeviceCommand command : commands) {
+                    this.commands.put(command);
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 
     public List<String> getTags() {
         return device.getTags();
@@ -114,4 +117,15 @@ public class DeviceThread extends Thread {
         return device;
     }
 
+    public Dimension getCurrentSize() {
+        return device.retrieveCurrentSize();
+    }
+
+    public String getCurrentUrl() {
+        return device.getDriver().getCurrentUrl();
+    }
+
+    public String getPageSource() {
+        return device.getDriver().getPageSource();
+    }
 }

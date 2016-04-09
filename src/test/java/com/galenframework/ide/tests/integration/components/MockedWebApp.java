@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.components;
 
+import com.galenframework.ide.IdeArguments;
 import com.galenframework.ide.Main;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
@@ -32,7 +33,9 @@ public class MockedWebApp extends Main {
 
     private void init() {
         ServiceProvider serviceProvider = new MockedServiceProvider();
-        initWebServer(serviceProvider);
+        IdeArguments ideArguments = new IdeArguments();
+        ideArguments.setPort(4567);
+        initWebServer(serviceProvider, ideArguments, "target/reports");
     }
 
     public synchronized static void create() throws IOException {

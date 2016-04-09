@@ -16,6 +16,7 @@
 package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;
@@ -132,5 +133,9 @@ public class Device {
 
     public void setBrowserType(String browserType) {
         this.browserType = browserType;
+    }
+
+    public Dimension retrieveCurrentSize() {
+        return this.driver.manage().window().getSize();
     }
 }

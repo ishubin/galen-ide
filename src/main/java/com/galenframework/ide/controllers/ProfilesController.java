@@ -17,39 +17,78 @@ package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.SaveProfileRequest;
+import com.galenframework.ide.Settings;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.profiles.ProfilesService;
+import com.galenframework.ide.services.settings.SettingsService;
+
+import java.io.File;
+
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 public class ProfilesController {
+    public static final String GALEN_EXTENSION = ".galen";
 
     private final ProfilesService profilesService;
+    private final SettingsService settingsService;
     ObjectMapper mapper = new ObjectMapper();
 
-    public ProfilesController(ProfilesService profilesService) {
+    public ProfilesController(ProfilesService profilesService, SettingsService settingsService) {
         this.profilesService = profilesService;
+        this.settingsService = settingsService;
         initRoutes();
     }
 
     public void initRoutes() {
         get("api/profiles", (req, res) -> {
-            return profilesService.getProfiles(new RequestData(req));
+            RequestData requestData = new RequestData(req);
+            String fullPath = obtainRootFolder(requestData).getAbsolutePath();
+            return profilesService.getProfiles(requestData, fullPath);
         }, toJson());
 
         post("api/profiles", (req, res) -> {
             SaveProfileRequest saveProfileRequest = mapper.readValue(req.body(), SaveProfileRequest.class);
-            profilesService.saveProfile(new RequestData(req), saveProfileRequest.getName());
+            RequestData requestData = new RequestData(req);
+
+            String name = saveProfileRequest.getName();
+
+            if (name == null || name.trim().isEmpty()) {
+                throw new RuntimeException("Name should not be empty");
+            }
+            String fileName = name.replace("/", "");
+            if (!fileName.endsWith(GALEN_EXTENSION)) {
+                fileName = fileName + GALEN_EXTENSION;
+            }
+
+            String fullPath = obtainRootFolder(requestData).getAbsolutePath() + File.separator + fileName;
+            profilesService.saveProfile(requestData, fullPath);
             return "saved";
         }, toJson());
 
         post("api/profiles-load/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
-                profilesService.loadProfile(new RequestData(req), splat[0]);
+                RequestData requestData = new RequestData(req);
+                String fullPath = obtainRootFolder(requestData).getAbsolutePath() + File.separator + splat[0];
+                profilesService.loadProfile(requestData, fullPath);
                 return "loaded";
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
+    }
+
+    private File obtainRootFolder(RequestData requestData) {
+        File root = new File(settingsService.getSettings(requestData).getHomeDirectory());
+        if (root.exists()) {
+            if (!root.isDirectory()) {
+                throw new RuntimeException("Home is not a directory: " + root.getAbsolutePath());
+            }
+        } else {
+            if (!root.mkdirs()) {
+                throw new RuntimeException("Cannot create a directory: " + root.getAbsolutePath());
+            }
+        }
+        return root;
     }
 }

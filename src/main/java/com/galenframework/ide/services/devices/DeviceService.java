@@ -16,15 +16,19 @@
 package com.galenframework.ide.services.devices;
 
 import com.galenframework.ide.DeviceRequest;
+import com.galenframework.ide.controllers.actions.DeviceActionCheckLayoutRequest;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
+import org.openqa.selenium.Dimension;
 
 import java.util.List;
 
 public interface DeviceService extends  Service {
 
     void createDevice(RequestData requestData, DeviceRequest createDeviceRequest);
+
+    void startMasterDriver(RequestData requestData, DeviceRequest createDeviceRequest, String url);
 
     List<Device> getAllDevices(RequestData requestData);
 
@@ -37,4 +41,16 @@ public interface DeviceService extends  Service {
     void changeDevice(RequestData requestData, String deviceId, DeviceRequest deviceRequest);
 
     void shutdownAllDevices(RequestData requestData);
+
+    /**
+     * Opens url on specified device
+     * @param requestData a request meta data
+     * @param deviceId Id of device
+     * @param url Url of the website that will be open
+     */
+    void openUrl(RequestData requestData, String deviceId, String url);
+
+    String checkLayout(RequestData requestData, String deviceId, String specPath, List<String> tags, String reportStoragePath);
+
+    void resize(RequestData requestData, String deviceId, Dimension size);
 }

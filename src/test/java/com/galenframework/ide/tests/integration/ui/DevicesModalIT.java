@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration;
+package com.galenframework.ide.tests.integration.ui;
 
 import com.galenframework.ide.*;
 import com.galenframework.ide.devices.Device;
@@ -23,7 +23,6 @@ import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
 import com.galenframework.ide.services.results.TestResultService;
-import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 

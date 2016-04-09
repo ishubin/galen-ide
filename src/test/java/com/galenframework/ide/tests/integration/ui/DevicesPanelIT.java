@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration;
+package com.galenframework.ide.tests.integration.ui;
 
 import com.galenframework.ide.Size;
 import com.galenframework.ide.SizeVariation;

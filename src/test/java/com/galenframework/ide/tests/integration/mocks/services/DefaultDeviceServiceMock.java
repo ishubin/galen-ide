@@ -20,6 +20,7 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.devices.DeviceService;
+import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,10 @@ import java.util.List;
 public class DefaultDeviceServiceMock implements DeviceService {
     @Override
     public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
+    }
+
+    @Override
+    public void startMasterDriver(RequestData requestData, DeviceRequest createDeviceRequest, String url) {
     }
 
     @Override
@@ -52,6 +57,21 @@ public class DefaultDeviceServiceMock implements DeviceService {
 
     @Override
     public void shutdownAllDevices(RequestData requestData) {
+    }
+
+    @Override
+    public void openUrl(RequestData requestData, String deviceId, String url) {
+
+    }
+
+    @Override
+    public String checkLayout(RequestData requestData, String deviceId, String specPath, List<String> tags, String reportStoragePath) {
+        return null;
+    }
+
+    @Override
+    public void resize(RequestData requestData, String deviceId, Dimension size) {
+
     }
 
     @Override

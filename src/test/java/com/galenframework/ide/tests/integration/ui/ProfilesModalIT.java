@@ -13,8 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration;
+package com.galenframework.ide.tests.integration.ui;
 
+import com.galenframework.ide.Settings;
 import com.galenframework.ide.TestResultContainer;
 import com.galenframework.ide.TestResultsOverview;
 import com.galenframework.ide.devices.Device;
@@ -23,9 +24,11 @@ import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
 import com.galenframework.ide.services.profiles.ProfilesService;
 import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -36,7 +39,11 @@ public class ProfilesModalIT extends GalenTestBase {
     FileBrowserService fileBrowserService = registerMock(FileBrowserService.class);
     DeviceService deviceService = registerMock(DeviceService.class);
     TestResultService testResultService = registerMock(TestResultService.class);
+    SettingsService settingsService = registerMock(SettingsService.class);
     ProfilesService profilesService = registerMock(ProfilesService.class);
+
+    private Settings settings = new Settings()
+            .setHomeDirectory("target");
 
     @Test
     public void loadProfilesModal_isDisplayedCorrectly() throws InterruptedException, IOException {
@@ -60,7 +67,8 @@ public class ProfilesModalIT extends GalenTestBase {
         page.loadProfilesModal.profiles.get(1).click();
         page.loadProfilesModal.waitUntilHidden();
 
-        verify(profilesService).loadProfile(any(), eq("profile-2.gspec"));
+        String expectedPathPrefix = new File("target").getAbsolutePath() + File.separator;
+        verify(profilesService).loadProfile(any(), eq(expectedPathPrefix + "profile-2.gspec"));
     }
 
 
@@ -68,7 +76,9 @@ public class ProfilesModalIT extends GalenTestBase {
         when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
         when(deviceService.getAllDevices(any())).thenReturn(Collections.<Device>emptyList());
         when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
-        when(profilesService.getProfiles(any())).thenReturn(asList(
+        when(settingsService.getSettings(any()))
+                .thenReturn(settings);
+        when(profilesService.getProfiles(any(), any())).thenReturn(asList(
                 new FileItem(false, "profile-1.gspec", "somepath/profile-1.gspec", false),
                 new FileItem(false, "profile-2.gspec", "somepath/profile-2.gspec", false),
                 new FileItem(false, "profile-3.gspec", "somepath/profile-3.gspec", false)

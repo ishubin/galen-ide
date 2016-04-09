@@ -64,8 +64,9 @@ public class Settings {
         return homeDirectory;
     }
 
-    public void setHomeDirectory(String homeDirectory) {
+    public Settings setHomeDirectory(String homeDirectory) {
         this.homeDirectory = homeDirectory;
+        return this;
     }
 
     public String getPhantomjsDriverBinPath() {

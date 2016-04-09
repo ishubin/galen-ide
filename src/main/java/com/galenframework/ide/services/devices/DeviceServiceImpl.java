@@ -23,6 +23,7 @@ import com.galenframework.ide.devices.SizeProvider;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -32,18 +33,18 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DeviceServiceImpl implements DeviceService {
     private final ServiceProvider serviceProvider;
-    private WebDriver masterDriver;
+    private final IdeArguments ideArguments;
+    private DeviceThread masterDevice;
     private List<DeviceThread> devices = new LinkedList<>();
 
-    public DeviceServiceImpl(ServiceProvider serviceProvider) {
+    public DeviceServiceImpl(IdeArguments ideArguments, ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
-        masterDriver = new FirefoxDriver();
-        masterDriver.get("http://localhost:8080");
-        masterDriver.manage().window().maximize();
+        this.ideArguments = ideArguments;
     }
 
     @Override
@@ -61,22 +62,43 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void syncAllBrowsers(RequestData requestData) {
-        String originSource = masterDriver.getPageSource();
-        String url = masterDriver.getCurrentUrl();
+        if (masterDevice != null) {
+            String originSource = masterDevice.getPageSource();
+            String url = masterDevice.getCurrentUrl();
 
-        String domSyncMethod = serviceProvider.settingsService().getSettings(requestData).getDomSyncMethod();
+            String domSyncMethod = serviceProvider.settingsService().getSettings(requestData).getDomSyncMethod();
 
-        if ("inject".equals(domSyncMethod)) {
-            syncAllBrowsersUsingInjection(originSource, url);
+            if ("inject".equals(domSyncMethod)) {
+                syncAllBrowsersUsingInjection(originSource, url);
+            } else {
+                syncAllBrowsersUsingProxy(requestData, originSource, url);
+            }
         } else {
-            syncAllBrowsersUsingProxy(requestData, originSource, url);
+            throw new RuntimeException("Main driver was not configured");
         }
     }
 
     @Override
-    public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
+    public void startMasterDriver(RequestData requestData, DeviceRequest createDeviceRequest, String url) {
+        masterDevice = createDeviceThreadFromRequest(createDeviceRequest);
         Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
+        masterDevice.initDriverFromClass(webDriverClass);
+        if (url != null) {
+            masterDevice.openUrl(url);
+        }
+    }
 
+
+    @Override
+    public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
+        DeviceThread deviceThread = createDeviceThreadFromRequest(createDeviceRequest);
+        addDeviceThread(deviceThread);
+
+        Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
+        deviceThread.initDriverFromClass(webDriverClass);
+    }
+
+    private DeviceThread createDeviceThreadFromRequest(DeviceRequest createDeviceRequest) {
         String uniqueId = UUID.randomUUID().toString();
 
         Device device = new Device(uniqueId, createDeviceRequest.getName(),
@@ -84,10 +106,7 @@ public class DeviceServiceImpl implements DeviceService {
                 createDeviceRequest.getTags(),
                 SizeProvider.readFrom(createDeviceRequest)
         );
-        DeviceThread  deviceThread = new DeviceThread(device);
-        addDeviceThread(deviceThread);
-
-        deviceThread.createDriverFromClass(webDriverClass);
+        return new DeviceThread(device);
     }
 
 
@@ -96,10 +115,11 @@ public class DeviceServiceImpl implements DeviceService {
         TestResultService testResultService = serviceProvider.testResultService();
         testResultService.clearAllTestResults(requestData);
         Settings settings = serviceProvider.settingsService().getSettings(requestData);
+
         getDeviceThreads().forEach(dt ->
             dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                String uniqueId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags(), size);
-                dt.checkLayout(settings, uniqueId, size, spec, testResultService, reportStoragePath);
+                String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags(), size);
+                dt.checkLayout(settings, reportId, size, spec, testResultService, reportStoragePath);
             })
         );
     }
@@ -136,8 +156,48 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public void openUrl(RequestData requestData, String deviceId, String url) {
+        withMandatoryDevice(deviceId, deviceThread -> {
+            deviceThread.openUrl(url);
+            return null;
+        });
+    }
+
+
+    @Override
+    public void resize(RequestData requestData, String deviceId, Dimension size) {
+        withMandatoryDevice(deviceId, (dt) -> {
+            dt.resize(size);
+            return null;
+        });
+    }
+
+    @Override
+    public String checkLayout(RequestData requestData, String deviceId, String specPath, List<String> tags, String reportStoragePath) {
+        return withMandatoryDevice(deviceId, (dt) -> {
+            TestResultService testResultService = serviceProvider.testResultService();
+            Settings settings = serviceProvider.settingsService().getSettings(requestData);
+
+            Dimension size = dt.getCurrentSize();
+            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), tags, size);
+            dt.checkLayout(settings, reportId, size, specPath, testResultService, reportStoragePath);
+
+            return reportId;
+        });
+    }
+
+    @Override
     public ServiceProvider getServiceProvider() {
         return serviceProvider;
+    }
+
+    private <T> T withMandatoryDevice(String deviceId, Function<DeviceThread, T> action) {
+        Optional<DeviceThread> deviceOption = devices.stream().filter(d -> d.getDevice().getDeviceId().equals(deviceId)).findFirst();
+        if (deviceOption.isPresent()) {
+            return action.apply(deviceOption.get());
+        } else {
+            throw new RuntimeException("Device is not registered: " + deviceId);
+        }
     }
 
     private static final Map<String, Class<? extends WebDriver>> webDriverMappings = new HashMap<String, Class<? extends WebDriver>>() {{
@@ -158,7 +218,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     private void syncAllBrowsersUsingProxy(RequestData requestData, String originSource, String url) {
         String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(requestData, originSource, url);
-        getActiveDeviceThreads().forEach((device) -> device.openUrl("http://localhost:4567/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
+        getActiveDeviceThreads().forEach((device) -> device.openUrl("http://localhost:" + ideArguments.getPort() + "/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
     }
 
 

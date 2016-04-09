@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services;
 
+import com.galenframework.ide.IdeArguments;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.devices.DeviceServiceImpl;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotServiceImpl;
@@ -39,9 +40,9 @@ public class DefaultServiceProvider implements ServiceProvider {
     private final TestResultService testResultService;
     private final DomSnapshotService domSnapshotService;
 
-    public DefaultServiceProvider(String reportStoragePath) {
+    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath) {
         this.testerService = new TesterServiceImpl(this, reportStoragePath);
-        this.deviceService = new DeviceServiceImpl(this);
+        this.deviceService = new DeviceServiceImpl(ideArguments, this);
         this.fileBrowserService = new FileBrowserServiceImpl(this);
         this.settingsService = new SettingsServiceImpl(this);
         this.profilesService = new ProfilesServiceImpl(this);

@@ -23,7 +23,7 @@ import java.util.List;
 
 public interface ProfilesService extends Service {
 
-    List<FileItem> getProfiles(RequestData requestData);
+    List<FileItem> getProfiles(RequestData requestData, String folderPath);
 
     void saveProfile(RequestData requestData, String name);
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class DefaultProfilesServiceMock implements ProfilesService {
     @Override
-    public List<FileItem> getProfiles(RequestData requestData) {
+    public List<FileItem> getProfiles(RequestData requestData, String path) {
         return Collections.emptyList();
     }
 
