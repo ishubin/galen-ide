@@ -27,6 +27,7 @@ import java.util.List;
 import static java.lang.String.format;
 
 public class TestResult {
+    public static final String CRASHED = "crashed";
     public static final String FAILED = "failed";
     public static final String RUNNING = "running";
     public static final String WARNING = "warning";
@@ -39,7 +40,6 @@ public class TestResult {
     @JsonIgnore
     private LayoutReport layoutReport;
 
-    private boolean hasCrashed = false;
     private String status = RUNNING;
     private TestResultException exception;
     private String externalReport;
@@ -99,7 +99,7 @@ public class TestResult {
     }
 
     public TestResult(Exception ex) {
-        setHasCrashed(true);
+        setStatus(CRASHED);
         exception = new TestResultException(ex);
         this.errorMessages = Collections.emptyList();
     }
@@ -110,15 +110,6 @@ public class TestResult {
 
     public void setLayoutReport(LayoutReport layoutReport) {
         this.layoutReport = layoutReport;
-    }
-
-
-    public boolean isHasCrashed() {
-        return hasCrashed;
-    }
-
-    public void setHasCrashed(boolean hasCrashed) {
-        this.hasCrashed = hasCrashed;
     }
 
     public TestResultException getException() {

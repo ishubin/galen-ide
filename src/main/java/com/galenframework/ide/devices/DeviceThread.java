@@ -76,8 +76,8 @@ public class DeviceThread extends Thread {
         sendCommands(new DeviceInjectSourceCommand(originSource));
     }
 
-    public void checkLayout(Settings settings, String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
-        sendCommands(new DeviceCheckLayoutCommand(settings, uniqueId, size, spec, testResultsListener, reportStoragePath));
+    public void checkLayout(Settings settings, String uniqueId, String spec, List<String> tags, TestResultsListener testResultsListener, String reportStoragePath) {
+        sendCommands(new DeviceCheckLayoutCommand(settings, uniqueId, spec, tags, testResultsListener, reportStoragePath));
     }
 
     public void resize(Dimension size) {

@@ -67,4 +67,15 @@ public class TestResultServiceImpl implements TestResultService{
         return testResultContainer.getUniqueId();
     }
 
+    @Override
+    public TestResult getTestResult(RequestData requestData, String reportId) {
+        Optional<TestResultContainer> testResultOption = testResults.stream().filter(trc -> trc.getUniqueId().equals(reportId)).findFirst();
+
+        if (testResultOption.isPresent()) {
+            return testResultOption.get().getTestResult();
+        } else {
+            return null;
+        }
+    }
+
 }

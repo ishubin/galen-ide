@@ -17,6 +17,7 @@ package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class DeviceOpenUrlCommand extends DeviceCommand {
     private final String url;
@@ -29,5 +30,12 @@ public class DeviceOpenUrlCommand extends DeviceCommand {
     public void execute(Device device, DeviceThread deviceThread) {
         System.out.println("Opening " + url);
         device.getDriver().get(url);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("url", url)
+                .toString();
     }
 }

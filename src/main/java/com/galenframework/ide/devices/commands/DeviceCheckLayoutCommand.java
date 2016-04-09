@@ -23,6 +23,7 @@ import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Dimension;
 
 import java.io.File;
@@ -37,18 +38,18 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
     public static final String REPORT_HTML = "report.html";
     private final String spec;
     private final TestResultsListener testResultsListener;
-    private final String uniqueId;
+    private final String reportId;
     private final String reportStoragePath;
-    private final Dimension size;
     private final Settings settings;
     private final static File onePixelImage = createOnePixelFakeImage();
+    private final List<String> tags;
 
 
-    public DeviceCheckLayoutCommand(Settings settings, String uniqueId, Dimension size, String spec, TestResultsListener testResultsListener, String reportStoragePath) {
+    public DeviceCheckLayoutCommand(Settings settings, String reportId, String spec, List<String> tags, TestResultsListener testResultsListener, String reportStoragePath) {
         this.settings = settings;
-        this.uniqueId = uniqueId;
-        this.size = size;
+        this.reportId = reportId;
         this.spec = spec;
+        this.tags = tags;
         this.testResultsListener = testResultsListener;
         this.reportStoragePath = reportStoragePath;
     }
@@ -62,18 +63,20 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
 
             if (settings.isMakeScreenshots()) {
                 layoutReport = Galen.checkLayout(
-                        device.getDriver(), spec, device.getTags());
+                        device.getDriver(), spec, tags);
             } else {
                 layoutReport = Galen.checkLayout(
                         device.getDriver(), spec,
-                        new SectionFilter(device.getTags(), null), null, null, onePixelImage);
+                        new SectionFilter(tags, null), null, null, onePixelImage);
             }
 
             testResult = new TestResult(layoutReport);
 
             HtmlReportBuilder reportBuilder = new HtmlReportBuilder();
-            String reportDir = uniqueId + "-" + new Date().getTime();
+            String reportDir = reportId + "-" + new Date().getTime();
             String reportDirPath = reportStoragePath + File.separator + reportDir;
+
+            Dimension size = device.getDriver().manage().window().getSize();
             reportBuilder.build(createTestInfo(device, spec, size, layoutReport), reportDirPath);
 
             testResult.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
@@ -87,7 +90,7 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             testResult = new TestResult(ex);
         }
 
-        testResultsListener.onTestResult(uniqueId, testResult);
+        testResultsListener.onTestResult(reportId, testResult);
     }
 
 
@@ -126,5 +129,15 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("spec", spec)
+                .append("tags", tags)
+                .append("reportId", reportId)
+                .toString();
     }
 }

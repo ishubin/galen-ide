@@ -18,6 +18,7 @@ package com.galenframework.ide.devices.commands;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.utils.GalenUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Dimension;
 
 public class DeviceResizeCommand extends DeviceCommand {
@@ -32,5 +33,13 @@ public class DeviceResizeCommand extends DeviceCommand {
         if (device.isSupportsResizing()) {
             GalenUtils.resizeDriver(device.getDriver(), size.width, size.height);
         }
+    }
+
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("size", size)
+            .toString();
     }
 }

@@ -43,6 +43,11 @@ public class DefaultTestResultServiceMock implements TestResultService {
     }
 
     @Override
+    public TestResult getTestResult(RequestData requestData, String reportId) {
+        return null;
+    }
+
+    @Override
     public ServiceProvider getServiceProvider() {
         return null;
     }

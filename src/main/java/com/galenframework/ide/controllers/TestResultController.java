@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.controllers;
 
+import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.results.TestResultService;
 import static com.galenframework.ide.JsonTransformer.toJson;
@@ -34,5 +35,33 @@ public class TestResultController {
             response.header("Content-Type", APPLICATION_JSON);
             return testResultService.getTestResultsOverview(new RequestData(request));
         }, toJson());
+
+        get("/api/results/:reportId", (req, res) -> {
+            String reportId = req.params("reportId");
+            res.header("Content-Type", APPLICATION_JSON);
+
+            TestResult testResult = testResultService.getTestResult(new RequestData(req), reportId);
+            if (testResult != null) {
+                return testResult;
+            } else {
+                throw new RuntimeException("Report doesn't exist: " + reportId);
+            }
+        }, toJson());
+
+        get("/api/results/:reportId/layoutReport", (req, res) -> {
+            String reportId = req.params("reportId");
+            res.header("Content-Type", APPLICATION_JSON);
+
+            TestResult testResult = testResultService.getTestResult(new RequestData(req), reportId);
+            if (testResult != null) {
+                return testResult.getLayoutReport();
+            } else {
+                throw new RuntimeException("Report doesn't exist: " + reportId);
+            }
+        }, toJson());
+        delete("/api/results", (req, res) -> {
+            testResultService.clearAllTestResults(new RequestData(req));
+            return "cleared";
+        });
     }
 }

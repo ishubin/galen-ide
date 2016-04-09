@@ -16,6 +16,7 @@
 package com.galenframework.ide.services.results;
 
 import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.devices.TestResultsListener;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
@@ -31,4 +32,6 @@ public interface TestResultService extends TestResultsListener, Service {
 
     String registerNewTestResultContainer(RequestData requestData, String deviceName,
                                           List<String> tags, Dimension size);
+
+    TestResult getTestResult(RequestData requestData, String reportId);
 }
