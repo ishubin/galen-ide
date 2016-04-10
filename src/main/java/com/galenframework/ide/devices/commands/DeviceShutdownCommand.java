@@ -26,4 +26,9 @@ public class DeviceShutdownCommand extends DeviceCommand {
             device.setIsActive(false);
         }
     }
+
+    @Override
+    public String getName() {
+        return "shutdown";
+    }
 }

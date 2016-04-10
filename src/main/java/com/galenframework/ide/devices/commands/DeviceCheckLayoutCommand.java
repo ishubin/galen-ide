@@ -35,6 +35,7 @@ import java.util.List;
 import static java.lang.String.format;
 
 public class DeviceCheckLayoutCommand extends DeviceCommand {
+    public static final String CHECK_LAYOUT = "checkLayout";
     public static final String REPORT_HTML = "report.html";
     private final String spec;
     private final TestResultsListener testResultsListener;
@@ -93,6 +94,10 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         testResultsListener.onTestResult(reportId, testResult);
     }
 
+    @Override
+    public String getName() {
+        return CHECK_LAYOUT;
+    }
 
 
     private String findTestHtmlFileIn(String reportDirPath) {

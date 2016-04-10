@@ -40,4 +40,9 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String getName() {
+        return "injectSource";
+    }
 }

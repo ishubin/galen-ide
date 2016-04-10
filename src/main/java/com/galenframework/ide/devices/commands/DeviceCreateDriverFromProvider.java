@@ -38,4 +38,9 @@ public class DeviceCreateDriverFromProvider extends DeviceCommand {
         }
         device.setDriver(driverProvider.provideDriver());
     }
+
+    @Override
+    public String getName() {
+        return "createDriverWithProvider";
+    }
 }

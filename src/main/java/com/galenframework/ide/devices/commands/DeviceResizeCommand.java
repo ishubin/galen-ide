@@ -35,6 +35,11 @@ public class DeviceResizeCommand extends DeviceCommand {
         }
     }
 
+    @Override
+    public String getName() {
+        return "resize";
+    }
+
 
     @Override
     public String toString() {

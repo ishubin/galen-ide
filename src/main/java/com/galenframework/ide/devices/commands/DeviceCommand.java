@@ -21,5 +21,7 @@ import com.galenframework.ide.devices.DeviceThread;
 
 public abstract class DeviceCommand {
     public abstract void execute(Device device, DeviceThread deviceThread) throws Exception;
+
+    public abstract String getName();
 }
 

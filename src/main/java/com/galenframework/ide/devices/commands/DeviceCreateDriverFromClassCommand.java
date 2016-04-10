@@ -38,4 +38,9 @@ public class DeviceCreateDriverFromClassCommand extends DeviceCommand {
         WebDriver newDriver = driverClass.newInstance();
         device.setDriver(newDriver);
     }
+
+    @Override
+    public String getName() {
+        return "createDriverFromClass";
+    }
 }

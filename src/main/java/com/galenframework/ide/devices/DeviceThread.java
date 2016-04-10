@@ -21,6 +21,7 @@ import com.galenframework.ide.Settings;
 import com.galenframework.ide.devices.commands.*;
 import org.openqa.selenium.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -127,5 +128,9 @@ public class DeviceThread extends Thread {
 
     public String getPageSource() {
         return device.getDriver().getPageSource();
+    }
+
+    public List<DeviceCommand> getCurrentCommands() {
+        return new LinkedList<>(commands);
     }
 }

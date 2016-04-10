@@ -86,5 +86,10 @@ public class DeviceController {
             }
             return "registered action: " + actionName;
         }, toJson());
+
+        get("api/devices/:deviceId/commands", (req, res) -> {
+            String deviceId = req.params("deviceId");
+            return deviceService.getCurrentCommands(new RequestData(req), deviceId);
+        }, toJson());
     }
 }
