@@ -22,6 +22,9 @@ import com.galenframework.ide.devices.DeviceThread;
 import java.util.Date;
 
 public abstract class DeviceCommand {
+    public static final String INJECT = "inject";
+    public static final String RUN_JS = "runJs";
+
     private Date registeredAt = new Date();
 
     public abstract void execute(Device device, DeviceThread deviceThread) throws Exception;

@@ -119,10 +119,10 @@ public class DeviceServiceImpl implements DeviceService {
         Settings settings = serviceProvider.settingsService().getSettings(requestData);
 
         getDeviceThreads().forEach(dt ->
-            dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags());
-                dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
-            })
+                        dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
+                            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags());
+                            dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
+                        })
         );
     }
 
@@ -183,6 +183,22 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId) {
         return withMandatoryDevice(deviceId, DeviceThread::getCurrentCommands);
+    }
+
+    @Override
+    public void injectScript(RequestData requestData, String deviceId, String script) {
+        withMandatoryDevice(deviceId, dt -> {
+            dt.injectScript(script);
+            return null;
+        });
+    }
+
+    @Override
+    public void runJavaScript(RequestData requestData, String deviceId, String path) {
+        withMandatoryDevice(deviceId, dt -> {
+            dt.runJavaScript(path);
+            return null;
+        });
     }
 
     @Override

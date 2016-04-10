@@ -55,4 +55,8 @@ public interface DeviceService extends  Service {
     void resize(RequestData requestData, String deviceId, Dimension size);
 
     List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId);
+
+    void injectScript(RequestData requestData, String deviceId, String script);
+
+    void runJavaScript(RequestData requestData, String deviceId, String path);
 }

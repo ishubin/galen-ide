@@ -81,6 +81,16 @@ public class DefaultDeviceServiceMock implements DeviceService {
     }
 
     @Override
+    public void injectScript(RequestData requestData, String deviceId, String script) {
+
+    }
+
+    @Override
+    public void runJavaScript(RequestData requestData, String deviceId, String path) {
+
+    }
+
+    @Override
     public ServiceProvider getServiceProvider() {
         return null;
     }

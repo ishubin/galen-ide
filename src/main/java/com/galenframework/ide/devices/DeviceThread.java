@@ -98,6 +98,14 @@ public class DeviceThread extends Thread {
         sendCommands(new DeviceCreateDriverFromProvider(driverProvider));
     }
 
+    public void injectScript(String script) {
+        sendCommands(new DeviceInjectCommand(script));
+    }
+
+    public void runJavaScript(String path) {
+        sendCommands(new DeviceRunJavaScriptCommand(path));
+    }
+
     public synchronized void sendCommands(DeviceCommand... commands) {
         try {
             if (device.isActive()) {

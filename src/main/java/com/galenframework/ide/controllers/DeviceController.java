@@ -17,9 +17,9 @@ package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.DeviceRequest;
-import com.galenframework.ide.controllers.actions.DeviceActionCheckLayoutRequest;
-import com.galenframework.ide.controllers.actions.DeviceActionOpenUrlRequest;
-import com.galenframework.ide.controllers.actions.DeviceActionResizeRequest;
+import com.galenframework.ide.controllers.actions.*;
+import com.galenframework.ide.devices.commands.DeviceCommand;
+import com.galenframework.ide.devices.commands.DeviceInjectCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.devices.DeviceService;
 import org.openqa.selenium.Dimension;
@@ -81,6 +81,12 @@ public class DeviceController {
                 DeviceActionCheckLayoutRequest checkLayoutRequest = mapper.readValue(requestBody, DeviceActionCheckLayoutRequest.class);
                 String reportId = deviceService.checkLayout(new RequestData(req), deviceId, checkLayoutRequest.getPath(), checkLayoutRequest.getTags(), reportStoragePath);
                 return reportId;
+            } else if (actionName.equals(DeviceCommand.INJECT)) {
+                DeviceInjectRequest deviceInjectRequest = mapper.readValue(requestBody, DeviceInjectRequest.class);
+                deviceService.injectScript(new RequestData(req), deviceId, deviceInjectRequest.getScript());
+            } else if (actionName.equals(DeviceCommand.RUN_JS)) {
+                DeviceRunJsRequest deviceRunJsRequest = mapper.readValue(requestBody, DeviceRunJsRequest.class);
+               deviceService.runJavaScript(new RequestData(req), deviceId, deviceRunJsRequest.getPath());
             } else {
                 throw new RuntimeException("Unknown action: " + actionName);
             }
