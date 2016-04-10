@@ -17,13 +17,12 @@ package com.galenframework.ide.services.devices;
 
 import com.galenframework.ide.DeviceRequest;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.commands.DeviceCommandInfo;
+import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 import org.openqa.selenium.Dimension;
 
 import java.util.List;
-import java.util.Map;
 
 public interface DeviceService extends  Service {
 
@@ -55,5 +54,5 @@ public interface DeviceService extends  Service {
 
     void resize(RequestData requestData, String deviceId, Dimension size);
 
-    List<DeviceCommandInfo> getCurrentCommands(RequestData requestData, String deviceId);
+    List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId);
 }

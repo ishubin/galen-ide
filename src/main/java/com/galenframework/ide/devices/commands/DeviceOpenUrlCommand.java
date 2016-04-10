@@ -37,6 +37,10 @@ public class DeviceOpenUrlCommand extends DeviceCommand {
         return "openUrl";
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)

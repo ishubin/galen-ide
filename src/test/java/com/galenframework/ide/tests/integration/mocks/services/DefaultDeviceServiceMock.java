@@ -17,7 +17,7 @@ package com.galenframework.ide.tests.integration.mocks.services;
 
 import com.galenframework.ide.DeviceRequest;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.commands.DeviceCommandInfo;
+import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.devices.DeviceService;
@@ -25,7 +25,6 @@ import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class DefaultDeviceServiceMock implements DeviceService {
     @Override
@@ -77,7 +76,7 @@ public class DefaultDeviceServiceMock implements DeviceService {
     }
 
     @Override
-    public List<DeviceCommandInfo> getCurrentCommands(RequestData requestData, String deviceId) {
+    public List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId) {
         return Collections.emptyList();
     }
 

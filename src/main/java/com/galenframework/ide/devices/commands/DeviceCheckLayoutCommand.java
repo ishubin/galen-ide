@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.devices.commands;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.api.Galen;
 import com.galenframework.ide.Settings;
 import com.galenframework.ide.devices.*;
@@ -37,13 +38,20 @@ import static java.lang.String.format;
 public class DeviceCheckLayoutCommand extends DeviceCommand {
     public static final String CHECK_LAYOUT = "checkLayout";
     public static final String REPORT_HTML = "report.html";
+
     private final String spec;
-    private final TestResultsListener testResultsListener;
     private final String reportId;
     private final String reportStoragePath;
-    private final Settings settings;
-    private final static File onePixelImage = createOnePixelFakeImage();
     private final List<String> tags;
+
+    @JsonIgnore
+    private final TestResultsListener testResultsListener;
+
+    @JsonIgnore
+    private final Settings settings;
+
+    @JsonIgnore
+    private final static File onePixelImage = createOnePixelFakeImage();
 
 
     public DeviceCheckLayoutCommand(Settings settings, String reportId, String spec, List<String> tags, TestResultsListener testResultsListener, String reportStoragePath) {
@@ -136,6 +144,21 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         return null;
     }
 
+    public String getSpec() {
+        return spec;
+    }
+
+    public String getReportId() {
+        return reportId;
+    }
+
+    public String getReportStoragePath() {
+        return reportStoragePath;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
 
     @Override
     public String toString() {

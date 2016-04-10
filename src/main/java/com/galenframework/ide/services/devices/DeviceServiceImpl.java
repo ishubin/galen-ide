@@ -20,7 +20,7 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.ide.devices.SizeProvider;
-import com.galenframework.ide.devices.commands.DeviceCommandInfo;
+import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
@@ -179,8 +179,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<DeviceCommandInfo> getCurrentCommands(RequestData requestData, String deviceId) {
-        return withMandatoryDevice(deviceId, (dt) -> dt.getCurrentCommands().stream().map(DeviceCommandInfo::new).collect(Collectors.toList()));
+    public List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId) {
+        return withMandatoryDevice(deviceId, DeviceThread::getCurrentCommands);
     }
 
     @Override

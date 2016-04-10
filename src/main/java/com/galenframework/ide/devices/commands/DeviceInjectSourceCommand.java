@@ -15,11 +15,14 @@
 ******************************************************************************/
 package com.galenframework.ide.devices.commands;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
 import org.openqa.selenium.JavascriptExecutor;
 
 public class DeviceInjectSourceCommand extends DeviceCommand {
+
+    @JsonIgnore
     private final String originSource;
 
     public DeviceInjectSourceCommand(String originSource) {

@@ -47,4 +47,8 @@ public class DeviceResizeCommand extends DeviceCommand {
             .append("size", size)
             .toString();
     }
+
+    public Dimension getSize() {
+        return size;
+    }
 }
