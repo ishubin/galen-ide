@@ -66,10 +66,13 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
     @Override
     public void execute(Device device, DeviceThread deviceThread) {
         TestResult testResult;
+        Dimension size = null;
+
         try {
             Date startedAt = new Date();
             LayoutReport layoutReport;
 
+            size = device.getDriver().manage().window().getSize();
             if (settings.isMakeScreenshots()) {
                 layoutReport = Galen.checkLayout(
                         device.getDriver(), spec, tags);
@@ -85,7 +88,6 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             String reportDir = reportId + "-" + new Date().getTime();
             String reportDirPath = reportStoragePath + File.separator + reportDir;
 
-            Dimension size = device.getDriver().manage().window().getSize();
             reportBuilder.build(createTestInfo(device, spec, size, layoutReport), reportDirPath);
 
             testResult.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
@@ -94,9 +96,12 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             testResult.setEndedAt(new Date());
             testResult.setDuration(testResult.getEndedAt().getTime() - testResult.getStartedAt().getTime());
 
+            testResult.setSize(device.getDriver().manage().window().getSize());
+
         } catch (Exception ex) {
             ex.printStackTrace();
             testResult = new TestResult(ex);
+            testResult.setSize(size);
         }
 
         testResultsListener.onTestResult(reportId, testResult);

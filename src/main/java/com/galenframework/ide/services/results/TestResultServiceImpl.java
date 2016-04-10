@@ -20,7 +20,6 @@ import com.galenframework.ide.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
-import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -61,8 +60,8 @@ public class TestResultServiceImpl implements TestResultService{
     }
 
     @Override
-    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags, Dimension size) {
-        TestResultContainer testResultContainer = new TestResultContainer(deviceName, tags, size);
+    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags) {
+        TestResultContainer testResultContainer = new TestResultContainer(deviceName, tags);
         testResults.add(testResultContainer);
         return testResultContainer.getUniqueId();
     }

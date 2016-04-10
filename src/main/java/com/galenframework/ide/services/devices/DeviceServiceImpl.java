@@ -119,10 +119,10 @@ public class DeviceServiceImpl implements DeviceService {
         Settings settings = serviceProvider.settingsService().getSettings(requestData);
 
         getDeviceThreads().forEach(dt ->
-                        dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags(), size);
-                            dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
-                        })
+            dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
+                String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags());
+                dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
+            })
         );
     }
 
@@ -189,8 +189,7 @@ public class DeviceServiceImpl implements DeviceService {
             TestResultService testResultService = serviceProvider.testResultService();
             Settings settings = serviceProvider.settingsService().getSettings(requestData);
 
-            Dimension size = dt.getCurrentSize();
-            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), tags, size);
+            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), tags);
             dt.checkLayout(settings, reportId, specPath, tags, testResultService, reportStoragePath);
 
             return reportId;

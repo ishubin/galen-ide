@@ -193,7 +193,11 @@
                                 {{name}}
                             </td>
                             <td>
-                                <code>{{size}}</code>
+                                {{#if testResult}}
+                                    {{#if testResult/size}}
+                                        <code>{{testResult/size/width}}x{{testResult/size/height}}</code>
+                                    {{/if}}
+                                {{/if}}
                             </td>
                             <td>
                                 {{#if testResult}}

@@ -21,7 +21,6 @@ import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
-import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +37,7 @@ public class DefaultTestResultServiceMock implements TestResultService {
     }
 
     @Override
-    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags, Dimension size) {
+    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags) {
         return "some-new-test-result-container";
     }
 

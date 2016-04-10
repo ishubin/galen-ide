@@ -18,6 +18,7 @@ package com.galenframework.ide.devices;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.validation.ValidationResult;
+import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
 import java.util.Date;
@@ -46,6 +47,7 @@ public class TestResult {
     private Date startedAt;
     private Date endedAt;
     private long duration;
+    private Dimension size;
 
     public TestResult(LayoutReport layoutReport) {
         this.layoutReport = layoutReport;
@@ -178,5 +180,13 @@ public class TestResult {
 
     public long getDuration() {
         return duration;
+    }
+
+    public void setSize(Dimension size) {
+        this.size = size;
+    }
+
+    public Dimension getSize() {
+        return size;
     }
 }

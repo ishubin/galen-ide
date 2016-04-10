@@ -27,14 +27,12 @@ public class TestResultContainer {
     private TestResult testResult;
     private String status = "running";
     private String name = "Unnamed";
-    private String size;
     private List<String> tags;
 
-    public TestResultContainer(String name, List<String> tags, Dimension size) {
+    public TestResultContainer(String name, List<String> tags) {
         this.uniqueId = UUID.randomUUID().toString();
         this.tags = tags;
         this.name = name;
-        this.size = String.format("%dx%d", size.getWidth(), size.getHeight());
     }
 
     public TestResult getTestResult() {
@@ -62,14 +60,6 @@ public class TestResultContainer {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     public List<String> getTags() {

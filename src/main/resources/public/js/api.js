@@ -275,6 +275,10 @@ var APIMock = {
                     {
                         "uniqueId": "f02b5d55-bfc8-4561-a7e0-5a8dd0af0036",
                         "testResult": {
+                            "size": {
+                                "width": 600,
+                                "height": 500
+                            },
                             "errorMessages": [
                                 "\"welcome_block\" is absent on page",
                                 "\"welcome_block\" is absent on page",
@@ -300,7 +304,6 @@ var APIMock = {
                         },
                         "status": "finished",
                         "name": "Some desktop",
-                        "size": "1024x768",
                         "tags": [
                             "desktop"
                         ]

@@ -20,7 +20,6 @@ import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.devices.TestResultsListener;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
-import org.openqa.selenium.Dimension;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public interface TestResultService extends TestResultsListener, Service {
     void clearAllTestResults(RequestData requestData);
 
     String registerNewTestResultContainer(RequestData requestData, String deviceName,
-                                          List<String> tags, Dimension size);
+                                          List<String> tags);
 
     TestResult getTestResult(RequestData requestData, String reportId);
 }
