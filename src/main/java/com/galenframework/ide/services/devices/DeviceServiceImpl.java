@@ -139,7 +139,9 @@ public class DeviceServiceImpl implements DeviceService {
     public void shutdownDevice(RequestData requestData, String deviceId) {
         Optional<DeviceThread> deviceOption = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (deviceOption.isPresent()) {
-            deviceOption.get().shutdownDevice();
+            DeviceThread deviceThread = deviceOption.get();
+            deviceThread.shutdownDevice();
+            devices.remove(deviceThread);
         } else {
             throw new RuntimeException("Unknown device: " + deviceId);
         }
