@@ -19,9 +19,21 @@ package com.galenframework.ide.devices.commands;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
 
+import java.util.Date;
+
 public abstract class DeviceCommand {
+    private Date registeredAt = new Date();
+
     public abstract void execute(Device device, DeviceThread deviceThread) throws Exception;
 
     public abstract String getName();
+
+    public Date getRegisteredAt() {
+        return registeredAt;
+    }
+
+    public void setRegisteredAt(Date registeredAt) {
+        this.registeredAt = registeredAt;
+    }
 }
 

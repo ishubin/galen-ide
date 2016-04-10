@@ -21,6 +21,7 @@ import com.galenframework.ide.Settings;
 import com.galenframework.ide.devices.commands.*;
 import org.openqa.selenium.*;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -101,6 +102,7 @@ public class DeviceThread extends Thread {
         try {
             if (device.isActive()) {
                 for (DeviceCommand command : commands) {
+                    command.setRegisteredAt(new Date());
                     this.commands.put(command);
                 }
             }

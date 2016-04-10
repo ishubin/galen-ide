@@ -20,7 +20,6 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.ide.devices.SizeProvider;
-import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.devices.commands.DeviceCommandInfo;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
@@ -36,6 +35,7 @@ import org.openqa.selenium.safari.SafariDriver;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DeviceServiceImpl implements DeviceService {
@@ -131,9 +131,13 @@ public class DeviceServiceImpl implements DeviceService {
         deviceThread.start();
     }
 
+    private Predicate<DeviceThread> byDeviceIdOrName(String requestedDeviceId) {
+        return (dt) -> dt.getDevice().getDeviceId().equals(requestedDeviceId) || dt.getDevice().getName().equals(requestedDeviceId);
+    }
+
     @Override
     public void shutdownDevice(RequestData requestData, String deviceId) {
-        Optional<DeviceThread> deviceOption = devices.stream().filter(d -> d.getDevice().getDeviceId().equals(deviceId)).findFirst();
+        Optional<DeviceThread> deviceOption = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (deviceOption.isPresent()) {
             deviceOption.get().shutdownDevice();
         } else {
@@ -143,7 +147,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void changeDevice(RequestData requestData, String deviceId, DeviceRequest deviceRequest) {
-        Optional<DeviceThread> optionalDevice = getDeviceThreads().stream().filter(d -> d.getDevice().getDeviceId().equals(deviceId)).findFirst();
+        Optional<DeviceThread> optionalDevice = getDeviceThreads().stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (optionalDevice.isPresent()) {
             Device device = optionalDevice.get().getDevice();
             device.setName(deviceRequest.getName());
@@ -199,7 +203,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     private <T> T withMandatoryDevice(String deviceId, Function<DeviceThread, T> action) {
-        Optional<DeviceThread> deviceOption = devices.stream().filter(d -> d.getDevice().getDeviceId().equals(deviceId)).findFirst();
+        Optional<DeviceThread> deviceOption = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (deviceOption.isPresent()) {
             return action.apply(deviceOption.get());
         } else {
