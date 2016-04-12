@@ -54,6 +54,16 @@ public class DeviceServiceImpl implements DeviceService {
         return devices.stream().map(DeviceThread::getDevice).collect(Collectors.toList());
     }
 
+    @Override
+    public Device getDevice(RequestData requestData, String deviceId) {
+        Optional<DeviceThread> dt = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
+        if (dt.isPresent()) {
+            return dt.get().getDevice();
+        } else {
+            return null;
+        }
+    }
+
     public List<DeviceThread> getDeviceThreads() {
         return devices;
     }

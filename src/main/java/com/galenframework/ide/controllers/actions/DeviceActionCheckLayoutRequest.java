@@ -26,15 +26,17 @@ public class DeviceActionCheckLayoutRequest {
         return path;
     }
 
-    public void setPath(String path) {
+    public DeviceActionCheckLayoutRequest setPath(String path) {
         this.path = path;
+        return this;
     }
 
     public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public DeviceActionCheckLayoutRequest setTags(List<String> tags) {
         this.tags = tags;
+        return this;
     }
 }

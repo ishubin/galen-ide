@@ -60,6 +60,7 @@ public class Main {
         new ProfilesController(serviceProvider.profilesService(), serviceProvider.settingsService());
         new TestResultController(serviceProvider.testResultService());
         new TesterController(serviceProvider.testerService());
+        new HelpController();
 
         if (ideArguments.getProfile() != null) {
             serviceProvider.profilesService().loadProfile(RequestData.EMPTY, ideArguments.getProfile());

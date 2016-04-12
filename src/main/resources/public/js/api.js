@@ -53,6 +53,11 @@ function deleteJSON(resource, callback) {
 
 
 var API = {
+    help: {
+        general: function (callback) {
+            getJSON("api/help", callback);
+        }  
+    },
     devices: {
         submitNew: function (device, callback) {
             postJSON("api/devices", device, callback);
@@ -312,6 +317,48 @@ var APIMock = {
                 "lastTestCommand": {
                     "specPath": "specs/welcomePage.gspec"
                 }
+            });
+        }
+    },
+    help: {
+        general: function (callback) {
+            callback({
+                "section": "Api Documentation",
+                "requests": [{
+                    "method": "GET",
+                    "path": "/api/devices",
+                    "title": "Return list of all available devices",
+                    "requestExamples": [],
+                    "responseExamples": [
+                        [
+                            {
+                                "deviceId": "124as324tgdsg4-3t12asfasf4-12412s-aaf421",
+                                "tags": [
+                                    "mobile"
+                                ],
+                                "name": "Device_1",
+                                "supportsResizing": true,
+                                "sizeProvider": {
+                                    "sizes": [
+                                        {
+                                            "width": 1024,
+                                            "height": 768
+                                        },
+                                        {
+                                            "width": 1200,
+                                            "height": 800
+                                        }
+                                    ],
+                                    "type": "custom"
+                                },
+                                "status": "READY",
+                                "lastErrorMessage": null,
+                                "browserType": "firefox",
+                                "active": true
+                            }
+                        ]
+                    ]
+                }]
             });
         }
     }

@@ -52,7 +52,7 @@ public class DefaultTestResultServiceMock implements TestResultService {
     }
 
     @Override
-    public void onTestResult(String testUniqueId, TestResult testResult) {
+    public void onTestResult(String reportId, TestResult testResult) {
 
     }
 }

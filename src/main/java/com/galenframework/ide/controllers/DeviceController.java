@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.DeviceRequest;
 import com.galenframework.ide.controllers.actions.*;
 import com.galenframework.ide.devices.commands.DeviceCommand;
-import com.galenframework.ide.devices.commands.DeviceInjectCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.devices.DeviceService;
 import org.openqa.selenium.Dimension;
@@ -47,6 +46,8 @@ public class DeviceController {
             deviceService.createDevice(new RequestData(req), createDeviceRequest);
             return "created";
         });
+
+        get("api/devices/:deviceId", (req, res) -> deviceService.getDevice(new RequestData(req), req.params("deviceId")), toJson());
 
         put("api/devices/:deviceId", (req, res) -> {
             String deviceId = req.params("deviceId");
@@ -80,7 +81,7 @@ public class DeviceController {
             } else if ("checkLayout".equals(actionName)) {
                 DeviceActionCheckLayoutRequest checkLayoutRequest = mapper.readValue(requestBody, DeviceActionCheckLayoutRequest.class);
                 String reportId = deviceService.checkLayout(new RequestData(req), deviceId, checkLayoutRequest.getPath(), checkLayoutRequest.getTags(), reportStoragePath);
-                return reportId;
+                return new DeviceActionCheckLayoutResponse(reportId);
             } else if (actionName.equals(DeviceCommand.INJECT)) {
                 DeviceInjectRequest deviceInjectRequest = mapper.readValue(requestBody, DeviceInjectRequest.class);
                 deviceService.injectScript(new RequestData(req), deviceId, deviceInjectRequest.getScript());

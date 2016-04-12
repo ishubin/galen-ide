@@ -23,15 +23,17 @@ public class DeviceActionResizeRequest {
         return width;
     }
 
-    public void setWidth(int width) {
+    public DeviceActionResizeRequest setWidth(int width) {
         this.width = width;
+        return this;
     }
 
     public int getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public DeviceActionResizeRequest setHeight(int height) {
         this.height = height;
+        return this;
     }
 }

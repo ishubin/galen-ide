@@ -41,6 +41,11 @@ public class DefaultDeviceServiceMock implements DeviceService {
     }
 
     @Override
+    public Device getDevice(RequestData requestData, String deviceId) {
+        return null;
+    }
+
+    @Override
     public void syncAllBrowsers(RequestData requestData) {
     }
 

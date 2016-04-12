@@ -171,6 +171,10 @@ Handlebars.registerHelper('formTextfield', function(elementName, placeholder) {
     return new Handlebars.SafeString(html);
 });
 
+Handlebars.registerHelper('jsonToString', function(json) {
+    return JSON.stringify(json, null, 2);
+});
+
 
 function whenClick(locator, callback) {
     $(locator).click(function () {

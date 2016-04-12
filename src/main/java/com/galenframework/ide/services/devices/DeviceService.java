@@ -32,6 +32,8 @@ public interface DeviceService extends  Service {
 
     List<Device> getAllDevices(RequestData requestData);
 
+    Device getDevice(RequestData requestData, String deviceId);
+
     void syncAllBrowsers(RequestData requestData);
 
     void testAllBrowsers(RequestData requestData, String spec, String reportStoragePath);
@@ -59,4 +61,5 @@ public interface DeviceService extends  Service {
     void injectScript(RequestData requestData, String deviceId, String script);
 
     void runJavaScript(RequestData requestData, String deviceId, String path);
+
 }

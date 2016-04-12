@@ -22,7 +22,8 @@ public class DeviceActionOpenUrlRequest {
         return url;
     }
 
-    public void setUrl(String url) {
+    public DeviceActionOpenUrlRequest setUrl(String url) {
         this.url = url;
+        return this;
     }
 }

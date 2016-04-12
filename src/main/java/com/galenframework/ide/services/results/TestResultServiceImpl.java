@@ -46,8 +46,8 @@ public class TestResultServiceImpl implements TestResultService{
     }
 
     @Override
-    public void onTestResult(String testUniqueId, TestResult testResult) {
-        Optional<TestResultContainer> foundTestResult = testResults.stream().filter((r) -> r.getUniqueId().equals(testUniqueId)).findFirst();
+    public void onTestResult(String reportId, TestResult testResult) {
+        Optional<TestResultContainer> foundTestResult = testResults.stream().filter((r) -> r.getUniqueId().equals(reportId)).findFirst();
 
         if (foundTestResult.isPresent()) {
             foundTestResult.get().setTestResult(testResult);
