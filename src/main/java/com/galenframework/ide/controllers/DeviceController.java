@@ -23,13 +23,15 @@ import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.devices.DeviceService;
 import org.openqa.selenium.Dimension;
 
+import java.util.Optional;
+
 import static com.galenframework.ide.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 public class DeviceController {
 
     private final DeviceService deviceService;
-    ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
     private final String reportStoragePath;
 
     public DeviceController(DeviceService deviceService, String reportFolderStorage) {
@@ -67,34 +69,21 @@ public class DeviceController {
         }, toJson());
 
 
-        post("api/devices/:deviceId/action/:actionName", (req, res) -> {
+        post("api/devices/:deviceId/actions/:actionName", (req, res) -> {
             String deviceId = req.params("deviceId");
             String actionName = req.params("actionName");
             String requestBody = req.body();
 
-            if ("openUrl".equals(actionName)) {
-                DeviceActionOpenUrlRequest openUrlRequest = mapper.readValue(requestBody, DeviceActionOpenUrlRequest.class);
-                deviceService.openUrl(new RequestData(req), deviceId, openUrlRequest.getUrl());
-            } else if ("resize".equals(actionName)) {
-                DeviceActionResizeRequest resizeRequest = mapper.readValue(requestBody, DeviceActionResizeRequest.class);
-                deviceService.resize(new RequestData(req), deviceId, new Dimension(resizeRequest.getWidth(), resizeRequest.getHeight()));
-            } else if ("checkLayout".equals(actionName)) {
-                DeviceActionCheckLayoutRequest checkLayoutRequest = mapper.readValue(requestBody, DeviceActionCheckLayoutRequest.class);
-                String reportId = deviceService.checkLayout(new RequestData(req), deviceId, checkLayoutRequest.getPath(), checkLayoutRequest.getTags(), reportStoragePath);
-                return new DeviceActionCheckLayoutResponse(reportId);
-            } else if (actionName.equals(DeviceCommand.INJECT)) {
-                DeviceInjectRequest deviceInjectRequest = mapper.readValue(requestBody, DeviceInjectRequest.class);
-                deviceService.injectScript(new RequestData(req), deviceId, deviceInjectRequest.getScript());
-            } else if (actionName.equals(DeviceCommand.RUN_JS)) {
-                DeviceRunJsRequest deviceRunJsRequest = mapper.readValue(requestBody, DeviceRunJsRequest.class);
-               deviceService.runJavaScript(new RequestData(req), deviceId, deviceRunJsRequest.getPath());
+            DeviceAction deviceAction = DeviceAction.parseAction(actionName, requestBody);
+            Optional<Object> result = deviceAction.execute(new RequestData(req), deviceService, deviceId, reportStoragePath);
+            if (result.isPresent()) {
+                return result;
             } else {
-                throw new RuntimeException("Unknown action: " + actionName);
+                return "registered action: " + actionName;
             }
-            return "registered action: " + actionName;
         }, toJson());
 
-        get("api/devices/:deviceId/commands", (req, res) -> {
+        get("api/devices/:deviceId/actions", (req, res) -> {
             String deviceId = req.params("deviceId");
             return deviceService.getCurrentCommands(new RequestData(req), deviceId);
         }, toJson());
