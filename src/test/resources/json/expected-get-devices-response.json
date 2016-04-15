@@ -1,4 +1,20 @@
-[,{
+[{
+  "deviceId":"qwe",
+  "tags":["mobile"],
+  "name":"Device1",
+  "supportsResizing":true,
+  "sizeProvider":{
+    "sizes":[{
+      "width":450,
+      "height":500
+    }],
+    "type":"custom"
+  },
+  "status":"BUSY",
+  "lastErrorMessage":null,
+  "browserType":"firefox",
+  "active":true
+},{
   "deviceId":"asd",
   "tags":["tablet"],
   "name":"Device2",
