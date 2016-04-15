@@ -96,6 +96,16 @@ public class DefaultDeviceServiceMock implements DeviceService {
     }
 
     @Override
+    public void restartDevice(RequestData requestData, String deviceId) {
+
+    }
+
+    @Override
+    public void clearCookies(RequestData requestData, String deviceId) {
+
+    }
+
+    @Override
     public ServiceProvider getServiceProvider() {
         return null;
     }

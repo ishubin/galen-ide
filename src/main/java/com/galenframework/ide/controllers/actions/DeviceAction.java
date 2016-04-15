@@ -19,6 +19,8 @@ public interface DeviceAction {
         put("checkLayout", requestBody -> new DeviceActionCheckLayout(mapper.readValue(requestBody, DeviceActionCheckLayoutRequest.class)));
         put("inject", requestBody -> new DeviceActionInject(mapper.readValue(requestBody, DeviceInjectRequest.class)));
         put("runJs", requestBody -> new DeviceActionRunJs(mapper.readValue(requestBody, DeviceRunJsRequest.class)));
+        put("restart", requestBody -> new DeviceActionRestart());
+        put("clearCookies", requestBody -> new DeviceActionClearCookies());
     }};
 
     static DeviceAction parseAction(String actionName, String requestBody) throws Exception {

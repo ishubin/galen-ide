@@ -138,4 +138,11 @@ public class Device {
     public Dimension retrieveCurrentSize() {
         return this.driver.manage().window().getSize();
     }
+
+    public void shutdown() {
+        this.isActive = false;
+        if (this.driver != null) {
+            this.driver.quit();
+        }
+    }
 }

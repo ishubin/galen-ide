@@ -16,7 +16,6 @@
 package com.galenframework.ide;
 
 import com.galenframework.ide.devices.TestResult;
-import org.openqa.selenium.Dimension;
 
 import java.util.List;
 import java.util.UUID;

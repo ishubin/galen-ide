@@ -62,4 +62,7 @@ public interface DeviceService extends  Service {
 
     void runJavaScript(RequestData requestData, String deviceId, String path);
 
+    void restartDevice(RequestData requestData, String deviceId);
+
+    void clearCookies(RequestData requestData, String deviceId);
 }

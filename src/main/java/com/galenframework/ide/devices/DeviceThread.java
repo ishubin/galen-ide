@@ -19,19 +19,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.ide.DriverProvider;
 import com.galenframework.ide.Settings;
 import com.galenframework.ide.devices.commands.*;
+import com.galenframework.ide.Callback;
+import org.eclipse.jetty.util.ArrayQueue;
 import org.openqa.selenium.*;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.Queue;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class DeviceThread extends Thread {
     protected final Device device;
     @JsonIgnore
-    private final BlockingQueue<DeviceCommand> commands = new ArrayBlockingQueue<>(100);
 
+    private final Queue<DeviceCommand> commands = new ArrayQueue<>(500);
+
+    private final ReentrantLock commandsLock = new ReentrantLock();
+
+
+    // Used for restarting device
+    private DeviceCommand deviceInitializationCommand = null;
 
     public DeviceThread(Device device) {
         this.device = device;
@@ -42,7 +49,8 @@ public class DeviceThread extends Thread {
         while(device.isActive()) {
             if (!commands.isEmpty()) {
                 try {
-                    DeviceCommand command = commands.take();
+                    DeviceCommand command = withCommandsLock(commands::poll);
+
                     if (command != null) {
 
                         if (device.getStatus() == DeviceStatus.READY) {
@@ -62,7 +70,7 @@ public class DeviceThread extends Thread {
                             device.setLastErrorMessage(ex.getClass().getSimpleName() + ": " + ex.getMessage());
                         }
                     }
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -87,19 +95,43 @@ public class DeviceThread extends Thread {
     }
 
     public void initDriverFromClass(Class<? extends WebDriver> driverClass) {
-        sendCommands(new DeviceCreateDriverFromClassCommand(driverClass));
+        DeviceCommand deviceCommand = new DeviceCreateDriverFromClassCommand(driverClass);
+        sendCommands(deviceCommand);
+        deviceInitializationCommand = deviceCommand;
+    }
+
+    public void restartDevice() {
+        if (deviceInitializationCommand != null) {
+            sendCommands(new DeviceRestartCommand(deviceInitializationCommand));
+        } else {
+            throw new RuntimeException("Device wasn't initialized");
+        }
     }
 
     public void shutdownDevice() {
-        sendCommands(new DeviceShutdownCommand());
+        device.shutdown();
+        deleteAllCommands();
+    }
+
+    private void deleteAllCommands() {
+        withCommandsLock(() -> {
+            commands.clear();
+            return null;
+        });
     }
 
     public void createDriver(DriverProvider driverProvider) {
-        sendCommands(new DeviceCreateDriverFromProvider(driverProvider));
+        DeviceCommand command = new DeviceCreateDriverFromProvider(driverProvider);
+        sendCommands(command);
+        deviceInitializationCommand = command;
     }
 
     public void injectScript(String script) {
         sendCommands(new DeviceInjectCommand(script));
+    }
+
+    public void clearCookies() {
+        sendCommands(new DeviceClearCookiesCommand());
     }
 
     public void runJavaScript(String path) {
@@ -107,15 +139,13 @@ public class DeviceThread extends Thread {
     }
 
     public synchronized void sendCommands(DeviceCommand... commands) {
-        try {
-            if (device.isActive()) {
+        if (device.isActive()) {
+            withCommandsLock(() -> {
                 for (DeviceCommand command : commands) {
-                    command.setRegisteredAt(new Date());
-                    this.commands.put(command);
+                    this.commands.add(command);
                 }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                return null;
+            });
         }
     }
 
@@ -141,6 +171,20 @@ public class DeviceThread extends Thread {
     }
 
     public List<DeviceCommand> getCurrentCommands() {
-        return new LinkedList<>(commands);
+        return withCommandsLock(() ->new LinkedList<>(commands));
+    }
+
+
+    private <A> A withCommandsLock(Callback<A> callback) {
+        commandsLock.lock();
+        A result;
+        try {
+            result = callback.apply();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            commandsLock.unlock();
+        }
+        return result;
     }
 }

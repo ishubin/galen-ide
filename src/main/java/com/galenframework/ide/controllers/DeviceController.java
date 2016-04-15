@@ -77,7 +77,7 @@ public class DeviceController {
             DeviceAction deviceAction = DeviceAction.parseAction(actionName, requestBody);
             Optional<Object> result = deviceAction.execute(new RequestData(req), deviceService, deviceId, reportStoragePath);
             if (result.isPresent()) {
-                return result;
+                return result.get();
             } else {
                 return "registered action: " + actionName;
             }

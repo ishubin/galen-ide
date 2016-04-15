@@ -42,7 +42,8 @@ public class DeviceServiceImpl implements DeviceService {
     private final ServiceProvider serviceProvider;
     private final IdeArguments ideArguments;
     private DeviceThread masterDevice;
-    private List<DeviceThread> devices = new LinkedList<>();
+
+    private SynchronizedStorage<DeviceThread> devices = new SynchronizedStorage<>();
 
     public DeviceServiceImpl(IdeArguments ideArguments, ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
@@ -65,7 +66,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     public List<DeviceThread> getDeviceThreads() {
-        return devices;
+        return devices.get();
     }
 
     private List<DeviceThread> getActiveDeviceThreads() {
@@ -207,6 +208,22 @@ public class DeviceServiceImpl implements DeviceService {
     public void runJavaScript(RequestData requestData, String deviceId, String path) {
         withMandatoryDevice(deviceId, dt -> {
             dt.runJavaScript(path);
+            return null;
+        });
+    }
+
+    @Override
+    public void restartDevice(RequestData requestData, String deviceId) {
+        withMandatoryDevice(deviceId, deviceThread -> {
+            deviceThread.restartDevice();
+            return null;
+        });
+    }
+
+    @Override
+    public void clearCookies(RequestData requestData, String deviceId) {
+        withMandatoryDevice(deviceId, dt -> {
+            dt.clearCookies();
             return null;
         });
     }

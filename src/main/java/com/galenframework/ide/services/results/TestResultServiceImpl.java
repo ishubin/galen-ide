@@ -15,21 +15,20 @@
 ******************************************************************************/
 package com.galenframework.ide.services.results;
 
+import com.galenframework.ide.SynchronizedStorage;
 import com.galenframework.ide.TestResultContainer;
 import com.galenframework.ide.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 public class TestResultServiceImpl implements TestResultService{
 
     private final ServiceProvider serviceProvider;
-    private final List<TestResultContainer> testResults = Collections.synchronizedList(new LinkedList<>());
+    private final SynchronizedStorage<TestResultContainer> testResults = new SynchronizedStorage<>();
 
     public TestResultServiceImpl(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
@@ -42,7 +41,7 @@ public class TestResultServiceImpl implements TestResultService{
 
     @Override
     public TestResultsOverview getTestResultsOverview(RequestData requestData) {
-        return new TestResultsOverview(testResults, serviceProvider.testerService().getLastTestCommand(requestData));
+        return new TestResultsOverview(testResults.get(), serviceProvider.testerService().getLastTestCommand(requestData));
     }
 
     @Override
