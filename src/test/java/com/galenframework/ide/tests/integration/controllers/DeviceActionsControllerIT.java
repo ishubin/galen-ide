@@ -6,7 +6,6 @@ import org.openqa.selenium.Dimension;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.any;

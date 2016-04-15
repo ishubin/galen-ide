@@ -1,0 +1,53 @@
+[{
+  "deviceId":"qwe",
+  "tags":["mobile"],
+  "name":"Device1",
+  "supportsResizing":true,
+  "sizeProvider":{
+    "sizes":[{
+      "width":450,
+      "height":500
+    }],
+    "type":"custom"
+  },
+  "status":"BUSY",
+  "lastErrorMessage":null,
+  "browserType":"firefox",
+  "active":true
+},{
+  "deviceId":"asd",
+  "tags":["tablet"],
+  "name":"Device2",
+  "supportsResizing":true,
+  "sizeProvider":{
+    "type":"unsupported"
+  },
+  "status":"STARTING",
+  "lastErrorMessage":null,
+  "browserType":"chrome",
+  "active":true
+},{
+  "deviceId":"zxc",
+  "tags":["desktop"],
+  "name":"Device3",
+  "supportsResizing":true,
+  "sizeProvider":{
+    "sizeVariation":{
+      "start":{
+        "width":1000,
+        "height":700
+      },
+      "end":{
+        "width":1200,
+        "height":900
+      },
+      "iterations":6,
+      "random":true
+    },
+    "type":"range"
+  },
+  "status":"READY",
+  "lastErrorMessage":null,
+  "browserType":"ie",
+  "active":true
+}]
