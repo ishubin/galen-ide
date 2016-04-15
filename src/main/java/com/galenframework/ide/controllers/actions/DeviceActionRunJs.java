@@ -6,9 +6,9 @@ import com.galenframework.ide.services.devices.DeviceService;
 import java.util.Optional;
 
 public class DeviceActionRunJs implements DeviceAction {
-    private final DeviceRunJsRequest runJsRequest;
+    private final DeviceActionRunJsRequest runJsRequest;
 
-    public DeviceActionRunJs(DeviceRunJsRequest runJsRequest) {
+    public DeviceActionRunJs(DeviceActionRunJsRequest runJsRequest) {
         this.runJsRequest = runJsRequest;
     }
 

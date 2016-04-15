@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services.settings;
 
-import com.galenframework.ide.Settings;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 

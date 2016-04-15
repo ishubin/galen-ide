@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services;
 
-import com.galenframework.ide.IdeArguments;
+import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.devices.DeviceServiceImpl;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotServiceImpl;

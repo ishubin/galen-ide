@@ -13,16 +13,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.controllers.actions;
+package com.galenframework.ide.model;
 
-public class DeviceRunJsRequest {
-    private String path;
+public class TestCommand {
+    private String specPath;
 
-    public String getPath() {
-        return path;
+    public String getSpecPath() {
+        return specPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setSpecPath(String specPath) {
+        this.specPath = specPath;
     }
+
+
 }

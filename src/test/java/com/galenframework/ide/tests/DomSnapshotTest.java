@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests;
 
-import com.galenframework.ide.DomSnapshot;
+import com.galenframework.ide.model.DomSnapshot;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
 

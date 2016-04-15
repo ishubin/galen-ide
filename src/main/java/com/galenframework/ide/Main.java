@@ -16,6 +16,7 @@
 package com.galenframework.ide;
 
 import com.galenframework.ide.controllers.*;
+import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.DefaultServiceProvider;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;

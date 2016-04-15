@@ -13,22 +13,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.controllers.actions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import spark.ResponseTransformer;
+public class DeviceActionInjectRequest {
+    private String script;
 
-public class JsonTransformer implements ResponseTransformer {
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    @Override
-    public String render(Object model) throws Exception {
-        return objectMapper.writeValueAsString(model);
+    public String getScript() {
+        return script;
     }
 
-    private final static JsonTransformer _instance = new JsonTransformer();
-
-    public static JsonTransformer toJson() {
-        return _instance;
+    public void setScript(String script) {
+        this.script = script;
     }
 }

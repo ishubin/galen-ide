@@ -13,18 +13,26 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.model.results;
 
-public class TestCommand {
-    private String specPath;
+import com.galenframework.ide.model.TestCommand;
 
-    public String getSpecPath() {
-        return specPath;
+import java.util.List;
+
+public class TestResultsOverview {
+    private final List<TestResultContainer> testResults;
+    private final TestCommand lastTestCommand;
+
+    public TestResultsOverview(List<TestResultContainer> testResults, TestCommand lastTestCommand) {
+        this.testResults = testResults;
+        this.lastTestCommand = lastTestCommand;
     }
 
-    public void setSpecPath(String specPath) {
-        this.specPath = specPath;
+    public List<TestResultContainer> getTestResults() {
+        return testResults;
     }
 
-
+    public TestCommand getLastTestCommand() {
+        return lastTestCommand;
+    }
 }

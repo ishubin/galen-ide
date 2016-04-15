@@ -21,7 +21,7 @@ import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileContent;
 
 import static spark.Spark.*;
-import static com.galenframework.ide.JsonTransformer.toJson;
+import static com.galenframework.ide.util.JsonTransformer.toJson;
 
 public class FileBrowserController {
 

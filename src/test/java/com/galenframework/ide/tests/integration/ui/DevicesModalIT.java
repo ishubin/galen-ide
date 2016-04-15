@@ -15,10 +15,14 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.ui;
 
-import com.galenframework.ide.*;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.SizeProviderCustom;
 import com.galenframework.ide.devices.SizeProviderRange;
+import com.galenframework.ide.model.Size;
+import com.galenframework.ide.model.SizeVariation;
+import com.galenframework.ide.model.devices.DeviceRequest;
+import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;

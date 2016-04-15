@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.services;
 
-import com.galenframework.ide.Settings;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.settings.SettingsService;

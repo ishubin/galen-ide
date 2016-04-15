@@ -13,10 +13,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.controllers.actions;
 
-import org.openqa.selenium.WebDriver;
+public class DeviceActionRunJsRequest {
+    private String path;
 
-public interface DriverProvider {
-    WebDriver provideDriver();
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

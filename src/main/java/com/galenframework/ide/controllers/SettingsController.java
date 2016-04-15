@@ -16,10 +16,10 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.Settings;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.settings.SettingsService;
-import static com.galenframework.ide.JsonTransformer.toJson;
+import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 public class SettingsController {

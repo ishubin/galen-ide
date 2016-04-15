@@ -17,8 +17,8 @@ public interface DeviceAction {
         put("openUrl", requestBody -> new DeviceActionOpenUrl(mapper.readValue(requestBody, DeviceActionOpenUrlRequest.class)));
         put("resize", requestBody -> new DeviceActionResize(mapper.readValue(requestBody, DeviceActionResizeRequest.class)));
         put("checkLayout", requestBody -> new DeviceActionCheckLayout(mapper.readValue(requestBody, DeviceActionCheckLayoutRequest.class)));
-        put("inject", requestBody -> new DeviceActionInject(mapper.readValue(requestBody, DeviceInjectRequest.class)));
-        put("runJs", requestBody -> new DeviceActionRunJs(mapper.readValue(requestBody, DeviceRunJsRequest.class)));
+        put("inject", requestBody -> new DeviceActionInject(mapper.readValue(requestBody, DeviceActionInjectRequest.class)));
+        put("runJs", requestBody -> new DeviceActionRunJs(mapper.readValue(requestBody, DeviceActionRunJsRequest.class)));
         put("restart", requestBody -> new DeviceActionRestart());
         put("clearCookies", requestBody -> new DeviceActionClearCookies());
     }};

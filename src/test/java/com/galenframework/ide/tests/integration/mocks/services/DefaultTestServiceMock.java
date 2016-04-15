@@ -15,11 +15,10 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.services;
 
-import com.galenframework.ide.TestCommand;
+import com.galenframework.ide.model.TestCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.tester.TesterService;
-import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
 
 public class DefaultTestServiceMock implements TesterService {
 

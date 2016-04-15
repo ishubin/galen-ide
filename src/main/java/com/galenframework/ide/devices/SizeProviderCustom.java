@@ -16,7 +16,7 @@
 package com.galenframework.ide.devices;
 
 
-import com.galenframework.ide.Size;
+import com.galenframework.ide.model.Size;
 import org.openqa.selenium.Dimension;
 
 import java.util.List;

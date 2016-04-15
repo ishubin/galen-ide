@@ -16,10 +16,9 @@
 package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.galenframework.ide.DriverProvider;
-import com.galenframework.ide.Settings;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.devices.commands.*;
-import com.galenframework.ide.Callback;
+import com.galenframework.ide.util.Callback;
 import org.eclipse.jetty.util.ArrayQueue;
 import org.openqa.selenium.*;
 

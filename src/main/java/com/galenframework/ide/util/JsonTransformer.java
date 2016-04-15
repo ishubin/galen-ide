@@ -13,24 +13,22 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.util;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import spark.ResponseTransformer;
 
-public class TestResultsOverview {
-    private final List<TestResultContainer> testResults;
-    private final TestCommand lastTestCommand;
+public class JsonTransformer implements ResponseTransformer {
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    public TestResultsOverview(List<TestResultContainer> testResults, TestCommand lastTestCommand) {
-        this.testResults = testResults;
-        this.lastTestCommand = lastTestCommand;
+    @Override
+    public String render(Object model) throws Exception {
+        return objectMapper.writeValueAsString(model);
     }
 
-    public List<TestResultContainer> getTestResults() {
-        return testResults;
-    }
+    private final static JsonTransformer _instance = new JsonTransformer();
 
-    public TestCommand getLastTestCommand() {
-        return lastTestCommand;
+    public static JsonTransformer toJson() {
+        return _instance;
     }
 }

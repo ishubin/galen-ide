@@ -16,16 +16,14 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.DeviceRequest;
+import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.controllers.actions.*;
-import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.devices.DeviceService;
-import org.openqa.selenium.Dimension;
 
 import java.util.Optional;
 
-import static com.galenframework.ide.JsonTransformer.toJson;
+import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 public class DeviceController {

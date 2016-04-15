@@ -16,7 +16,7 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.TestCommand;
+import com.galenframework.ide.model.TestCommand;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.tester.TesterService;
 

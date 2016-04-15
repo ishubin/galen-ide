@@ -6,9 +6,9 @@ import com.galenframework.ide.services.devices.DeviceService;
 import java.util.Optional;
 
 public class DeviceActionInject implements DeviceAction {
-    private final DeviceInjectRequest injectRequest;
+    private final DeviceActionInjectRequest injectRequest;
 
-    public DeviceActionInject(DeviceInjectRequest injectRequest) {
+    public DeviceActionInject(DeviceActionInjectRequest injectRequest) {
         this.injectRequest = injectRequest;
     }
 

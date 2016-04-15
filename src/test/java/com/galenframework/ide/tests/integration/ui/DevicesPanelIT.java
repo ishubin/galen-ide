@@ -15,10 +15,10 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.ui;
 
-import com.galenframework.ide.Size;
-import com.galenframework.ide.SizeVariation;
-import com.galenframework.ide.TestResultContainer;
-import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.model.Size;
+import com.galenframework.ide.model.SizeVariation;
+import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.*;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;

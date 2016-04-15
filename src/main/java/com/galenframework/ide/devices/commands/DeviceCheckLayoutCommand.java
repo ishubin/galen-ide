@@ -17,7 +17,7 @@ package com.galenframework.ide.devices.commands;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.api.Galen;
-import com.galenframework.ide.Settings;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.devices.*;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;

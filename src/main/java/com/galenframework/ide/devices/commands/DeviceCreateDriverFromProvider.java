@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.devices.commands;
 
-import com.galenframework.ide.DriverProvider;
+import com.galenframework.ide.devices.DriverProvider;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceThread;
 

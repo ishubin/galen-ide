@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.devices;
 
-import com.galenframework.ide.SizeVariation;
+import com.galenframework.ide.model.SizeVariation;
 import org.openqa.selenium.Dimension;
 
 import java.util.List;

@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.services;
 
-import com.galenframework.ide.DeviceRequest;
+import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.services.RequestData;

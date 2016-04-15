@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.devices;
 
-import com.galenframework.ide.DeviceRequest;
+import com.galenframework.ide.model.devices.DeviceRequest;
 import org.openqa.selenium.Dimension;
 
 import java.util.function.Consumer;

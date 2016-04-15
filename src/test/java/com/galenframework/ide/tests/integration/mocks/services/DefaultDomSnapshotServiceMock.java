@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.services;
 
-import com.galenframework.ide.DomSnapshot;
+import com.galenframework.ide.model.DomSnapshot;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotService;

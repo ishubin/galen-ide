@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.components;
 
-import com.galenframework.ide.IdeArguments;
+import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.Main;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;

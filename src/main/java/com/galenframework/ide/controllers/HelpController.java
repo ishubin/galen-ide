@@ -1,4 +1,4 @@
-package com.galenframework.ide;
+package com.galenframework.ide.controllers;
 
 import com.galenframework.ide.controllers.actions.DeviceActionCheckLayoutRequest;
 import com.galenframework.ide.controllers.actions.DeviceActionOpenUrlRequest;
@@ -7,13 +7,15 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.SizeProviderCustom;
 import com.galenframework.ide.devices.SizeProviderRange;
+import com.galenframework.ide.model.Size;
+import com.galenframework.ide.model.SizeVariation;
 import com.galenframework.ide.model.docs.ApiDocRequest;
 import com.galenframework.ide.model.docs.ApiDocSection;
 
 
 import java.util.List;
 
-import static com.galenframework.ide.JsonTransformer.toJson;
+import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static spark.Spark.*;

@@ -15,8 +15,8 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.services;
 
-import com.galenframework.ide.TestResultContainer;
-import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;

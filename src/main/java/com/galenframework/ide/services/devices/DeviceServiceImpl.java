@@ -15,15 +15,18 @@
 ******************************************************************************/
 package com.galenframework.ide.services.devices;
 
-import com.galenframework.ide.*;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.DeviceThread;
 import com.galenframework.ide.devices.SizeProvider;
 import com.galenframework.ide.devices.commands.DeviceCommand;
+import com.galenframework.ide.model.settings.IdeArguments;
+import com.galenframework.ide.model.settings.Settings;
+import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.util.SynchronizedStorage;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

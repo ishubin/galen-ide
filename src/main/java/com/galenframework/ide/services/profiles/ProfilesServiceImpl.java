@@ -18,8 +18,8 @@ package com.galenframework.ide.services.profiles;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.DeviceRequest;
-import com.galenframework.ide.ProfileContent;
+import com.galenframework.ide.model.devices.DeviceRequest;
+import com.galenframework.ide.model.profile.ProfileContent;
 import com.galenframework.ide.services.filebrowser.FileItem;
 import org.apache.commons.io.FileUtils;
 

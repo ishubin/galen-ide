@@ -16,15 +16,14 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.SaveProfileRequest;
-import com.galenframework.ide.Settings;
+import com.galenframework.ide.model.profile.SaveProfileRequest;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.profiles.ProfilesService;
 import com.galenframework.ide.services.settings.SettingsService;
 
 import java.io.File;
 
-import static com.galenframework.ide.JsonTransformer.toJson;
+import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 public class ProfilesController {

@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services.results;
 
-import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.devices.TestResultsListener;
 import com.galenframework.ide.services.RequestData;

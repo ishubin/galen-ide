@@ -18,7 +18,7 @@ package com.galenframework.ide.controllers;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.results.TestResultService;
-import static com.galenframework.ide.JsonTransformer.toJson;
+import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
 
 public class TestResultController {

@@ -13,12 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.model.devices;
 
 
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.SizeProviderCustom;
 import com.galenframework.ide.devices.SizeProviderRange;
+import com.galenframework.ide.model.Size;
+import com.galenframework.ide.model.SizeVariation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

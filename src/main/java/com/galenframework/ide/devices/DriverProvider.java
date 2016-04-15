@@ -13,28 +13,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide;
+package com.galenframework.ide.devices;
 
+import org.openqa.selenium.WebDriver;
 
-import java.util.List;
-
-public class ProfileContent {
-    private Settings settings;
-    private List<DeviceRequest> devices;
-
-    public void setSettings(Settings settings) {
-        this.settings = settings;
-    }
-
-    public Settings getSettings() {
-        return settings;
-    }
-
-    public List<DeviceRequest> getDevices() {
-        return devices;
-    }
-
-    public void setDevices(List<DeviceRequest> devices) {
-        this.devices = devices;
-    }
+public interface DriverProvider {
+    WebDriver provideDriver();
 }

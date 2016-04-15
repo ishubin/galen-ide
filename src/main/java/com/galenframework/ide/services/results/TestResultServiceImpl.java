@@ -15,9 +15,9 @@
 ******************************************************************************/
 package com.galenframework.ide.services.results;
 
-import com.galenframework.ide.SynchronizedStorage;
-import com.galenframework.ide.TestResultContainer;
-import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.util.SynchronizedStorage;
+import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;

@@ -1,4 +1,4 @@
-package com.galenframework.ide;
+package com.galenframework.ide.util;
 
 
 import java.util.ArrayList;

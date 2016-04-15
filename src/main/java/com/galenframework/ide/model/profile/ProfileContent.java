@@ -13,16 +13,31 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.controllers.actions;
+package com.galenframework.ide.model.profile;
 
-public class DeviceInjectRequest {
-    private String script;
 
-    public String getScript() {
-        return script;
+import com.galenframework.ide.model.devices.DeviceRequest;
+import com.galenframework.ide.model.settings.Settings;
+
+import java.util.List;
+
+public class ProfileContent {
+    private Settings settings;
+    private List<DeviceRequest> devices;
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 
-    public void setScript(String script) {
-        this.script = script;
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public List<DeviceRequest> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<DeviceRequest> devices) {
+        this.devices = devices;
     }
 }

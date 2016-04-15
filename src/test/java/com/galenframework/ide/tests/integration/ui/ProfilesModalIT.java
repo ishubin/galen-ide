@@ -15,9 +15,9 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.ui;
 
-import com.galenframework.ide.Settings;
-import com.galenframework.ide.TestResultContainer;
-import com.galenframework.ide.TestResultsOverview;
+import com.galenframework.ide.model.settings.Settings;
+import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;

@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Collections;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;

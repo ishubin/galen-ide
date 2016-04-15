@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.controllers;
 
-import com.galenframework.ide.DomSnapshot;
+import com.galenframework.ide.model.DomSnapshot;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 
