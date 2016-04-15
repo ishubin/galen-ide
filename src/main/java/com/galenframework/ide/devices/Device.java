@@ -16,6 +16,7 @@
 package com.galenframework.ide.devices;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galenframework.ide.model.devices.DeviceRequest;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
@@ -144,5 +145,19 @@ public class Device {
         if (this.driver != null) {
             this.driver.quit();
         }
+    }
+
+    public DeviceRequest toDeviceRequest() {
+        DeviceRequest dr = new DeviceRequest();
+        dr.setBrowserType(getBrowserType());
+        dr.setTags(getTags());
+        dr.setName(getName());
+        dr.setSizeType(getSizeProvider().getType());
+        if (getSizeProvider() instanceof SizeProviderCustom) {
+            dr.setSizes(((SizeProviderCustom) getSizeProvider()).getSizes());
+        } else if (getSizeProvider() instanceof SizeProviderRange) {
+            dr.setSizeVariation(((SizeProviderRange) getSizeProvider()).getSizeVariation());
+        }
+        return dr;
     }
 }

@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services.profiles;
 
+import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,12 +59,10 @@ public class ProfilesServiceImpl implements ProfilesService {
 
     @Override
     public void saveProfile(RequestData requestData, String path) {
-
-
         File profileFile = new File(path);
         ProfileContent profileContent = new ProfileContent();
         profileContent.setSettings(serviceProvider.settingsService().getSettings(requestData));
-        profileContent.setDevices(serviceProvider.deviceService().getAllDevices(requestData).stream().map(DeviceRequest::fromDevice).collect(Collectors.toList()));
+        profileContent.setDevices(serviceProvider.deviceService().getAllDevices(requestData).stream().map(Device::toDeviceRequest).collect(Collectors.toList()));
 
         try {
             FileUtils.writeStringToFile(profileFile, objectMapper.writeValueAsString(profileContent));

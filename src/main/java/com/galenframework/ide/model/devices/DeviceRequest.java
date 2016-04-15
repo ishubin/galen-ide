@@ -89,20 +89,6 @@ public class DeviceRequest {
         return this;
     }
 
-    public static DeviceRequest fromDevice(Device device) {
-        DeviceRequest dr = new DeviceRequest();
-        dr.setBrowserType(device.getBrowserType());
-        dr.setTags(device.getTags());
-        dr.setName(device.getName());
-        dr.setSizeType(device.getSizeProvider().getType());
-        if (device.getSizeProvider() instanceof SizeProviderCustom) {
-            dr.setSizes(((SizeProviderCustom) device.getSizeProvider()).getSizes());
-        } else if (device.getSizeProvider() instanceof SizeProviderRange) {
-            dr.setSizeVariation(((SizeProviderRange) device.getSizeProvider()).getSizeVariation());
-        }
-        return dr;
-    }
-
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
