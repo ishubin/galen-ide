@@ -16,9 +16,6 @@
 package com.galenframework.ide.model.devices;
 
 
-import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.SizeProviderCustom;
-import com.galenframework.ide.devices.SizeProviderRange;
 import com.galenframework.ide.model.Size;
 import com.galenframework.ide.model.SizeVariation;
 import org.apache.commons.lang3.builder.EqualsBuilder;

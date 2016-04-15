@@ -3,6 +3,7 @@ package com.galenframework.ide.tests.integration.controllers;
 import com.galenframework.ide.devices.*;
 import com.galenframework.ide.model.Size;
 import com.galenframework.ide.model.SizeVariation;
+import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.tests.integration.components.api.Response;
 
@@ -35,6 +36,22 @@ public class DeviceControllerIT extends ApiTestBase {
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), jsonFromResources("/json/expected-get-devices-response.json"));
         verify(deviceService).getAllDevices(any());
+    }
+
+    @Test
+    public void should_post_device() throws IOException {
+        Response response = postJson("/api/devices",
+            jsonFromResources("/json/post-device-request-1.json"));
+
+        assertEquals(response.getCode(), 200);
+        assertEquals(response.getBody(), "created");
+        verify(deviceService).createDevice(any(), eq(new DeviceRequest()
+            .setName("Device1")
+            .setBrowserType("firefox")
+            .setSizes(singletonList(new Size(450, 500)))
+            .setSizeType("custom")
+            .setTags(singletonList("mobile")))
+        );
     }
 
 

@@ -1,0 +1,10 @@
+{
+  "tags":["mobile"],
+  "name":"Device1",
+  "sizeType":"custom",
+  "sizes":[{
+      "width":450,
+      "height":500
+    }],
+  "browserType":"firefox"
+}
