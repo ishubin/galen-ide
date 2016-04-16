@@ -27,7 +27,7 @@ public class MockedWebApp extends Main {
 
 
     private MockedWebApp() throws IOException {
-        super();
+        super("target/reports");
         init();
     }
 
@@ -35,7 +35,7 @@ public class MockedWebApp extends Main {
         ServiceProvider serviceProvider = new MockedServiceProvider();
         IdeArguments ideArguments = new IdeArguments();
         ideArguments.setPort(4567);
-        initWebServer(serviceProvider, ideArguments, "target/reports");
+        initWebServer(serviceProvider, ideArguments);
     }
 
     public synchronized static void create() throws IOException {

@@ -20,6 +20,7 @@ import org.apache.commons.cli.*;
 
 public class IdeArguments {
     private String profile;
+    private String fileStorage;
     private int port;
 
     public String getProfile() {
@@ -34,6 +35,7 @@ public class IdeArguments {
         Options options = new Options();
         options.addOption("p", "port", true, "Port for a server");
         options.addOption("P", "profile", true, "Profile that will be loaded on start");
+        options.addOption("s", "storage", true, "Path to static file storage that will be used for storing reports");
 
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
@@ -49,6 +51,7 @@ public class IdeArguments {
         IdeArguments ideArguments = new IdeArguments();
         ideArguments.setProfile(cmd.getOptionValue("P"));
         ideArguments.setPort(Integer.parseInt(cmd.getOptionValue("p", "4567")));
+        ideArguments.setFileStorage(cmd.getOptionValue("s"));
 
         return ideArguments;
     }
@@ -59,5 +62,13 @@ public class IdeArguments {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getFileStorage() {
+        return fileStorage;
+    }
+
+    public void setFileStorage(String fileStorage) {
+        this.fileStorage = fileStorage;
     }
 }

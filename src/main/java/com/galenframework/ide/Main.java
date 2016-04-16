@@ -31,30 +31,35 @@ import static spark.Spark.*;
 
 public class Main {
 
-    protected final String REPORT_FOLDER_FOR_SPARK;
-    protected final String REPORT_FOLDER_STORAGE;
 
-    protected Main() throws IOException {
-        REPORT_FOLDER_FOR_SPARK = createTempReportFolder();
-        REPORT_FOLDER_STORAGE = createFolder(REPORT_FOLDER_FOR_SPARK + File.separator + "reports");
+    private final String reportFolder;
+    private final String staticFolderForSpark;
+
+    protected Main(String fileStorage) throws IOException {
+        if (fileStorage == null || fileStorage.trim().isEmpty()) {
+            staticFolderForSpark = createTempReportFolder();
+        } else {
+            staticFolderForSpark = createFolder(fileStorage);
+        }
+
+        reportFolder = createFolder(staticFolderForSpark + File.separator + "reports");
     }
 
     public static void main(String[] args) throws IOException {
-        Main main = new Main();
-
         IdeArguments ideArguments = IdeArguments.parse(args);
+        Main main = new Main(ideArguments.getFileStorage());
 
-        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.REPORT_FOLDER_STORAGE);
-        main.initWebServer(serviceProvider, ideArguments, main.REPORT_FOLDER_STORAGE);
+        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder);
+        main.initWebServer(serviceProvider, ideArguments);
     }
 
-    protected void initWebServer(ServiceProvider serviceProvider, IdeArguments ideArguments, String reportFolderStorage) {
+    protected void initWebServer(ServiceProvider serviceProvider, IdeArguments ideArguments) {
         port(ideArguments.getPort());
         staticFileLocation("/public");
-        externalStaticFileLocation(REPORT_FOLDER_FOR_SPARK);
-        System.out.println("Reports are in: " + REPORT_FOLDER_FOR_SPARK);
+        externalStaticFileLocation(staticFolderForSpark);
+        System.out.println("Reports are in: " + reportFolder);
 
-        new DeviceController(serviceProvider.deviceService(), reportFolderStorage);
+        new DeviceController(serviceProvider.deviceService(), reportFolder);
         new DomSnapshotController(serviceProvider.domSnapshotService());
         new FileBrowserController(serviceProvider.fileBrowserService());
         new SettingsController(serviceProvider.settingsService());
