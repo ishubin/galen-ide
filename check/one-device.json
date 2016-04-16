@@ -1,0 +1,24 @@
+{
+  "settings": {
+    "makeScreenshots": true,
+    "homeDirectory": "/home/ishubin/.galen",
+    "chromeDriverBinPath": null,
+    "safariDriverBinPath": null,
+    "edgeDriverBinPath": null
+  },
+  "devices": [
+    {
+      "browserType": "firefox",
+      "name": "Device_1",
+      "tags": [
+        "mobile"
+      ],
+      "sizes": [{
+        "width": 1024,
+        "height": 700
+      }],
+      "sizeType": "custom",
+      "sizeVariation": null 
+    }
+  ]
+}
