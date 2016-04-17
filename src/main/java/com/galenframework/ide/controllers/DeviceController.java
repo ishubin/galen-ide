@@ -74,11 +74,12 @@ public class DeviceController {
 
             DeviceAction deviceAction = DeviceAction.parseAction(actionName, requestBody);
             Optional<Object> result = deviceAction.execute(new RequestData(req), deviceService, deviceId, reportStoragePath);
+            Object resultObject = null;
+
             if (result.isPresent()) {
-                return result.get();
-            } else {
-                return "registered action: " + actionName;
+                resultObject = result.get();
             }
+            return new ActionResult(actionName, deviceId, resultObject);
         }, toJson());
 
         get("api/devices/:deviceId/actions", (req, res) -> {

@@ -26,7 +26,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "\"registered action: openUrl\"");
+        assertEquals(response.getBody(), "{\"actionName\":\"openUrl\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).openUrl(any(), eq("device01"), eq("http://example.com/blah"));
     }
 
@@ -37,7 +37,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "\"registered action: resize\"");
+        assertEquals(response.getBody(), "{\"actionName\":\"resize\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).resize(any(), eq("device01"), eq(new Dimension(600, 450)));
     }
 
@@ -51,7 +51,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"reportId\":\"some-report-id\"}");
+        assertEquals(response.getBody(), "{\"actionName\":\"checkLayout\",\"deviceId\":\"device01\",\"result\":{\"reportId\":\"some-report-id\"}}");
         verify(deviceService).checkLayout(any(), eq("device01"), eq("homepage.gspec"), eq(singletonList("mobile")), any());
     }
 
@@ -62,7 +62,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "\"registered action: inject\"");
+        assertEquals(response.getBody(), "{\"actionName\":\"inject\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).injectScript(any(), eq("device01"), eq("document.body.writeln('Hello');"));
     }
 
@@ -73,7 +73,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "\"registered action: runJs\"");
+        assertEquals(response.getBody(), "{\"actionName\":\"runJs\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).runJavaScript(any(), eq("device01"), eq("somescript.js"));
     }
 
@@ -82,7 +82,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         Response response = postJson("/api/devices/device01/actions/restart", "");
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "\"registered action: restart\"");
+        assertEquals(response.getBody(), "{\"actionName\":\"restart\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).restartDevice(any(), eq("device01"));
     }
 
@@ -91,7 +91,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         Response response = postJson("/api/devices/device01/actions/clearCookies", "");
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "\"registered action: clearCookies\"");
+        assertEquals(response.getBody(), "{\"actionName\":\"clearCookies\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).clearCookies(any(), eq("device01"));
     }
 }
