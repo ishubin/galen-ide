@@ -62,6 +62,7 @@ DevicesPanel.prototype.showEditDevicePopup = function (device) {
         browserType: device.browserType,
         name: device.name,
         tags: device.tags,
+        master: device.master || false,
         sizeType: device.sizeProvider.type,
         sizes: sizes,
         sizeVariation: sizeVariation

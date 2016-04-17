@@ -103,6 +103,7 @@ DeviceModal.prototype.$behavior = function () {
 DeviceModal.prototype.show = function (device, devices) {
     this.device = device || null;
     this.devices = devices;
+
     this.render({device: this.device});
     if (this.device !== null) {
         if (this.device.sizeType === "custom") {
@@ -111,6 +112,20 @@ DeviceModal.prototype.show = function (device, devices) {
         this.setModel(this.model, device);
     }
     this.showModal();
+
+    if (this.hasMaster()) {
+        this.$find("#master-checkbox").prop("disabled", true);
+    }
+};
+DeviceModal.prototype.hasMaster = function () {
+    if (this.devices !== null) {
+        for (var i = 0; i < this.devices.length; i++) {
+            if (this.devices[i].master) {
+                return true;
+            }
+        }
+    }
+    return false;
 };
 DeviceModal.prototype.submitNewDevice = function (device, callback) {
     var that = this;

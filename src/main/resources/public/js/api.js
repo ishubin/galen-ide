@@ -125,6 +125,7 @@ var APIMock = {
                 "tags": ["desktop"],
                 "name": "some device",
                 "supportsResizing": true,
+                "master": true,
                 "sizeProvider": {
                     "sizes": [
                         {"width": 450, "height": 800}
@@ -140,6 +141,7 @@ var APIMock = {
                 "tags": ["desktop", "tablet"],
                 "name": "some device 2",
                 "supportsResizing": false,
+                "master": false,
                 "sizeProvider": {
                     "type": "unsupported"
                 },
@@ -154,6 +156,7 @@ var APIMock = {
                 ],
                 "name": "asdsd",
                 "supportsResizing": true,
+                "master": false,
                 "sizeProvider": {
                     "sizeVariation": {
                         "start": {
