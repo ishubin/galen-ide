@@ -1,8 +1,6 @@
 package com.galenframework.ide.controllers;
 
-import com.galenframework.ide.controllers.actions.DeviceActionCheckLayoutRequest;
-import com.galenframework.ide.controllers.actions.DeviceActionOpenUrlRequest;
-import com.galenframework.ide.controllers.actions.DeviceActionResizeRequest;
+import com.galenframework.ide.controllers.actions.*;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.SizeProviderCustom;
@@ -17,6 +15,7 @@ import java.util.List;
 
 import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static java.util.Arrays.asList;
+import static java.util.Collections.asLifoQueue;
 import static java.util.Collections.emptyList;
 import static spark.Spark.*;
 
@@ -51,19 +50,31 @@ public class HelpController {
                     asList(
                         new DeviceActionOpenUrlRequest().setUrl("http://example.com")
                     ),
-                    NO_RESPONSE
+                    asList(new ActionResult("openUrl", "device-01", null))
                 ),
                 new ApiDocRequest("POST", "/api/devices/{deviceId}/action/resize", "Resize browser window", NO_DESCRIPTION,
                     asList(
                         new DeviceActionResizeRequest().setWidth(650).setHeight(450)
                     ),
-                    NO_RESPONSE
+                    asList(new ActionResult("resize", "device-01", null))
+                ),
+                new ApiDocRequest("POST", "/api/devices/{deviceId}/action/restart", "Restart browser for current device", NO_DESCRIPTION,
+                    NO_REQUEST,
+                    asList(new ActionResult("restart", "device-01", null))
+                ),
+                new ApiDocRequest("POST", "/api/devices/{deviceId}/action/clearCookies", "Clears cookies in a browser", NO_DESCRIPTION,
+                    NO_REQUEST,
+                    asList(new ActionResult("clearCookies", "device-01", null))
+                ),
+                new ApiDocRequest("POST", "/api/devices/{deviceId}/action/inject", "Inject client-size JavaScript on a page", NO_DESCRIPTION,
+                    asList(new DeviceActionInjectRequest().setScript("document.body.write('Hello');")),
+                    asList(new ActionResult("inject", "device-01", null))
                 ),
                 new ApiDocRequest("POST", "/api/devices/{deviceId}/action/checkLayout", "Check layout", NO_DESCRIPTION,
                     asList(
                             new DeviceActionCheckLayoutRequest().setPath("homePage.gspec").setTags(asList("mobile"))
                     ),
-                    NO_RESPONSE
+                    asList(new ActionResult("checkLayout", "device-01", new DeviceActionCheckLayoutResponse("sdg897s-dg965ds8sdg-98sgsd78g-55sd7g6")))
                 )
             ));
         }, toJson());

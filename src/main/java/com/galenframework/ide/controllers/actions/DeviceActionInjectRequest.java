@@ -22,7 +22,8 @@ public class DeviceActionInjectRequest {
         return script;
     }
 
-    public void setScript(String script) {
+    public DeviceActionInjectRequest setScript(String script) {
         this.script = script;
+        return this;
     }
 }
