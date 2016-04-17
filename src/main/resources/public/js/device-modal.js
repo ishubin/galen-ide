@@ -59,6 +59,7 @@ function DeviceModal(app) {
         name: Model.text().required("A name of a browser should not be empty"),
         tags: Model.text().converter(TagsConverter),
         sizeType: Model.radio(),
+        master: Model.checkbox(),
         sizeProviderCustom: Model.group({
             sizes: Model.text().required().converter(SizeArrayConverter)
         }),
@@ -99,8 +100,9 @@ DeviceModal.prototype.$behavior = function () {
         }
     }
 };
-DeviceModal.prototype.show = function (device) {
+DeviceModal.prototype.show = function (device, devices) {
     this.device = device || null;
+    this.devices = devices;
     this.render({device: this.device});
     if (this.device !== null) {
         if (this.device.sizeType === "custom") {

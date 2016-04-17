@@ -10,7 +10,7 @@ DevicesPanel.prototype.$behavior = function () {
     return {
         click: {
             ".action-devices-add-new": function () {
-                this.deviceModal.show();
+                this.deviceModal.show(null, this.devices);
             },
             ".action-edit-device": function ($element) {
                 var deviceId = $element.attr("data-device-id");
@@ -65,5 +65,5 @@ DevicesPanel.prototype.showEditDevicePopup = function (device) {
         sizeType: device.sizeProvider.type,
         sizes: sizes,
         sizeVariation: sizeVariation
-    });
+    }, this.devices);
 };
