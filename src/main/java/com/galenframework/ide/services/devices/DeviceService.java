@@ -28,15 +28,13 @@ public interface DeviceService extends  Service {
 
     void createDevice(RequestData requestData, DeviceRequest createDeviceRequest);
 
-    void startMasterDriver(RequestData requestData, DeviceRequest createDeviceRequest, String url);
-
     List<Device> getAllDevices(RequestData requestData);
 
     Device getDevice(RequestData requestData, String deviceId);
 
-    void syncAllBrowsers(RequestData requestData);
+    void syncAllBrowsersWithMaster(RequestData requestData);
 
-    void testAllBrowsers(RequestData requestData, String spec, String reportStoragePath);
+    void testAllNodeDevices(RequestData requestData, String spec, String reportStoragePath);
 
     void shutdownDevice(RequestData requestData, String deviceId);
 

@@ -29,10 +29,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DeviceThread extends Thread {
     protected final Device device;
-    @JsonIgnore
 
+    @JsonIgnore
     private final Queue<DeviceCommand> commands = new ArrayQueue<>(500);
 
+    @JsonIgnore
     private final ReentrantLock commandsLock = new ReentrantLock();
 
 

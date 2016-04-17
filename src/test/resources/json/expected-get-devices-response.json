@@ -13,6 +13,7 @@
   "status":"BUSY",
   "lastErrorMessage":null,
   "browserType":"firefox",
+  "master":false,
   "active":true
 },{
   "deviceId":"asd",
@@ -25,6 +26,7 @@
   "status":"STARTING",
   "lastErrorMessage":null,
   "browserType":"chrome",
+  "master":false,
   "active":true
 },{
   "deviceId":"zxc",
@@ -49,5 +51,6 @@
   "status":"READY",
   "lastErrorMessage":null,
   "browserType":"ie",
+  "master":false,
   "active":true
 }]

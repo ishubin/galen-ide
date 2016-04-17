@@ -32,10 +32,6 @@ public class DefaultDeviceServiceMock implements DeviceService {
     }
 
     @Override
-    public void startMasterDriver(RequestData requestData, DeviceRequest createDeviceRequest, String url) {
-    }
-
-    @Override
     public List<Device> getAllDevices(RequestData requestData) {
         return Collections.emptyList();
     }
@@ -46,11 +42,11 @@ public class DefaultDeviceServiceMock implements DeviceService {
     }
 
     @Override
-    public void syncAllBrowsers(RequestData requestData) {
+    public void syncAllBrowsersWithMaster(RequestData requestData) {
     }
 
     @Override
-    public void testAllBrowsers(RequestData requestData, String spec, String reportStoragePath) {
+    public void testAllNodeDevices(RequestData requestData, String spec, String reportStoragePath) {
     }
 
     @Override

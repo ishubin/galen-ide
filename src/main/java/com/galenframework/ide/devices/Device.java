@@ -37,6 +37,7 @@ public class Device {
     private DeviceStatus status = DeviceStatus.STARTING;
     private String lastErrorMessage;
     private String browserType;
+    private boolean master = false;
 
     public Device() {
     }
@@ -159,5 +160,13 @@ public class Device {
             dr.setSizeVariation(((SizeProviderRange) getSizeProvider()).getSizeVariation());
         }
         return dr;
+    }
+
+    public boolean isMaster() {
+        return master;
+    }
+
+    public void setMaster(boolean master) {
+        this.master = master;
     }
 }

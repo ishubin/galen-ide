@@ -42,9 +42,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DeviceServiceImpl implements DeviceService {
+    private static final String MASTER_DEVICE_NAME = "master";
     private final ServiceProvider serviceProvider;
     private final IdeArguments ideArguments;
-    private DeviceThread masterDevice;
 
     private SynchronizedStorage<DeviceThread> devices = new SynchronizedStorage<>();
 
@@ -77,10 +77,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void syncAllBrowsers(RequestData requestData) {
-        if (masterDevice != null) {
-            String originSource = masterDevice.getPageSource();
-            String url = masterDevice.getCurrentUrl();
+    public void syncAllBrowsersWithMaster(RequestData requestData) {
+        Optional<DeviceThread> masterDevice = findMasterDevice();
+
+        if (masterDevice.isPresent()) {
+            String originSource = masterDevice.get().getPageSource();
+            String url = masterDevice.get().getCurrentUrl();
 
             String domSyncMethod = serviceProvider.settingsService().getSettings(requestData).getDomSyncMethod();
 
@@ -90,28 +92,56 @@ public class DeviceServiceImpl implements DeviceService {
                 syncAllBrowsersUsingProxy(requestData, originSource, url);
             }
         } else {
-            throw new RuntimeException("Main driver was not configured");
+            throw new RuntimeException("Master device was not configured");
         }
     }
 
-    @Override
-    public void startMasterDriver(RequestData requestData, DeviceRequest createDeviceRequest, String url) {
-        masterDevice = createDeviceThreadFromRequest(createDeviceRequest);
-        Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
-        masterDevice.initDriverFromClass(webDriverClass);
-        if (url != null) {
-            masterDevice.openUrl(url);
-        }
+    private Optional<DeviceThread> findMasterDevice() {
+        return getDeviceThreads().stream().filter(d -> d.getDevice().isMaster()).findAny();
     }
-
 
     @Override
     public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
-        DeviceThread deviceThread = createDeviceThreadFromRequest(createDeviceRequest);
-        addDeviceThread(deviceThread);
+        verifyNameIsDefined(createDeviceRequest);
+
+        DeviceThread deviceThread = registerDeviceThread(createDeviceRequest);
 
         Class<? extends WebDriver> webDriverClass = pickWebDriverClass(createDeviceRequest.getBrowserType());
         deviceThread.initDriverFromClass(webDriverClass);
+    }
+
+    private DeviceThread registerDeviceThread(DeviceRequest createDeviceRequest) {
+        DeviceThread deviceThread;
+        synchronized (this) {
+            verifyNameIsUnique(createDeviceRequest.getName());
+
+            deviceThread = createDeviceThreadFromRequest(createDeviceRequest);
+            if (createDeviceRequest.isMaster()) {
+                verifyMasterIsAbsent();
+                deviceThread.getDevice().setMaster(true);
+            }
+            addDeviceThread(deviceThread);
+        }
+        return deviceThread;
+    }
+
+    private void verifyMasterIsAbsent() {
+        if (getDeviceThreads().stream().filter(d -> d.getDevice().isMaster()).findAny().isPresent()) {
+            throw new RuntimeException("Master device already exists");
+        }
+    }
+
+    private void verifyNameIsUnique(String name) {
+        if (getDeviceThreads().stream().filter(d -> d.getDevice().getName().equals(name)).findAny().isPresent()) {
+            throw new RuntimeException("Device with name \"" + name + "\" already exists");
+        }
+    }
+
+    private void verifyNameIsDefined(DeviceRequest createDeviceRequest) {
+        String name = createDeviceRequest.getName();
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Missing device name");
+        }
     }
 
     private DeviceThread createDeviceThreadFromRequest(DeviceRequest createDeviceRequest) {
@@ -127,16 +157,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public void testAllBrowsers(RequestData requestData, String spec, String reportStoragePath) {
+    public void testAllNodeDevices(RequestData requestData, String spec, String reportStoragePath) {
         TestResultService testResultService = serviceProvider.testResultService();
         testResultService.clearAllTestResults(requestData);
         Settings settings = serviceProvider.settingsService().getSettings(requestData);
 
-        getDeviceThreads().forEach(dt ->
-                        dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags());
-                            dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
-                        })
+        getDeviceThreads().stream().filter(byNotMaster()).forEach(dt ->
+            dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
+                String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags());
+                dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
+            })
         );
     }
 
@@ -276,11 +306,14 @@ public class DeviceServiceImpl implements DeviceService {
 
     private void syncAllBrowsersUsingProxy(RequestData requestData, String originSource, String url) {
         String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(requestData, originSource, url);
-        getActiveDeviceThreads().forEach((device) -> device.openUrl("http://localhost:" + ideArguments.getPort() + "/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
+        getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.openUrl("http://localhost:" + ideArguments.getPort() + "/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
     }
 
-
     private void syncAllBrowsersUsingInjection(String originSource, String url) {
-        getActiveDeviceThreads().forEach((device) -> device.injectSource(url, originSource));
+        getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.injectSource(url, originSource));
+    }
+
+    private Predicate<DeviceThread> byNotMaster() {
+        return d -> !d.getDevice().isMaster();
     }
 }

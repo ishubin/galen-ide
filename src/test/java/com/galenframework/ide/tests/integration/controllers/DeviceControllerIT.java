@@ -49,10 +49,27 @@ public class DeviceControllerIT extends ApiTestBase {
             .setName("Device1")
             .setBrowserType("firefox")
             .setSizes(singletonList(new Size(450, 500)))
+            .setMaster(false)
             .setSizeType("custom")
             .setTags(singletonList("mobile")))
         );
     }
 
+    @Test
+    public void should_post_master_device() throws IOException {
+        Response response = postJson("/api/devices",
+            jsonFromResources("/json/post-master-device-request-1.json"));
+
+        assertEquals(response.getCode(), 200);
+        assertEquals(response.getBody(), "created");
+        verify(deviceService).createDevice(any(), eq(new DeviceRequest()
+                .setName("Device1")
+                .setBrowserType("firefox")
+                .setSizes(singletonList(new Size(450, 500)))
+                .setMaster(true)
+                .setSizeType("custom")
+                .setTags(singletonList("mobile")))
+        );
+    }
 
 }

@@ -31,6 +31,7 @@ public class DeviceRequest {
     private List<Size> sizes;
     private String sizeType;
     private SizeVariation sizeVariation;
+    private boolean master;
 
     public String getBrowserType() {
         return browserType;
@@ -129,5 +130,14 @@ public class DeviceRequest {
                 .append("sizeType", this.sizeType)
                 .append("sizeVariation", this.sizeVariation)
                 .toString();
+    }
+
+    public boolean isMaster() {
+        return master;
+    }
+
+    public DeviceRequest setMaster(boolean master) {
+        this.master = master;
+        return this;
     }
 }
