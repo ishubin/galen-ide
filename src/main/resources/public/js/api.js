@@ -55,42 +55,42 @@ function deleteJSON(resource, callback) {
 var API = {
     help: {
         general: function (callback) {
-            getJSON("api/help", callback);
+            getJSON("/api/help", callback);
         }  
     },
     devices: {
         submitNew: function (device, callback) {
-            postJSON("api/devices", device, callback);
+            postJSON("/api/devices", device, callback);
         },
         list: function (callback) {
-            getJSON("api/devices", callback);
+            getJSON("/api/devices", callback);
         },
         update: function (deviceId, device, callback) {
-            putJSON("api/devices/" + deviceId, device, callback);
+            putJSON("/api/devices/" + deviceId, device, callback);
         },
         deleteDevice: function (deviceId, callback) {
-            deleteJSON("api/devices/" + deviceId, callback);
+            deleteJSON("/api/devices/" + deviceId, callback);
         }
     },
     settings: {
         get: function (callback) {
-            getJSON("api/settings", function (settings) {
+            getJSON("/api/settings", function (settings) {
                 callback(settings);
             });
         },
         save: function (settings, callback) {
-            postJSON("api/settings", settings, callback);
+            postJSON("/api/settings", settings, callback);
         }
     },
     profiles: {
         list: function (callback) {
-            getJSON("api/profiles", callback);
+            getJSON("/api/profiles", callback);
         },
         load: function (path, callback) {
-            postJSON("api/profiles-load/" + path, {}, callback);
+            postJSON("/api/profiles-load/" + path, {}, callback);
         },
         save: function (name, callback) {
-            postJSON("api/profiles", {name: name}, callback);
+            postJSON("/api/profiles", {name: name}, callback);
         }
     },
     files: {
