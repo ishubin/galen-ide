@@ -16,11 +16,10 @@
 package com.galenframework.ide.services.tester;
 
 import com.galenframework.ide.model.TestCommand;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 
 public interface TesterService extends Service {
-    void runtTest(RequestData requestData, TestCommand testCommand);
+    void runtTest(TestCommand testCommand);
 
-    TestCommand getLastTestCommand(RequestData requestData);
+    TestCommand getLastTestCommand();
 }

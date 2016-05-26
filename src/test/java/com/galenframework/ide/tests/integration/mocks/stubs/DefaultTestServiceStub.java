@@ -13,28 +13,22 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.services.RequestData;
+import com.galenframework.ide.model.TestCommand;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.filebrowser.FileItem;
-import com.galenframework.ide.services.profiles.ProfilesService;
+import com.galenframework.ide.services.tester.TesterService;
 
-import java.util.Collections;
-import java.util.List;
+public class DefaultTestServiceStub implements TesterService {
 
-public class DefaultProfilesServiceMock implements ProfilesService {
     @Override
-    public List<FileItem> getProfiles(RequestData requestData, String path) {
-        return Collections.emptyList();
+    public void runtTest(TestCommand testCommand) {
+
     }
 
     @Override
-    public void saveProfile(RequestData requestData, String name) {
-    }
-
-    @Override
-    public void loadProfile(RequestData requestData, String path) {
+    public TestCommand getLastTestCommand() {
+        return null;
     }
 
     @Override

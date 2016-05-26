@@ -15,8 +15,6 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.components.galenpages;
 
-import java.util.List;
-
 public abstract class WaitCheck implements WaitCheckCondition {
     private String name;
 

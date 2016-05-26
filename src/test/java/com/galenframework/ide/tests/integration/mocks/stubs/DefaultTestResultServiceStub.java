@@ -13,36 +13,35 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
 
-import java.util.Collections;
 import java.util.List;
 
-public class DefaultTestResultServiceMock implements TestResultService {
+import static java.util.Collections.emptyList;
+
+public class DefaultTestResultServiceStub implements TestResultService {
 
     @Override
-    public TestResultsOverview getTestResultsOverview(RequestData requestData) {
-        return new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null);
+    public TestResultsOverview getTestResultsOverview() {
+        return new TestResultsOverview(emptyList(), null);
     }
 
     @Override
-    public void clearAllTestResults(RequestData requestData) {
+    public void clearAllTestResults() {
     }
 
     @Override
-    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags) {
+    public String registerNewTestResultContainer(String deviceName, List<String> tags) {
         return "some-new-test-result-container";
     }
 
     @Override
-    public TestResult getTestResult(RequestData requestData, String reportId) {
+    public TestResult getTestResult(String reportId) {
         return null;
     }
 

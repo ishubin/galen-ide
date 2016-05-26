@@ -13,21 +13,27 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.model.settings.Settings;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.settings.SettingsService;
+import com.galenframework.ide.services.filebrowser.FileItem;
+import com.galenframework.ide.services.profiles.ProfilesService;
 
-public class DefaultSettingsServiceMock implements SettingsService {
+import java.util.Collections;
+import java.util.List;
+
+public class DefaultProfilesServiceStub implements ProfilesService {
     @Override
-    public Settings getSettings(RequestData requestData) {
-        return new Settings();
+    public List<FileItem> getProfiles(String path) {
+        return Collections.emptyList();
     }
 
     @Override
-    public void changeSettings(RequestData requestData, Settings settings) {
+    public void saveProfile(String name) {
+    }
+
+    @Override
+    public void loadProfile(String path) {
     }
 
     @Override

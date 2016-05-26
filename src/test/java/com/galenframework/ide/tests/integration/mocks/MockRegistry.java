@@ -15,6 +15,8 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks;
 
+import com.galenframework.ide.services.Service;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,27 +25,43 @@ public enum MockRegistry {
     INSTANCE;
 
     private Map<MockKey, Object> mocks = new HashMap<>();
+    private Map<Object, Object> sessionLessMocks = new HashMap<>();
 
-    private <T> void register(String mockUniqueKey, T mock, String mockName) {
-        MockKey mockKey = new MockKey(mockUniqueKey, mockName);
+    private <T> void register(String sessionId, T mock, String mockName) {
+        MockKey mockKey = new MockKey(sessionId, mockName);
         mocks.put(mockKey, mock);
     }
 
     @SuppressWarnings("unchecked")
-    private synchronized <T> Optional<T> pick(String mockUniqueKey, String mockName) {
-        MockKey mockKey = new MockKey(mockUniqueKey, mockName);
+    private synchronized <T> Optional<T> pick(String sessionId, String mockName) {
+        MockKey mockKey = new MockKey(sessionId, mockName);
         if (mocks.containsKey(mockKey)) {
             return Optional.ofNullable((T) mocks.get(mockKey));
         }
         return Optional.empty();
     }
 
-    public static <T> void registerMock(String mockUniqueKey, T mock, String mockName) {
-        MockRegistry.INSTANCE.register(mockUniqueKey, mock, mockName);
+    public static <T> void registerMock(String sessionId, T mock, String mockName) {
+        MockRegistry.INSTANCE.register(sessionId, mock, mockName);
     }
 
-    public static <T> Optional<T> pickMock(String mockUniqueKey, String mockName) {
-        return MockRegistry.INSTANCE.pick(mockUniqueKey, mockName);
+    public static <T> Optional<T> pickMock(String sessionId, String mockName) {
+        return MockRegistry.INSTANCE.pick(sessionId, mockName);
     }
 
+    public static <T extends Service> Optional<T> pickSessionlessMock(String mockName) {
+        return MockRegistry.INSTANCE.pickSessionless(mockName);
+    }
+
+    @SuppressWarnings("unchecked")
+    private synchronized <T> Optional<T> pickSessionless(String mockName) {
+        if (sessionLessMocks.containsKey(mockName)) {
+            return Optional.ofNullable((T) sessionLessMocks.get(mockName));
+        }
+        return Optional.empty();
+    }
+
+    public static <T> void registerSessionlessMock(T mock, String mockName) {
+        INSTANCE.sessionLessMocks.put(mockName, mock);
+    }
 }

@@ -18,7 +18,6 @@ package com.galenframework.ide.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.controllers.actions.*;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.devices.DeviceService;
 
 import java.util.Optional;
@@ -39,21 +38,21 @@ public class DeviceController {
     }
 
     public void initRoutes() {
-        get("api/devices", (request, response) -> deviceService.getAllDevices(new RequestData(request)), toJson());
+        get("api/devices", (request, response) -> deviceService.getAllDevices(), toJson());
 
         post("api/devices", (req, res) -> {
             DeviceRequest createDeviceRequest = mapper.readValue(req.body(), DeviceRequest.class);
-            deviceService.createDevice(new RequestData(req), createDeviceRequest);
+            deviceService.createDevice(createDeviceRequest);
             return "created";
         });
 
-        get("api/devices/:deviceId", (req, res) -> deviceService.getDevice(new RequestData(req), req.params("deviceId")), toJson());
+        get("api/devices/:deviceId", (req, res) -> deviceService.getDevice(req.params("deviceId")), toJson());
 
         put("api/devices/:deviceId", (req, res) -> {
             String deviceId = req.params("deviceId");
             if (deviceId != null && !deviceId.trim().isEmpty()) {
                 DeviceRequest createDeviceRequest = mapper.readValue(req.body(), DeviceRequest.class);
-                deviceService.changeDevice(new RequestData(req), deviceId, createDeviceRequest);
+                deviceService.changeDevice(deviceId, createDeviceRequest);
                 return "modified";
             } else throw new RuntimeException("Incorrect request, missing device id");
         });
@@ -61,7 +60,7 @@ public class DeviceController {
         delete("api/devices/:deviceId", (req, res) -> {
             String deviceId = req.params("deviceId");
             if (deviceId != null && !deviceId.trim().isEmpty()) {
-                deviceService.shutdownDevice(new RequestData(req), deviceId);
+                deviceService.shutdownDevice(deviceId);
                 return "Delete device " + deviceId;
             } else throw new RuntimeException("Incorrect request, missing device id");
         }, toJson());
@@ -73,7 +72,7 @@ public class DeviceController {
             String requestBody = req.body();
 
             DeviceAction deviceAction = DeviceAction.parseAction(actionName, requestBody);
-            Optional<Object> result = deviceAction.execute(new RequestData(req), deviceService, deviceId, reportStoragePath);
+            Optional<Object> result = deviceAction.execute(deviceService, deviceId, reportStoragePath);
             Object resultObject = null;
 
             if (result.isPresent()) {
@@ -84,7 +83,7 @@ public class DeviceController {
 
         get("api/devices/:deviceId/actions", (req, res) -> {
             String deviceId = req.params("deviceId");
-            return deviceService.getCurrentCommands(new RequestData(req), deviceId);
+            return deviceService.getCurrentCommands(deviceId);
         }, toJson());
     }
 }

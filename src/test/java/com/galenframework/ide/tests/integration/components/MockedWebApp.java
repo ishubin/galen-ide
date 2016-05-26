@@ -18,13 +18,16 @@ package com.galenframework.ide.tests.integration.components;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.Main;
 import com.galenframework.ide.services.ServiceProvider;
+import com.galenframework.ide.tests.integration.mocks.MockSessionStorage;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
 
 import java.io.IOException;
 
+import static spark.Spark.before;
+
 public class MockedWebApp extends Main {
     private static MockedWebApp _instance = null;
-
+    public static final String MOCK_KEY_COOKIE_NAME = "__MockUniqueKey__";
 
     private MockedWebApp() throws IOException {
         super("target/reports");
@@ -36,6 +39,16 @@ public class MockedWebApp extends Main {
         IdeArguments ideArguments = new IdeArguments();
         ideArguments.setPort(4567);
         initWebServer(serviceProvider, ideArguments);
+        initMockRequestFilter();
+    }
+
+    private void initMockRequestFilter() {
+        before((request, response) -> {
+            String mockUniqueKey = request.cookie(MOCK_KEY_COOKIE_NAME);
+            if (mockUniqueKey != null) {
+                MockSessionStorage.registerMockSession(mockUniqueKey);
+            }
+        });
     }
 
     public synchronized static void create() throws IOException {

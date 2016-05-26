@@ -15,11 +15,18 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.ui;
 
+import com.galenframework.ide.services.devices.DeviceService;
+import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
+import com.galenframework.ide.services.filebrowser.FileBrowserService;
+import com.galenframework.ide.services.profiles.ProfilesService;
+import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.settings.SettingsService;
+import com.galenframework.ide.services.tester.TesterService;
 import com.galenframework.ide.tests.integration.components.DeviceRunner;
 import com.galenframework.ide.tests.integration.components.MockedWebApp;
 import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.mocks.MockRegistry;
-import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
+import com.galenframework.ide.tests.integration.mocks.stubs.*;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.testng.GalenTestNgTestBase;
 import org.mockito.Mockito;
@@ -42,7 +49,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
     private String mockUniqueKey = UUID.randomUUID().toString();
     private static final long ONE_YEAR = 31556952000L;
 
-    protected <T> T registerMock(Class<T> mockClass) {
+    protected <T> T registerMockitoMock(Class<T> mockClass) {
         return registerMock(Mockito.mock(mockClass), mockClass);
     }
 
@@ -66,6 +73,11 @@ public class GalenTestBase extends GalenTestNgTestBase {
         return mock;
     }
 
+    protected <T> T registerSessionlessMock(T mock, Class<T> mockClass) {
+        MockRegistry.registerSessionlessMock(mock, mockClass.getName());
+        return mock;
+    }
+
     @BeforeMethod
     public void resetAllMocks() {
         reset(mocks.toArray(new Object[mocks.size()]));
@@ -79,7 +91,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
         driver.manage().window().setSize(desktopDevice.getSize());
 
         driver.manage().deleteAllCookies();
-        driver.manage().addCookie(new Cookie(MockedServiceProvider.MOCK_KEY_COOKIE_NAME, mockUniqueKey, "/", new Date(new Date().getTime() + ONE_YEAR)));
+        driver.manage().addCookie(new Cookie(MockedWebApp.MOCK_KEY_COOKIE_NAME, mockUniqueKey, "/", new Date(new Date().getTime() + ONE_YEAR)));
         return driver;
     }
 
@@ -95,6 +107,13 @@ public class GalenTestBase extends GalenTestNgTestBase {
     @BeforeSuite
     public void startupMockedWebApp() throws IOException {
         MockedWebApp.create();
+        registerSessionlessMock(new DefaultDeviceServiceStub(), DeviceService.class);
+        registerSessionlessMock(new DefaultDomSnapshotServiceStub(), DomSnapshotService.class);
+        registerSessionlessMock(new DefaultFileBrowserServiceStub(), FileBrowserService.class);
+        registerSessionlessMock(new DefaultProfilesServiceStub(), ProfilesService.class);
+        registerSessionlessMock(new DefaultSettingsServiceStub(), SettingsService.class);
+        registerSessionlessMock(new DefaultTestResultServiceStub(), TestResultService.class);
+        registerSessionlessMock(new DefaultTestServiceStub(), TesterService.class);
     }
 
     @AfterMethod

@@ -28,7 +28,7 @@ public abstract class GalenPage<T extends GalenPage> extends GalenComponent<T> {
 
     @SuppressWarnings("unchecked")
     public T waitForIt() {
-        new Wait(getName() + " to be loaded").untilALL(availabilityElements().stream().map(WaitCheckPresent::new).collect(toList()));
+        new Wait(getName() + " to be loaded").untilAll(availabilityElements().stream().map(WaitCheckPresent::new).collect(toList()));
         return (T) this;
     }
 

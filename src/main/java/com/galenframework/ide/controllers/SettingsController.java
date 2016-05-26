@@ -17,7 +17,6 @@ package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.model.settings.Settings;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.settings.SettingsService;
 import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -33,11 +32,11 @@ public class SettingsController {
     }
 
     public void initRoutes() {
-        get("api/settings", (request, response) -> settingsService.getSettings(new RequestData(request)), toJson());
+        get("api/settings", (request, response) -> settingsService.getSettings(), toJson());
 
         post("api/settings", (request, response) -> {
             Settings settings = mapper.readValue(request.body(), Settings.class);
-            settingsService.changeSettings(new RequestData(request), settings);
+            settingsService.changeSettings(settings);
             return "saved";
         });
     }

@@ -1,3 +1,18 @@
+/*******************************************************************************
+* Copyright 2016 Ivan Shubin http://galenframework.com
+* 
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* 
+*   http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+******************************************************************************/
 package com.galenframework.ide.tests.integration.controllers;
 
 import com.galenframework.ide.devices.*;
@@ -24,7 +39,7 @@ public class DeviceControllerIT extends ApiTestBase {
 
     @Test
     public void should_get_list_of_devices() throws IOException {
-        when(deviceService.getAllDevices(any()))
+        when(deviceService.getAllDevices())
             .thenReturn(asList(
                 new Device("qwe", "Device1", "firefox", singletonList("mobile"), new SizeProviderCustom(asList(new Size(450, 500))), DeviceStatus.BUSY),
                 new Device("asd", "Device2", "chrome", singletonList("tablet"), new SizeProviderUnsupported(), DeviceStatus.STARTING),
@@ -35,7 +50,7 @@ public class DeviceControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), jsonFromResources("/json/expected-get-devices-response.json"));
-        verify(deviceService).getAllDevices(any());
+        verify(deviceService).getAllDevices();
     }
 
     @Test
@@ -45,7 +60,7 @@ public class DeviceControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "created");
-        verify(deviceService).createDevice(any(), eq(new DeviceRequest()
+        verify(deviceService).createDevice(eq(new DeviceRequest()
             .setName("Device1")
             .setBrowserType("firefox")
             .setSizes(singletonList(new Size(450, 500)))
@@ -62,7 +77,7 @@ public class DeviceControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "created");
-        verify(deviceService).createDevice(any(), eq(new DeviceRequest()
+        verify(deviceService).createDevice(eq(new DeviceRequest()
                 .setName("Device1")
                 .setBrowserType("firefox")
                 .setSizes(singletonList(new Size(450, 500)))

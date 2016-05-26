@@ -18,7 +18,6 @@ package com.galenframework.ide;
 import com.galenframework.ide.controllers.*;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.DefaultServiceProvider;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import org.apache.commons.io.FileUtils;
 
@@ -69,7 +68,7 @@ public class Main {
         new HelpController();
 
         if (ideArguments.getProfile() != null) {
-            serviceProvider.profilesService().loadProfile(RequestData.EMPTY, ideArguments.getProfile());
+            serviceProvider.profilesService().loadProfile(ideArguments.getProfile());
         }
     }
 

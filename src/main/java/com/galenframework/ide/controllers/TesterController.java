@@ -17,7 +17,6 @@ package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.model.TestCommand;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.tester.TesterService;
 
 import static spark.Spark.*;
@@ -36,7 +35,7 @@ public class TesterController {
     private void initRoutes() {
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
-            testerService.runtTest(new RequestData(request), testCommand);
+            testerService.runtTest(testCommand);
             return "Started testing: " + testCommand.getSpecPath();
         });
     }

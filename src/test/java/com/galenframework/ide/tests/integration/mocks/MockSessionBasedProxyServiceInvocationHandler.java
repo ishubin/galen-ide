@@ -15,48 +15,39 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks;
 
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-class CookieBasedProxyServiceInvocationHandler<T extends Service> implements InvocationHandler {
+class MockSessionBasedProxyServiceInvocationHandler<T extends Service> implements InvocationHandler {
 
-    private final T defaultMock;
     private final String serviceName;
 
-    CookieBasedProxyServiceInvocationHandler(String serviceName, T defaultMock) {
+    MockSessionBasedProxyServiceInvocationHandler(String serviceName) {
         this.serviceName = serviceName;
-        this.defaultMock = defaultMock;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Optional<RequestData> requestData  = obtainRequestData(args);
 
-        if (requestData.isPresent()) {
-            Optional<String> cookie = requestData.get().cookie(MockedServiceProvider.MOCK_KEY_COOKIE_NAME);
-            if (cookie.isPresent()) {
-                String mockUniqueKey = cookie.get();
-                Optional<T> mock = MockRegistry.pickMock(mockUniqueKey, serviceName);
-                if (mock.isPresent()) {
-                    return method.invoke(mock.get(), args);
-                }
+        Optional<String> mockSessionId = MockSessionStorage.getMockSession();
+        if (mockSessionId.isPresent()) {
+            Optional<T> mock = MockRegistry.pickMock(mockSessionId.get(), serviceName);
+            if (mock.isPresent()) {
+                return method.invoke(mock.get(), args);
+            } else {
+                throw new RuntimeException("Mock " + method.getName() + " in " + serviceName + " service is not defined for session " + mockSessionId.get());
+            }
+        } else {
+            Optional<T> mock = MockRegistry.pickSessionlessMock(serviceName);
+            if (mock.isPresent()) {
+                return method.invoke(mock.get(), args);
+            } else {
+                throw new RuntimeException("You haven't configured a session-less mock for " + serviceName + " service, method " + method.getName());
             }
         }
-        return method.invoke(defaultMock, args);
-    }
 
-    private Optional<RequestData> obtainRequestData(Object[] args) {
-        if (args != null) {
-            for (Object arg : args) {
-                if (arg != null && arg instanceof RequestData) {
-                    return Optional.of((RequestData)arg);
-                }
-            }
-        }
-        return Optional.empty();
     }
 }

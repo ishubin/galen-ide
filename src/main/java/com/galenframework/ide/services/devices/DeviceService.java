@@ -18,7 +18,6 @@ package com.galenframework.ide.services.devices;
 import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.commands.DeviceCommand;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 import org.openqa.selenium.Dimension;
 
@@ -26,41 +25,40 @@ import java.util.List;
 
 public interface DeviceService extends  Service {
 
-    void createDevice(RequestData requestData, DeviceRequest createDeviceRequest);
+    void createDevice(DeviceRequest createDeviceRequest);
 
-    List<Device> getAllDevices(RequestData requestData);
+    List<Device> getAllDevices();
 
-    Device getDevice(RequestData requestData, String deviceId);
+    Device getDevice(String deviceId);
 
-    void syncAllBrowsersWithMaster(RequestData requestData);
+    void syncAllBrowsersWithMaster();
 
-    void testAllNodeDevices(RequestData requestData, String spec, String reportStoragePath);
+    void testAllNodeDevices(String spec, String reportStoragePath);
 
-    void shutdownDevice(RequestData requestData, String deviceId);
+    void shutdownDevice(String deviceId);
 
-    void changeDevice(RequestData requestData, String deviceId, DeviceRequest deviceRequest);
+    void changeDevice(String deviceId, DeviceRequest deviceRequest);
 
-    void shutdownAllDevices(RequestData requestData);
+    void shutdownAllDevices();
 
     /**
      * Opens url on specified device
-     * @param requestData a request meta data
      * @param deviceId Id of device
      * @param url Url of the website that will be open
      */
-    void openUrl(RequestData requestData, String deviceId, String url);
+    void openUrl(String deviceId, String url);
 
-    String checkLayout(RequestData requestData, String deviceId, String specPath, List<String> tags, String reportStoragePath);
+    String checkLayout(String deviceId, String specPath, List<String> tags, String reportStoragePath);
 
-    void resize(RequestData requestData, String deviceId, Dimension size);
+    void resize(String deviceId, Dimension size);
 
-    List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId);
+    List<DeviceCommand> getCurrentCommands(String deviceId);
 
-    void injectScript(RequestData requestData, String deviceId, String script);
+    void injectScript(String deviceId, String script);
 
-    void runJavaScript(RequestData requestData, String deviceId, String path);
+    void runJavaScript(String deviceId, String path);
 
-    void restartDevice(RequestData requestData, String deviceId);
+    void restartDevice(String deviceId);
 
-    void clearCookies(RequestData requestData, String deviceId);
+    void clearCookies(String deviceId);
 }

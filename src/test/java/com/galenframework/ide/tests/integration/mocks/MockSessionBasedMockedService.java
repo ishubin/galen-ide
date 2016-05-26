@@ -20,23 +20,15 @@ import com.galenframework.ide.services.Service;
 import java.lang.reflect.Proxy;
 import java.util.Optional;
 
-public class CookieBasedMockedService<T extends Service> {
+public class MockSessionBasedMockedService<T extends Service> {
     private final Class<T> serviceClass;
-    private final T defaultMock;
     private final String serviceName;
 
     private Optional<T> service = Optional.empty();
 
-    public CookieBasedMockedService(String serviceName, Class<T> serviceClass, T defaultMock) {
-        this.serviceName = serviceName;
-        this.serviceClass = serviceClass;
-        this.defaultMock = defaultMock;
-    }
-
-    public CookieBasedMockedService(Class<T> serviceClass, T defaultMock) {
+    public MockSessionBasedMockedService(Class<T> serviceClass) {
         this.serviceName = serviceClass.getName();
         this.serviceClass = serviceClass;
-        this.defaultMock = defaultMock;
     }
 
     @SuppressWarnings("unchecked")
@@ -44,7 +36,7 @@ public class CookieBasedMockedService<T extends Service> {
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),
                 new Class<?>[] {serviceClass},
-                new CookieBasedProxyServiceInvocationHandler(serviceName, defaultMock)
+                new MockSessionBasedProxyServiceInvocationHandler(serviceName)
         );
     }
 

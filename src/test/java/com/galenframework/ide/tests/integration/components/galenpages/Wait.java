@@ -30,7 +30,7 @@ public class Wait {
     }
 
 
-    public void untilALL(List<WaitCheck> checks) {
+    public void untilAll(List<WaitCheck> checks) {
         if (checks.isEmpty()) {
             throw new IllegalArgumentException("Check list should not be empty");
         }
@@ -90,6 +90,6 @@ public class Wait {
     }
 
     public void until(WaitCheckCondition waitCheckCondition) {
-        untilALL(singletonList(WaitCheck.check(prefix, waitCheckCondition)));
+        untilAll(singletonList(WaitCheck.check(prefix, waitCheckCondition)));
     }
 }

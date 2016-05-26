@@ -16,9 +16,7 @@
 package com.galenframework.ide.tests.integration.ui;
 
 import com.galenframework.ide.model.settings.Settings;
-import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.results.TestResultsOverview;
-import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
@@ -30,17 +28,17 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.*;
 
 public class ProfilesModalIT extends GalenTestBase {
-    FileBrowserService fileBrowserService = registerMock(FileBrowserService.class);
-    DeviceService deviceService = registerMock(DeviceService.class);
-    TestResultService testResultService = registerMock(TestResultService.class);
-    SettingsService settingsService = registerMock(SettingsService.class);
-    ProfilesService profilesService = registerMock(ProfilesService.class);
+    FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
+    DeviceService deviceService = registerMockitoMock(DeviceService.class);
+    TestResultService testResultService = registerMockitoMock(TestResultService.class);
+    SettingsService settingsService = registerMockitoMock(SettingsService.class);
+    ProfilesService profilesService = registerMockitoMock(ProfilesService.class);
 
     private Settings settings = new Settings()
             .setHomeDirectory("target");
@@ -68,17 +66,17 @@ public class ProfilesModalIT extends GalenTestBase {
         page.loadProfilesModal.waitUntilHidden();
 
         String expectedPathPrefix = new File("target").getAbsolutePath() + File.separator;
-        verify(profilesService).loadProfile(any(), eq(expectedPathPrefix + "profile-2.gspec"));
+        verify(profilesService).loadProfile(eq(expectedPathPrefix + "profile-2.gspec"));
     }
 
 
     private void configureDefaultMocks() {
-        when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
-        when(deviceService.getAllDevices(any())).thenReturn(Collections.<Device>emptyList());
-        when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
-        when(settingsService.getSettings(any()))
+        when(fileBrowserService.getFilesInPath(any())).thenReturn(emptyList());
+        when(deviceService.getAllDevices()).thenReturn(emptyList());
+        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList(), null));
+        when(settingsService.getSettings())
                 .thenReturn(settings);
-        when(profilesService.getProfiles(any(), any())).thenReturn(asList(
+        when(profilesService.getProfiles(any())).thenReturn(asList(
                 new FileItem(false, "profile-1.gspec", "somepath/profile-1.gspec", false),
                 new FileItem(false, "profile-2.gspec", "somepath/profile-2.gspec", false),
                 new FileItem(false, "profile-3.gspec", "somepath/profile-3.gspec", false)

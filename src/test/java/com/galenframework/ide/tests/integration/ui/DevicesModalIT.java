@@ -21,7 +21,6 @@ import com.galenframework.ide.devices.SizeProviderRange;
 import com.galenframework.ide.model.Size;
 import com.galenframework.ide.model.SizeVariation;
 import com.galenframework.ide.model.devices.DeviceRequest;
-import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
@@ -31,11 +30,11 @@ import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.*;
 
 public class DevicesModalIT extends GalenTestBase {
@@ -43,13 +42,13 @@ public class DevicesModalIT extends GalenTestBase {
             new Device("123qweasd", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
             new Device("zxcvbnm", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
     );
-    private static final TestResultsOverview EMPTY_TEST_RESULTS = new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null);
-    private static final List<FileItem> EMPTY_FILES = Collections.emptyList();
-    private static final List<Device> EMPTY_DEVICES = Collections.emptyList();
+    private static final TestResultsOverview EMPTY_TEST_RESULTS = new TestResultsOverview(emptyList(), null);
+    private static final List<FileItem> EMPTY_FILES = emptyList();
+    private static final List<Device> EMPTY_DEVICES = emptyList();
 
-    FileBrowserService fileBrowserService = registerMock(FileBrowserService.class);
-    DeviceService deviceService = registerMock(DeviceService.class);
-    TestResultService testResultService = registerMock(TestResultService.class);
+    FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
+    DeviceService deviceService = registerMockitoMock(DeviceService.class);
+    TestResultService testResultService = registerMockitoMock(TestResultService.class);
 
 
     @Test
@@ -74,7 +73,7 @@ public class DevicesModalIT extends GalenTestBase {
         for (String sizeProviderType: asList("custom", "range", "unsupported")) {
             page.deviceModal.chooseSizeProvider(sizeProviderType);
 
-            checkLayout("/specs/tests/device_modal_only_size_provider.gspec", Collections.<String>emptyList(), new HashMap<String, Object>() {{
+            checkLayout("/specs/tests/device_modal_only_size_provider.gspec", emptyList(), new HashMap<String, Object>() {{
                 put("size_provider", sizeProviderType);
             }});
         }
@@ -97,8 +96,8 @@ public class DevicesModalIT extends GalenTestBase {
         page.deviceModal.submitButton.click();
         page.deviceModal.waitUntilHidden();
 
-        verify(deviceService, atLeastOnce()).getAllDevices(any());
-        verify(deviceService).createDevice(any(), eq(new DeviceRequest()
+        verify(deviceService, atLeastOnce()).getAllDevices();
+        verify(deviceService).createDevice(eq(new DeviceRequest()
                 .setName("Sample device")
                 .setBrowserType("chrome")
                 .setTags(asList("desktop", "tablet"))
@@ -133,8 +132,8 @@ public class DevicesModalIT extends GalenTestBase {
         page.deviceModal.submitButton.click();
         page.deviceModal.waitUntilHidden();
 
-        verify(deviceService, atLeastOnce()).getAllDevices(any());
-        verify(deviceService).changeDevice(any(), eq("123qweasd"), eq(new DeviceRequest()
+        verify(deviceService, atLeastOnce()).getAllDevices();
+        verify(deviceService).changeDevice(eq("123qweasd"), eq(new DeviceRequest()
                 .setName("Changed device name")
                 .setBrowserType("firefox")
                 .setTags(asList("mobile", "iphone"))
@@ -147,8 +146,8 @@ public class DevicesModalIT extends GalenTestBase {
     protected void configureInitialMockCalls(List<FileItem> fileBrowserServiceReturn,
                                              List<Device> deviceServiceReturn,
                                              TestResultsOverview testResultsServiceReturn) {
-        when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(fileBrowserServiceReturn);
-        when(deviceService.getAllDevices(any())).thenReturn(deviceServiceReturn);
-        when(testResultService.getTestResultsOverview(any())).thenReturn(testResultsServiceReturn);
+        when(fileBrowserService.getFilesInPath(any())).thenReturn(fileBrowserServiceReturn);
+        when(deviceService.getAllDevices()).thenReturn(deviceServiceReturn);
+        when(testResultService.getTestResultsOverview()).thenReturn(testResultsServiceReturn);
     }
 }

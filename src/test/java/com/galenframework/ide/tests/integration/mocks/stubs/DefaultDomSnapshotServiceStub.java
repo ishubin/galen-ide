@@ -13,23 +13,23 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.model.TestCommand;
-import com.galenframework.ide.services.RequestData;
+import com.galenframework.ide.model.DomSnapshot;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.tester.TesterService;
+import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 
-public class DefaultTestServiceMock implements TesterService {
+import java.util.Optional;
 
+public class DefaultDomSnapshotServiceStub implements DomSnapshotService {
     @Override
-    public void runtTest(RequestData requestData, TestCommand testCommand) {
-
+    public Optional<DomSnapshot> getDomSnapshot(String snapshotId) {
+        return Optional.empty();
     }
 
     @Override
-    public TestCommand getLastTestCommand(RequestData requestData) {
-        return null;
+    public String createSnapshot(String originSource, String url) {
+        return "some-default-snapshot-id";
     }
 
     @Override

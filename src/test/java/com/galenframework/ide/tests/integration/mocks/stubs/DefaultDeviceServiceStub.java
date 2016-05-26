@@ -13,12 +13,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
 import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.commands.DeviceCommand;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.devices.DeviceService;
 import org.openqa.selenium.Dimension;
@@ -26,78 +25,78 @@ import org.openqa.selenium.Dimension;
 import java.util.Collections;
 import java.util.List;
 
-public class DefaultDeviceServiceMock implements DeviceService {
+public class DefaultDeviceServiceStub implements DeviceService {
     @Override
-    public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
+    public void createDevice(DeviceRequest createDeviceRequest) {
     }
 
     @Override
-    public List<Device> getAllDevices(RequestData requestData) {
+    public List<Device> getAllDevices() {
         return Collections.emptyList();
     }
 
     @Override
-    public Device getDevice(RequestData requestData, String deviceId) {
+    public Device getDevice(String deviceId) {
         return null;
     }
 
     @Override
-    public void syncAllBrowsersWithMaster(RequestData requestData) {
+    public void syncAllBrowsersWithMaster() {
     }
 
     @Override
-    public void testAllNodeDevices(RequestData requestData, String spec, String reportStoragePath) {
+    public void testAllNodeDevices(String spec, String reportStoragePath) {
     }
 
     @Override
-    public void shutdownDevice(RequestData requestData, String deviceId) {
+    public void shutdownDevice(String deviceId) {
     }
 
     @Override
-    public void changeDevice(RequestData requestData, String deviceId, DeviceRequest deviceRequest) {
+    public void changeDevice(String deviceId, DeviceRequest deviceRequest) {
     }
 
     @Override
-    public void shutdownAllDevices(RequestData requestData) {
+    public void shutdownAllDevices() {
     }
 
     @Override
-    public void openUrl(RequestData requestData, String deviceId, String url) {
+    public void openUrl(String deviceId, String url) {
 
     }
 
     @Override
-    public String checkLayout(RequestData requestData, String deviceId, String specPath, List<String> tags, String reportStoragePath) {
+    public String checkLayout(String deviceId, String specPath, List<String> tags, String reportStoragePath) {
         return null;
     }
 
     @Override
-    public void resize(RequestData requestData, String deviceId, Dimension size) {
+    public void resize(String deviceId, Dimension size) {
 
     }
 
     @Override
-    public List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId) {
+    public List<DeviceCommand> getCurrentCommands(String deviceId) {
         return Collections.emptyList();
     }
 
     @Override
-    public void injectScript(RequestData requestData, String deviceId, String script) {
+    public void injectScript(String deviceId, String script) {
 
     }
 
     @Override
-    public void runJavaScript(RequestData requestData, String deviceId, String path) {
+    public void runJavaScript(String deviceId, String path) {
 
     }
 
     @Override
-    public void restartDevice(RequestData requestData, String deviceId) {
+    public void restartDevice(String deviceId) {
 
     }
 
     @Override
-    public void clearCookies(RequestData requestData, String deviceId) {
+    public void clearCookies(String deviceId) {
 
     }
 

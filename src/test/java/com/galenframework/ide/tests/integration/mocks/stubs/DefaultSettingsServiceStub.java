@@ -13,31 +13,20 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.services.RequestData;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.filebrowser.FileBrowserService;
-import com.galenframework.ide.services.filebrowser.FileContent;
-import com.galenframework.ide.services.filebrowser.FileItem;
+import com.galenframework.ide.services.settings.SettingsService;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-public class DefaultFileBrowserService implements FileBrowserService {
+public class DefaultSettingsServiceStub implements SettingsService {
     @Override
-    public List<FileItem> getFilesInPath(RequestData requestData, String path) {
-        return Collections.emptyList();
+    public Settings getSettings() {
+        return new Settings();
     }
 
     @Override
-    public FileContent showFileContent(RequestData requestData, String path) {
-        return new FileContent("somefile.txt", "/somefile.txt", "Some content");
-    }
-
-    @Override
-    public void saveFile(RequestData requestData, String path, FileContent fileContent) throws IOException {
+    public void changeSettings(Settings settings) {
     }
 
     @Override

@@ -16,7 +16,6 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileContent;
 
@@ -35,24 +34,24 @@ public class FileBrowserController {
 
     public void initRoutes() {
         get("/api/files", (req, res) -> {
-            return fileBrowserService.getFilesInPath(new RequestData(req), ".");
+            return fileBrowserService.getFilesInPath(".");
         }, toJson());
 
         get("/api/files/", (req, res) -> {
-            return fileBrowserService.getFilesInPath(new RequestData(req), ".");
+            return fileBrowserService.getFilesInPath(".");
         }, toJson());
 
         get("/api/files/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
-                return fileBrowserService.getFilesInPath(new RequestData(req), splat[0]);
+                return fileBrowserService.getFilesInPath(splat[0]);
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
         get("/api/file-content/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
-                return fileBrowserService.showFileContent(new RequestData(req), splat[0]);
+                return fileBrowserService.showFileContent(splat[0]);
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
@@ -60,7 +59,7 @@ public class FileBrowserController {
             String[] splat = req.splat();
             if (splat.length > 0) {
                 FileContent fileContent = mapper.readValue(req.body(), FileContent.class);
-                fileBrowserService.saveFile(new RequestData(req), splat[0], fileContent);
+                fileBrowserService.saveFile(splat[0], fileContent);
                 return "saved";
             } else throw new RuntimeException("Incorrect request");
         }, toJson());

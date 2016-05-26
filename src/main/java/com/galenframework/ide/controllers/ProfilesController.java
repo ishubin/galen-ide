@@ -17,7 +17,6 @@ package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.model.profile.SaveProfileRequest;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.profiles.ProfilesService;
 import com.galenframework.ide.services.settings.SettingsService;
 
@@ -41,14 +40,12 @@ public class ProfilesController {
 
     public void initRoutes() {
         get("api/profiles", (req, res) -> {
-            RequestData requestData = new RequestData(req);
-            String fullPath = obtainRootFolder(requestData).getAbsolutePath();
-            return profilesService.getProfiles(requestData, fullPath);
+            String fullPath = obtainRootFolder().getAbsolutePath();
+            return profilesService.getProfiles(fullPath);
         }, toJson());
 
         post("api/profiles", (req, res) -> {
             SaveProfileRequest saveProfileRequest = mapper.readValue(req.body(), SaveProfileRequest.class);
-            RequestData requestData = new RequestData(req);
 
             String name = saveProfileRequest.getName();
 
@@ -60,25 +57,24 @@ public class ProfilesController {
                 fileName = fileName + GALEN_EXTENSION;
             }
 
-            String fullPath = obtainRootFolder(requestData).getAbsolutePath() + File.separator + fileName;
-            profilesService.saveProfile(requestData, fullPath);
+            String fullPath = obtainRootFolder().getAbsolutePath() + File.separator + fileName;
+            profilesService.saveProfile(fullPath);
             return "saved";
         }, toJson());
 
         post("api/profiles-load/*", (req, res) -> {
             String[] splat = req.splat();
             if (splat.length > 0) {
-                RequestData requestData = new RequestData(req);
-                String fullPath = obtainRootFolder(requestData).getAbsolutePath() + File.separator + splat[0];
-                profilesService.loadProfile(requestData, fullPath);
+                String fullPath = obtainRootFolder().getAbsolutePath() + File.separator + splat[0];
+                profilesService.loadProfile(fullPath);
                 return "loaded";
             } else throw new RuntimeException("Incorrect request");
         }, toJson());
 
     }
 
-    private File obtainRootFolder(RequestData requestData) {
-        File root = new File(settingsService.getSettings(requestData).getHomeDirectory());
+    private File obtainRootFolder() {
+        File root = new File(settingsService.getSettings().getHomeDirectory());
         if (root.exists()) {
             if (!root.isDirectory()) {
                 throw new RuntimeException("Home is not a directory: " + root.getAbsolutePath());

@@ -18,19 +18,18 @@ package com.galenframework.ide.services.results;
 import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
 import com.galenframework.ide.devices.TestResultsListener;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 
 import java.util.List;
 
 public interface TestResultService extends TestResultsListener, Service {
 
-    TestResultsOverview getTestResultsOverview(RequestData requestData);
+    TestResultsOverview getTestResultsOverview();
 
-    void clearAllTestResults(RequestData requestData);
+    void clearAllTestResults();
 
-    String registerNewTestResultContainer(RequestData requestData, String deviceName,
+    String registerNewTestResultContainer(String deviceName,
                                           List<String> tags);
 
-    TestResult getTestResult(RequestData requestData, String reportId);
+    TestResult getTestResult(String reportId);
 }

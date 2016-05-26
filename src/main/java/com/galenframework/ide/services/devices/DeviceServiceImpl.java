@@ -23,7 +23,6 @@ import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.model.devices.DeviceRequest;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.results.TestResultService;
 import com.galenframework.ide.util.SynchronizedStorage;
@@ -54,12 +53,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> getAllDevices(RequestData requestData) {
+    public List<Device> getAllDevices() {
         return devices.stream().map(DeviceThread::getDevice).collect(Collectors.toList());
     }
 
     @Override
-    public Device getDevice(RequestData requestData, String deviceId) {
+    public Device getDevice(String deviceId) {
         Optional<DeviceThread> dt = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (dt.isPresent()) {
             return dt.get().getDevice();
@@ -77,19 +76,19 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void syncAllBrowsersWithMaster(RequestData requestData) {
+    public void syncAllBrowsersWithMaster() {
         Optional<DeviceThread> masterDevice = findMasterDevice();
 
         if (masterDevice.isPresent()) {
             String originSource = masterDevice.get().getPageSource();
             String url = masterDevice.get().getCurrentUrl();
 
-            String domSyncMethod = serviceProvider.settingsService().getSettings(requestData).getDomSyncMethod();
+            String domSyncMethod = serviceProvider.settingsService().getSettings().getDomSyncMethod();
 
             if ("inject".equals(domSyncMethod)) {
                 syncAllBrowsersUsingInjection(originSource, url);
             } else {
-                syncAllBrowsersUsingProxy(requestData, originSource, url);
+                syncAllBrowsersUsingProxy(originSource, url);
             }
         } else {
             throw new RuntimeException("Master device was not configured");
@@ -101,7 +100,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void createDevice(RequestData requestData, DeviceRequest createDeviceRequest) {
+    public void createDevice(DeviceRequest createDeviceRequest) {
         verifyNameIsDefined(createDeviceRequest);
 
         DeviceThread deviceThread = registerDeviceThread(createDeviceRequest);
@@ -157,14 +156,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public void testAllNodeDevices(RequestData requestData, String spec, String reportStoragePath) {
+    public void testAllNodeDevices(String spec, String reportStoragePath) {
         TestResultService testResultService = serviceProvider.testResultService();
-        testResultService.clearAllTestResults(requestData);
-        Settings settings = serviceProvider.settingsService().getSettings(requestData);
+        testResultService.clearAllTestResults();
+        Settings settings = serviceProvider.settingsService().getSettings();
 
         getDeviceThreads().stream().filter(byNotMaster()).forEach(dt ->
             dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), dt.getTags());
+                String reportId = testResultService.registerNewTestResultContainer(dt.getDevice().getName(), dt.getTags());
                 dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
             })
         );
@@ -180,7 +179,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void shutdownDevice(RequestData requestData, String deviceId) {
+    public void shutdownDevice(String deviceId) {
         Optional<DeviceThread> deviceOption = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (deviceOption.isPresent()) {
             DeviceThread deviceThread = deviceOption.get();
@@ -192,7 +191,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void changeDevice(RequestData requestData, String deviceId, DeviceRequest deviceRequest) {
+    public void changeDevice(String deviceId, DeviceRequest deviceRequest) {
         Optional<DeviceThread> optionalDevice = getDeviceThreads().stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (optionalDevice.isPresent()) {
             Device device = optionalDevice.get().getDevice();
@@ -203,12 +202,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void shutdownAllDevices(RequestData requestData) {
+    public void shutdownAllDevices() {
         devices.stream().forEach(DeviceThread::shutdownDevice);
     }
 
     @Override
-    public void openUrl(RequestData requestData, String deviceId, String url) {
+    public void openUrl(String deviceId, String url) {
         withMandatoryDevice(deviceId, deviceThread -> {
             deviceThread.openUrl(url);
             return null;
@@ -217,7 +216,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public void resize(RequestData requestData, String deviceId, Dimension size) {
+    public void resize(String deviceId, Dimension size) {
         withMandatoryDevice(deviceId, (dt) -> {
             dt.resize(size);
             return null;
@@ -225,12 +224,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<DeviceCommand> getCurrentCommands(RequestData requestData, String deviceId) {
+    public List<DeviceCommand> getCurrentCommands(String deviceId) {
         return withMandatoryDevice(deviceId, DeviceThread::getCurrentCommands);
     }
 
     @Override
-    public void injectScript(RequestData requestData, String deviceId, String script) {
+    public void injectScript(String deviceId, String script) {
         withMandatoryDevice(deviceId, dt -> {
             dt.injectScript(script);
             return null;
@@ -238,7 +237,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void runJavaScript(RequestData requestData, String deviceId, String path) {
+    public void runJavaScript(String deviceId, String path) {
         withMandatoryDevice(deviceId, dt -> {
             dt.runJavaScript(path);
             return null;
@@ -246,7 +245,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void restartDevice(RequestData requestData, String deviceId) {
+    public void restartDevice(String deviceId) {
         withMandatoryDevice(deviceId, deviceThread -> {
             deviceThread.restartDevice();
             return null;
@@ -254,7 +253,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void clearCookies(RequestData requestData, String deviceId) {
+    public void clearCookies(String deviceId) {
         withMandatoryDevice(deviceId, dt -> {
             dt.clearCookies();
             return null;
@@ -262,12 +261,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public String checkLayout(RequestData requestData, String deviceId, String specPath, List<String> tags, String reportStoragePath) {
+    public String checkLayout(String deviceId, String specPath, List<String> tags, String reportStoragePath) {
         return withMandatoryDevice(deviceId, (dt) -> {
             TestResultService testResultService = serviceProvider.testResultService();
-            Settings settings = serviceProvider.settingsService().getSettings(requestData);
+            Settings settings = serviceProvider.settingsService().getSettings();
 
-            String reportId = testResultService.registerNewTestResultContainer(requestData, dt.getDevice().getName(), tags);
+            String reportId = testResultService.registerNewTestResultContainer(dt.getDevice().getName(), tags);
             dt.checkLayout(settings, reportId, specPath, tags, testResultService, reportStoragePath);
 
             return reportId;
@@ -304,8 +303,8 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
-    private void syncAllBrowsersUsingProxy(RequestData requestData, String originSource, String url) {
-        String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(requestData, originSource, url);
+    private void syncAllBrowsersUsingProxy(String originSource, String url) {
+        String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(originSource, url);
         getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.openUrl("http://localhost:" + ideArguments.getPort() + "/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
     }
 

@@ -16,7 +16,6 @@
 package com.galenframework.ide.controllers;
 
 import com.galenframework.ide.model.DomSnapshot;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 
 import java.util.Optional;
@@ -37,7 +36,7 @@ public class DomSnapshotController {
             res.header("Content-Type", "text/html");
             String domId = req.params("domId");
             if (domId != null && !domId.trim().isEmpty()) {
-                Optional<DomSnapshot> domSnapshot = domSnapshotService.getDomSnapshot(new RequestData(req), domId);
+                Optional<DomSnapshot> domSnapshot = domSnapshotService.getDomSnapshot(domId);
                 if (domSnapshot.isPresent()) {
                     return domSnapshot.get().getOriginSource();
                 } else {

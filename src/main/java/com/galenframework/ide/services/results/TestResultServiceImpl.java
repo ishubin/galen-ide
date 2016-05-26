@@ -19,7 +19,6 @@ import com.galenframework.ide.util.SynchronizedStorage;
 import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.TestResult;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 
 import java.util.List;
@@ -40,8 +39,8 @@ public class TestResultServiceImpl implements TestResultService{
     }
 
     @Override
-    public TestResultsOverview getTestResultsOverview(RequestData requestData) {
-        return new TestResultsOverview(testResults.get(), serviceProvider.testerService().getLastTestCommand(requestData));
+    public TestResultsOverview getTestResultsOverview() {
+        return new TestResultsOverview(testResults.get(), serviceProvider.testerService().getLastTestCommand());
     }
 
     @Override
@@ -54,19 +53,19 @@ public class TestResultServiceImpl implements TestResultService{
     }
 
     @Override
-    public void clearAllTestResults(RequestData requestData) {
+    public void clearAllTestResults() {
         this.testResults.clear();
     }
 
     @Override
-    public String registerNewTestResultContainer(RequestData requestData, String deviceName, List<String> tags) {
+    public String registerNewTestResultContainer(String deviceName, List<String> tags) {
         TestResultContainer testResultContainer = new TestResultContainer(deviceName, tags);
         testResults.add(testResultContainer);
         return testResultContainer.getUniqueId();
     }
 
     @Override
-    public TestResult getTestResult(RequestData requestData, String reportId) {
+    public TestResult getTestResult(String reportId) {
         Optional<TestResultContainer> testResultOption = testResults.stream().filter(trc -> trc.getUniqueId().equals(reportId)).findFirst();
 
         if (testResultOption.isPresent()) {

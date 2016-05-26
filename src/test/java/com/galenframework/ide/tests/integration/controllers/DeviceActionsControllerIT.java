@@ -1,3 +1,18 @@
+/*******************************************************************************
+* Copyright 2016 Ivan Shubin http://galenframework.com
+* 
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* 
+*   http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+******************************************************************************/
 package com.galenframework.ide.tests.integration.controllers;
 
 import com.galenframework.ide.services.devices.DeviceService;
@@ -27,7 +42,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"openUrl\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).openUrl(any(), eq("device01"), eq("http://example.com/blah"));
+        verify(deviceService).openUrl(eq("device01"), eq("http://example.com/blah"));
     }
 
     @Test
@@ -38,12 +53,12 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"resize\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).resize(any(), eq("device01"), eq(new Dimension(600, 450)));
+        verify(deviceService).resize(eq("device01"), eq(new Dimension(600, 450)));
     }
 
     @Test
     public void should_post_checkLayout_action() throws IOException {
-        when(deviceService.checkLayout(any(), anyString(), anyString(), any(), anyString()))
+        when(deviceService.checkLayout(anyString(), anyString(), any(), anyString()))
             .thenReturn("some-report-id");
 
         Response response = postJson("/api/devices/device01/actions/checkLayout",
@@ -52,7 +67,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"checkLayout\",\"deviceId\":\"device01\",\"result\":{\"reportId\":\"some-report-id\"}}");
-        verify(deviceService).checkLayout(any(), eq("device01"), eq("homepage.gspec"), eq(singletonList("mobile")), any());
+        verify(deviceService).checkLayout(eq("device01"), eq("homepage.gspec"), eq(singletonList("mobile")), any());
     }
 
     @Test
@@ -63,7 +78,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"inject\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).injectScript(any(), eq("device01"), eq("document.body.writeln('Hello');"));
+        verify(deviceService).injectScript(eq("device01"), eq("document.body.writeln('Hello');"));
     }
 
     @Test
@@ -74,7 +89,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"runJs\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).runJavaScript(any(), eq("device01"), eq("somescript.js"));
+        verify(deviceService).runJavaScript(eq("device01"), eq("somescript.js"));
     }
 
     @Test
@@ -83,7 +98,7 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"restart\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).restartDevice(any(), eq("device01"));
+        verify(deviceService).restartDevice(eq("device01"));
     }
 
     @Test
@@ -92,6 +107,6 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"clearCookies\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).clearCookies(any(), eq("device01"));
+        verify(deviceService).clearCookies(eq("device01"));
     }
 }

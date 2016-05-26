@@ -17,7 +17,6 @@ package com.galenframework.ide.tests.integration.ui;
 
 import com.galenframework.ide.model.Size;
 import com.galenframework.ide.model.SizeVariation;
-import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.results.TestResultsOverview;
 import com.galenframework.ide.devices.*;
 import com.galenframework.ide.services.devices.DeviceService;
@@ -34,9 +33,9 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
 public class DevicesPanelIT extends GalenTestBase {
-    FileBrowserService fileBrowserService = registerMock(FileBrowserService.class);
-    DeviceService deviceService = registerMock(DeviceService.class);
-    TestResultService testResultService = registerMock(TestResultService.class);
+    FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
+    DeviceService deviceService = registerMockitoMock(DeviceService.class);
+    TestResultService testResultService = registerMockitoMock(TestResultService.class);
 
     private List<Device> sampleDevices = asList(
             new Device("id1", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700))), DeviceStatus.STARTING),
@@ -64,17 +63,17 @@ public class DevicesPanelIT extends GalenTestBase {
         page.devicesPanel.devices.get(1).deleteButton.click();
         page.devicesPanel.waitForAttributeToChange("data-generation-marker", timeMarker);
 
-        verify(deviceService, atLeast(2)).getAllDevices(any());
-        verify(deviceService).shutdownDevice(any(), eq("id2"));
-        verify(deviceService, never()).shutdownDevice(any(), eq("id4"));
+        verify(deviceService, atLeast(2)).getAllDevices();
+        verify(deviceService).shutdownDevice(eq("id2"));
+        verify(deviceService, never()).shutdownDevice(eq("id4"));
         verifyNoMoreInteractions(deviceService);
     }
 
 
     private void configureMocks() {
-        when(fileBrowserService.getFilesInPath(any(), any())).thenReturn(Collections.emptyList());
-        when(deviceService.getAllDevices(any())).thenReturn(sampleDevices);
-        when(testResultService.getTestResultsOverview(any())).thenReturn(new TestResultsOverview(Collections.<TestResultContainer>emptyList(), null));
+        when(fileBrowserService.getFilesInPath(any())).thenReturn(Collections.emptyList());
+        when(deviceService.getAllDevices()).thenReturn(sampleDevices);
+        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(Collections.emptyList(), null));
     }
 
 }

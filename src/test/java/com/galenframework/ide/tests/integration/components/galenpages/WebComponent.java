@@ -20,6 +20,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class WebComponent<T extends GalenComponent> extends GalenComponent<T> {
 
@@ -106,11 +107,11 @@ public abstract class WebComponent<T extends GalenComponent> extends GalenCompon
     public T selectByText(String text) {
         WebElement webElement = getWebElement();
 
-        try {
-            WebElement optionElement = webElement.findElement(By.xpath(".//option[normalize-space(.)=\"" + text + "\"]"));
-            optionElement.click();
-        } catch (NoSuchElementException ex) {
-            throw new RuntimeException("Couldn't find option with text \"" + text + "\" for " + getName(), ex);
+        Optional<WebElement> optionElement = webElement.findElements(By.tagName("option")).stream().filter(e -> text.equals(e.getText())).findFirst();
+        if (optionElement.isPresent()) {
+            optionElement.get().click();
+        } else {
+            throw new RuntimeException("Couldn't find option with text \"" + text + "\" for " + getName());
         }
 
         return (T) this;

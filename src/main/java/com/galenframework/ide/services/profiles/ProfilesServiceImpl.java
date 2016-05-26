@@ -16,7 +16,6 @@
 package com.galenframework.ide.services.profiles;
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.model.devices.DeviceRequest;
@@ -42,7 +41,7 @@ public class ProfilesServiceImpl implements ProfilesService {
     }
 
     @Override
-    public List<FileItem> getProfiles(RequestData requestData, String folderPath) {
+    public List<FileItem> getProfiles(String folderPath) {
         File[] filesInFolder = new File(folderPath).listFiles();
 
         List<FileItem> fileItems = new LinkedList<>();
@@ -58,11 +57,11 @@ public class ProfilesServiceImpl implements ProfilesService {
 
 
     @Override
-    public void saveProfile(RequestData requestData, String path) {
+    public void saveProfile(String path) {
         File profileFile = new File(path);
         ProfileContent profileContent = new ProfileContent();
-        profileContent.setSettings(serviceProvider.settingsService().getSettings(requestData));
-        profileContent.setDevices(serviceProvider.deviceService().getAllDevices(requestData).stream().map(Device::toDeviceRequest).collect(Collectors.toList()));
+        profileContent.setSettings(serviceProvider.settingsService().getSettings());
+        profileContent.setDevices(serviceProvider.deviceService().getAllDevices().stream().map(Device::toDeviceRequest).collect(Collectors.toList()));
 
         try {
             FileUtils.writeStringToFile(profileFile, objectMapper.writeValueAsString(profileContent));
@@ -72,14 +71,14 @@ public class ProfilesServiceImpl implements ProfilesService {
     }
 
     @Override
-    public void loadProfile(RequestData requestData, String path) {
+    public void loadProfile(String path) {
         File file = new File(path);
         if (file.exists() && !file.isDirectory()) {
             try {
                 String content = FileUtils.readFileToString(file);
                 ProfileContent profileContent = objectMapper.readValue(content, ProfileContent.class);
                 if (profileContent != null) {
-                    loadProfile(requestData, profileContent);
+                    loadProfile(profileContent);
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Couldn't read file:" + path, e);
@@ -95,14 +94,14 @@ public class ProfilesServiceImpl implements ProfilesService {
     }
 
 
-    private void loadProfile(RequestData requestData, ProfileContent profileContent) {
-        serviceProvider.settingsService().changeSettings(requestData, profileContent.getSettings());
-        serviceProvider.deviceService().shutdownAllDevices(requestData);
+    private void loadProfile(ProfileContent profileContent) {
+        serviceProvider.settingsService().changeSettings(profileContent.getSettings());
+        serviceProvider.deviceService().shutdownAllDevices();
 
         List<DeviceRequest> deviceRequests = profileContent.getDevices();
         if (deviceRequests != null) {
             deviceRequests.stream().forEach(dr ->
-                serviceProvider.deviceService().createDevice(requestData, dr)
+                serviceProvider.deviceService().createDevice(dr)
             );
         }
     }

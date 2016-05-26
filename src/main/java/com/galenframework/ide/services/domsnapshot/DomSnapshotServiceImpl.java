@@ -16,7 +16,6 @@
 package com.galenframework.ide.services.domsnapshot;
 
 import com.galenframework.ide.model.DomSnapshot;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceImpl;
 import com.galenframework.ide.services.ServiceProvider;
 
@@ -34,12 +33,12 @@ public class DomSnapshotServiceImpl extends ServiceImpl implements DomSnapshotSe
     }
 
     @Override
-    public Optional<DomSnapshot> getDomSnapshot(RequestData requestData, String snapshotId) {
+    public Optional<DomSnapshot> getDomSnapshot(String snapshotId) {
         return Optional.of(domSnapshots.get(snapshotId));
     }
 
     @Override
-    public String createSnapshot(RequestData requestData, String originSource, String url) {
+    public String createSnapshot(String originSource, String url) {
         String uniqueDomId = UUID.randomUUID().toString();
         try {
             domSnapshots.put(uniqueDomId, DomSnapshot.createSnapshotAndReplaceUrls(originSource, url));

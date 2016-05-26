@@ -13,24 +13,30 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.tests.integration.mocks.services;
+package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.model.DomSnapshot;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
+import com.galenframework.ide.services.filebrowser.FileBrowserService;
+import com.galenframework.ide.services.filebrowser.FileContent;
+import com.galenframework.ide.services.filebrowser.FileItem;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
-public class DefaultDomSnapshotServiceMock implements DomSnapshotService {
+public class DefaultFileBrowserServiceStub implements FileBrowserService {
     @Override
-    public Optional<DomSnapshot> getDomSnapshot(RequestData requestData, String snapshotId) {
-        return Optional.empty();
+    public List<FileItem> getFilesInPath(String path) {
+        return Collections.emptyList();
     }
 
     @Override
-    public String createSnapshot(RequestData requestData, String originSource, String url) {
-        return "some-default-snapshot-id";
+    public FileContent showFileContent(String path) {
+        return new FileContent("somefile.txt", "/somefile.txt", "Some content");
+    }
+
+    @Override
+    public void saveFile(String path, FileContent fileContent) throws IOException {
     }
 
     @Override

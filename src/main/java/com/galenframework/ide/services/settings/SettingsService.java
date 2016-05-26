@@ -16,12 +16,11 @@
 package com.galenframework.ide.services.settings;
 
 import com.galenframework.ide.model.settings.Settings;
-import com.galenframework.ide.services.RequestData;
 import com.galenframework.ide.services.Service;
 
 public interface SettingsService extends Service {
-    Settings getSettings(RequestData requestData);
+    Settings getSettings();
 
-    void changeSettings(RequestData requestData, Settings settings);
+    void changeSettings(Settings settings);
 
 }

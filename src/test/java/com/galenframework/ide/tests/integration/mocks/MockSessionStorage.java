@@ -13,37 +13,20 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.services;
+package com.galenframework.ide.tests.integration.mocks;
 
-import spark.Request;
-
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
-public class RequestData {
-    public static final RequestData EMPTY = new RequestData();
-    private final Map<String, String> cookies;
+public enum MockSessionStorage {
+    INSTANCE;
 
-    public RequestData(Request req) {
-        this.cookies = req.cookies();
+    private ThreadLocal<String> mockSessionIds = new ThreadLocal<>();
+
+    public static void registerMockSession(String sessionId) {
+        INSTANCE.mockSessionIds.set(sessionId);
     }
 
-    public RequestData() {
-        this.cookies = Collections.emptyMap();
+    public static Optional<String> getMockSession() {
+        return Optional.ofNullable(INSTANCE.mockSessionIds.get());
     }
-
-    public Map<String, String> getCookies() {
-        return cookies;
-    }
-
-    public Optional<String> cookie(String mockKeyCookieName) {
-        if (cookies != null) {
-            return Optional.ofNullable(cookies.get(mockKeyCookieName));
-        } else {
-            return Optional.empty();
-        }
-    }
-
 }
