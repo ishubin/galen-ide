@@ -86,8 +86,8 @@ public class DefaultDeviceServiceStub implements DeviceService {
     }
 
     @Override
-    public void runJavaScript(String deviceId, String path) {
-
+    public String runJavaScript(String deviceId, String path) {
+        return null;
     }
 
     @Override

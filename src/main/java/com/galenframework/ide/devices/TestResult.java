@@ -34,6 +34,7 @@ public class TestResult {
     public static final String WARNING = "warning";
     public static final String PASSED = "passed";
     private final List<String> errorMessages;
+    private final String name;
 
     private int errors;
     private int warnings;
@@ -46,11 +47,17 @@ public class TestResult {
     private String externalReport;
     private Date startedAt;
     private Date endedAt;
-    private long duration;
     private Dimension size;
+
+    public TestResult(String name) {
+        this.name = name;
+        status = PASSED;
+        errorMessages = Collections.emptyList();
+    }
 
     public TestResult(LayoutReport layoutReport) {
         this.layoutReport = layoutReport;
+        this.name = "Layout report: " + layoutReport.getTitle();
 
         errors = layoutReport.errors();
         warnings = layoutReport.warnings();
@@ -63,6 +70,13 @@ public class TestResult {
             this.status = PASSED;
         }
         this.errorMessages = collectValidationErrors(layoutReport);
+    }
+
+    public TestResult(Exception ex) {
+        setStatus(CRASHED);
+        this.name = ex.getClass().getName() + ": " + ex.getMessage();
+        exception = new TestResultException(ex);
+        this.errorMessages = Collections.emptyList();
     }
 
     private List<String> collectValidationErrors(LayoutReport layoutReport) {
@@ -98,12 +112,6 @@ public class TestResult {
         } else {
             return "unknown element";
         }
-    }
-
-    public TestResult(Exception ex) {
-        setStatus(CRASHED);
-        exception = new TestResultException(ex);
-        this.errorMessages = Collections.emptyList();
     }
 
     public LayoutReport getLayoutReport() {
@@ -174,12 +182,11 @@ public class TestResult {
         return endedAt;
     }
 
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
     public long getDuration() {
-        return duration;
+        if (startedAt != null && endedAt != null) {
+            return endedAt.getTime() - startedAt.getTime();
+        }
+        return 0;
     }
 
     public void setSize(Dimension size) {

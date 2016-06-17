@@ -50,13 +50,13 @@ public interface DeviceService extends  Service {
 
     String checkLayout(String deviceId, String specPath, List<String> tags, String reportStoragePath);
 
+    String runJavaScript(String deviceId, String path);
+
     void resize(String deviceId, Dimension size);
 
     List<DeviceCommand> getCurrentCommands(String deviceId);
 
     void injectScript(String deviceId, String script);
-
-    void runJavaScript(String deviceId, String path);
 
     void restartDevice(String deviceId);
 

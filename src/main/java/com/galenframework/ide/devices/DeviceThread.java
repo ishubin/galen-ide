@@ -82,12 +82,18 @@ public class DeviceThread extends Thread {
         sendCommands(new DeviceOpenUrlCommand(url));
     }
     public void injectSource(String url, String originSource) {
-        sendCommands(new DeviceOpenUrlCommand(url));
-        sendCommands(new DeviceInjectSourceCommand(originSource));
+        sendCommands(
+            new DeviceOpenUrlCommand(url),
+            new DeviceInjectSourceCommand(originSource)
+        );
     }
 
     public void checkLayout(Settings settings, String uniqueId, String spec, List<String> tags, TestResultsListener testResultsListener, String reportStoragePath) {
         sendCommands(new DeviceCheckLayoutCommand(settings, uniqueId, spec, tags, testResultsListener, reportStoragePath));
+    }
+
+    public void runJavaScript(String path, String reportId, TestResultsListener testResultsListener) {
+        sendCommands(new DeviceRunJavaScriptCommand(path, reportId, testResultsListener));
     }
 
     public void resize(Dimension size) {
@@ -120,22 +126,12 @@ public class DeviceThread extends Thread {
         });
     }
 
-    public void createDriver(DriverProvider driverProvider) {
-        DeviceCommand command = new DeviceCreateDriverFromProvider(driverProvider);
-        sendCommands(command);
-        deviceInitializationCommand = command;
-    }
-
     public void injectScript(String script) {
         sendCommands(new DeviceInjectCommand(script));
     }
 
     public void clearCookies() {
         sendCommands(new DeviceClearCookiesCommand());
-    }
-
-    public void runJavaScript(String path) {
-        sendCommands(new DeviceRunJavaScriptCommand(path));
     }
 
     public synchronized void sendCommands(DeviceCommand... commands) {

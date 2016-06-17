@@ -87,7 +87,7 @@ public class HelpController {
                     asList(
                             new DeviceActionCheckLayoutRequest().setPath("homePage.gspec").setTags(asList("mobile"))
                     ),
-                    asList(new ActionResult("checkLayout", "device-01", new DeviceActionCheckLayoutResponse("sdg897s-dg965ds8sdg-98sgsd78g-55sd7g6")))
+                    asList(new ActionResult("checkLayout", "device-01", new DeviceActionReportResponse("sdg897s-dg965ds8sdg-98sgsd78g-55sd7g6")))
                 )
             ));
         }, toJson());

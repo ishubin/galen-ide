@@ -9,6 +9,7 @@ send_action() {
 #DEVICE_ID=Device_1
 DEVICE_ID=`curl -s $API/devices | jq -r .[0].deviceId`
 
+curl -X DELETE http://localhost:4567/api/results
 
 send_action "$DEVICE_ID" "openUrl" '{"url": "http://testapp.galenframework.com"}'
 send_action "$DEVICE_ID" "resize" '{"width": 450, "height": 600}'

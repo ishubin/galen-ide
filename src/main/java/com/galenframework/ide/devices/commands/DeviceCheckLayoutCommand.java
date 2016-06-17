@@ -94,7 +94,6 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
 
             testResult.setStartedAt(startedAt);
             testResult.setEndedAt(new Date());
-            testResult.setDuration(testResult.getEndedAt().getTime() - testResult.getStartedAt().getTime());
 
             testResult.setSize(device.getDriver().manage().window().getSize());
 

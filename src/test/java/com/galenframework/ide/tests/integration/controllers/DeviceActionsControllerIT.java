@@ -83,12 +83,15 @@ public class DeviceActionsControllerIT extends ApiTestBase {
 
     @Test
     public void should_post_runJs_action() throws IOException {
+        when(deviceService.runJavaScript(anyString(), anyString()))
+            .thenReturn("some-report-id");
+
         Response response = postJson("/api/devices/device01/actions/runJs",
             "{\"path\": \"somescript.js\"}"
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"runJs\",\"deviceId\":\"device01\",\"result\":null}");
+        assertEquals(response.getBody(), "{\"actionName\":\"runJs\",\"deviceId\":\"device01\",\"result\":{\"reportId\":\"some-report-id\"}}");
         verify(deviceService).runJavaScript(eq("device01"), eq("somescript.js"));
     }
 

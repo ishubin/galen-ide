@@ -15,10 +15,10 @@
 ******************************************************************************/
 package com.galenframework.ide.controllers.actions;
 
-public class DeviceActionCheckLayoutResponse {
+public class DeviceActionReportResponse {
     private final String reportId;
 
-    public DeviceActionCheckLayoutResponse(String reportId) {
+    public DeviceActionReportResponse(String reportId) {
         this.reportId = reportId;
     }
 

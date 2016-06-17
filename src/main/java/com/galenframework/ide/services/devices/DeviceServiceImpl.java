@@ -41,7 +41,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DeviceServiceImpl implements DeviceService {
-    private static final String MASTER_DEVICE_NAME = "master";
     private final ServiceProvider serviceProvider;
     private final IdeArguments ideArguments;
 
@@ -237,14 +236,6 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void runJavaScript(String deviceId, String path) {
-        withMandatoryDevice(deviceId, dt -> {
-            dt.runJavaScript(path);
-            return null;
-        });
-    }
-
-    @Override
     public void restartDevice(String deviceId) {
         withMandatoryDevice(deviceId, deviceThread -> {
             deviceThread.restartDevice();
@@ -269,6 +260,17 @@ public class DeviceServiceImpl implements DeviceService {
             String reportId = testResultService.registerNewTestResultContainer(dt.getDevice().getName(), tags);
             dt.checkLayout(settings, reportId, specPath, tags, testResultService, reportStoragePath);
 
+            return reportId;
+        });
+    }
+
+    @Override
+    public String runJavaScript(String deviceId, String path) {
+        return withMandatoryDevice(deviceId, dt -> {
+            TestResultService testResultService = serviceProvider.testResultService();
+
+            String reportId = testResultService.registerNewTestResultContainer(dt.getDevice().getName(), Collections.emptyList());
+            dt.runJavaScript(path, reportId, testResultService);
             return reportId;
         });
     }

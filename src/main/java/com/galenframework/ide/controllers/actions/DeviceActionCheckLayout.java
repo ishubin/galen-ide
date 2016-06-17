@@ -29,6 +29,6 @@ public class DeviceActionCheckLayout implements DeviceAction {
     @Override
     public Optional<Object> execute(DeviceService deviceService, String deviceId, String reportStoragePath) {
         String reportId = deviceService.checkLayout(deviceId, checkLayoutRequest.getPath(), checkLayoutRequest.getTags(), reportStoragePath);
-        return Optional.of(new DeviceActionCheckLayoutResponse(reportId));
+        return Optional.of(new DeviceActionReportResponse(reportId));
     }
 }

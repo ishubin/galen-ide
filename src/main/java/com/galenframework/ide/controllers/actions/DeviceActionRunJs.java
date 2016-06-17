@@ -28,7 +28,6 @@ public class DeviceActionRunJs implements DeviceAction {
 
     @Override
     public Optional<Object> execute(DeviceService deviceService, String deviceId, String reportStoragePath) {
-        deviceService.runJavaScript(deviceId, runJsRequest.getPath());
-        return Optional.empty();
+        return Optional.of(new DeviceActionReportResponse(deviceService.runJavaScript(deviceId, runJsRequest.getPath())));
     }
 }
