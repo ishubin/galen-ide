@@ -17,6 +17,8 @@ package com.galenframework.ide.model;
 
 public class TestCommand {
     private String specPath;
+    private String pageUrl;
+    private String domSyncMethod;
 
     public String getSpecPath() {
         return specPath;
@@ -26,5 +28,19 @@ public class TestCommand {
         this.specPath = specPath;
     }
 
+    public String getPageUrl() {
+        return pageUrl;
+    }
 
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
+    }
+
+    public String getDomSyncMethod() {
+        return domSyncMethod;
+    }
+
+    public void setDomSyncMethod(String domSyncMethod) {
+        this.domSyncMethod = domSyncMethod;
+    }
 }

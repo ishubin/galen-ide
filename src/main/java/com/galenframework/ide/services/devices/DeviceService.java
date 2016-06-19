@@ -31,7 +31,7 @@ public interface DeviceService extends  Service {
 
     Device getDevice(String deviceId);
 
-    void syncAllBrowsersWithMaster();
+    void updateAllPages(String pageUrl, String domSyncMethod);
 
     void testAllNodeDevices(String spec, String reportStoragePath);
 

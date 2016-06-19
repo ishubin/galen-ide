@@ -15,24 +15,17 @@
 ******************************************************************************/
 package com.galenframework.ide.model.results;
 
-import com.galenframework.ide.model.TestCommand;
 
 import java.util.List;
 
 public class TestResultsOverview {
     private final List<TestResultContainer> testResults;
-    private final TestCommand lastTestCommand;
 
-    public TestResultsOverview(List<TestResultContainer> testResults, TestCommand lastTestCommand) {
+    public TestResultsOverview(List<TestResultContainer> testResults) {
         this.testResults = testResults;
-        this.lastTestCommand = lastTestCommand;
     }
 
     public List<TestResultContainer> getTestResults() {
         return testResults;
-    }
-
-    public TestCommand getLastTestCommand() {
-        return lastTestCommand;
     }
 }

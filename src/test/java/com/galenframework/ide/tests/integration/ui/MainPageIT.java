@@ -41,7 +41,7 @@ public class MainPageIT extends GalenTestBase {
                 new FileItem(false, "home.gspec", "/home.gspec", true)
         ));
         when(deviceService.getAllDevices()).thenReturn(emptyList());
-        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList(), null));
+        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList()));
 
         loadDefaultTestUrl();
         checkLayout("/specs/tests/initial-page.gspec");

@@ -40,7 +40,7 @@ public class TestResultServiceImpl implements TestResultService{
 
     @Override
     public TestResultsOverview getTestResultsOverview() {
-        return new TestResultsOverview(testResults.get(), serviceProvider.testerService().getLastTestCommand());
+        return new TestResultsOverview(testResults.get());
     }
 
     @Override

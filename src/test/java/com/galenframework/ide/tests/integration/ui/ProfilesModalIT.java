@@ -73,7 +73,7 @@ public class ProfilesModalIT extends GalenTestBase {
     private void configureDefaultMocks() {
         when(fileBrowserService.getFilesInPath(any())).thenReturn(emptyList());
         when(deviceService.getAllDevices()).thenReturn(emptyList());
-        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList(), null));
+        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList()));
         when(settingsService.getSettings())
                 .thenReturn(settings);
         when(profilesService.getProfiles(any())).thenReturn(asList(

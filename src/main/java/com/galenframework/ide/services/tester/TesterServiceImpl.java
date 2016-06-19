@@ -32,7 +32,7 @@ public class TesterServiceImpl implements TesterService {
     @Override
     public void runtTest(TestCommand testCommand) {
         this.lastTestCommand = testCommand;
-        serviceProvider.deviceService().syncAllBrowsersWithMaster();
+        serviceProvider.deviceService().updateAllPages(testCommand.getPageUrl(), testCommand.getDomSyncMethod());
         serviceProvider.deviceService().testAllNodeDevices(testCommand.getSpecPath(), reportStoragePath);
     }
 

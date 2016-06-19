@@ -28,7 +28,7 @@ public class DefaultTestResultServiceStub implements TestResultService {
 
     @Override
     public TestResultsOverview getTestResultsOverview() {
-        return new TestResultsOverview(emptyList(), null);
+        return new TestResultsOverview(emptyList());
     }
 
     @Override

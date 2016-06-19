@@ -108,6 +108,11 @@ var API = {
         get: function (callback) {
             getJSON("/api/results", callback);
         }
+    },
+    tester: {
+        test: function (testSetup, callback) {
+            postJSON("api/tester/test", testSetup, callback);
+        }
     }
 };
 
@@ -363,6 +368,12 @@ var APIMock = {
                     ]
                 }]
             });
+        }
+    },
+    tester: {
+        test: function (testSetup, callback) {
+            console.log("Test", testSetup);
+            callback();
         }
     }
 };

@@ -42,7 +42,7 @@ public class DevicesModalIT extends GalenTestBase {
             new Device("123qweasd", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
             new Device("zxcvbnm", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
     );
-    private static final TestResultsOverview EMPTY_TEST_RESULTS = new TestResultsOverview(emptyList(), null);
+    private static final TestResultsOverview EMPTY_TEST_RESULTS = new TestResultsOverview(emptyList());
     private static final List<FileItem> EMPTY_FILES = emptyList();
     private static final List<Device> EMPTY_DEVICES = emptyList();
 

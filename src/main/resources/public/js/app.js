@@ -22,6 +22,7 @@ function App() {
     this.saveProfilesModal = new SaveProfilesModal(this);
     this.settingsModal = new SettingsModal(this);
     this.testResultsPanel = new TestResultsPanel(this);
+    this.testSetupPanel = new TestSetupPanel(this);
 
     this.render();
     this.init();
@@ -46,12 +47,10 @@ App.prototype.init = function () {
     this.fileBrowser.update();
     this.devicesPanel.update();
     this.testResultsPanel.update();
+    this.testSetupPanel.render();
 };
 App.prototype.runTest = function (specPath) {
-    var that = this;
-    postJSON("api/tester/test", {specPath: specPath}, function (result) {
-        that.testResultsPanel.waitForTestResults();
-    });
+    this.testSetupPanel.runTest(specPath);
 };
 App.prototype.loadFileInEditor = function (filePath) {
     this.fileBrowser.loadFileInEditor(filePath);
@@ -59,7 +58,9 @@ App.prototype.loadFileInEditor = function (filePath) {
 App.prototype.updateDevices = function () {
     this.devicesPanel.update();
 };
-
+App.prototype.waitForTestResults = function () {
+    this.testResultsPanel.waitForTestResults();
+};
 
 var app = null;
 

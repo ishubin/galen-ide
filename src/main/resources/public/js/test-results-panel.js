@@ -5,23 +5,8 @@ function TestResultsPanel(app) {
 }
 extend(TestResultsPanel, UIComponent);
 
-TestResultsPanel.prototype.$behavior = function () {
-    return {
-        click: {
-            ".action-rerun-test": function ($element) {
-                var specPath = $element.attr("data-file-path");
-                this.app.runTest(specPath);
-            },
-            ".file-item": function ($element) {
-                var filePath = $element.attr("data-file-path");
-                this.app.loadFileInEditor(filePath);
-            }
-        }
-    }
-};
 TestResultsPanel.prototype.show = function (results) {
     this.render({
-        lastTestCommand: results.lastTestCommand,
         tests: results.testResults,
         overview: this._createTestsOverview(results.testResults)
     });

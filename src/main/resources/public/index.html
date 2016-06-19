@@ -39,6 +39,7 @@
         <script src="js/device-modal.js"></script>
         <script src="js/devices-panel.js"></script>
         <script src="js/test-results-panel.js"></script>
+        <script src="js/test-setup-panel.js"></script>
         <script src="js/app.js"></script>
 
         <nav class="navbar navbar-inverse">
@@ -65,6 +66,11 @@
                 </div>
                 <div class="col-md-8 col-lg-8 col-sm-8 col-xs-12">
                     <div id="devices-panel"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="test-setup"></div>
                 </div>
             </div>
             <div class="row">
@@ -143,24 +149,52 @@
             </div>
         </script>
 
+        <script id="tpl-test-setup" type="text/x-handlebars-template">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>Test Setup</span>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="text-left">
+                                <h5>Page url</h5>
+                                <input type="text" name="pageUrl" class="form-control" placeholder="Provide test url" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="text-left">
+                                <h5>DOM Sync Method</h5>
+                                <select class="form-control" name="domSyncMethod">
+                                    <option value="proxy">Proxy (needs master)</option>
+                                    <option value="inject">JS Injection (needs master)</option>
+                                    <option value="url">Static Page (master not needed)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {{#if lastTestCommand}}
+                        {{#with lastTestCommand}}
+                        <div class="last-test-command">
+                            <button type="button" class="btn btn-sm btn-success action-rerun-test" data-file-path="{{specPath}}">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                            </button>
+                            <a class="file-item" data-file-path="{{specPath}}" href="#">{{specPath}}</a>
+                        </div>
+                        {{/with}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </script>
+
         <script id="tpl-test-results" type="text/x-handlebars-template">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Test Results{{#if overview/totalDuration}}, total duration:  {{formatDurationHumanReadable overview/totalDuration}}{{/if}}
                 </div>
                 <div class="panel-body">
-                    <div class="test-results-overview">
-                        {{#if lastTestCommand}}
-                            {{#with lastTestCommand}}
-                                <div class="last-test-command">
-                                    <button type="button" class="btn btn-sm btn-success action-rerun-test" data-file-path="{{specPath}}">
-                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                    </button>
-                                    <a class="file-item" data-file-path="{{specPath}}" href="#">{{specPath}}</a>
-                                </div>
-                            {{/with}}
-                        {{/if}}
-                    </div>
                     <table class="table">
                         <thead>
                         <tr>
@@ -392,23 +426,6 @@
                                                 <h5>Home directory</h5>
                                                 <span>Used for storing Galen IDE profiles</span>
                                                 {{formTextfield 'homeDirectory'  'Type a path to home directory'}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-section">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="text-left">
-                                            <span class="text-left">
-                                                <h5>DOM Sync Method</h5>
-                                                <p>Choose the way it will sync the DOM in all browsers.
-                                                    Different websites might have to use different sync methods</p>
-                                                <select class="form-control" name="domSyncMethod">
-                                                    <option value="proxy">Proxy (default)</option>
-                                                    <option value="inject">JS Injection</option>
-                                                </select>
                                             </span>
                                         </div>
                                     </div>

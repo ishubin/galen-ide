@@ -41,7 +41,7 @@ public class DefaultDeviceServiceStub implements DeviceService {
     }
 
     @Override
-    public void syncAllBrowsersWithMaster() {
+    public void updateAllPages(String pageUrl, String domSyncMethod) {
     }
 
     @Override

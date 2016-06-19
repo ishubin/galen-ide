@@ -73,7 +73,7 @@ public class DevicesPanelIT extends GalenTestBase {
     private void configureMocks() {
         when(fileBrowserService.getFilesInPath(any())).thenReturn(Collections.emptyList());
         when(deviceService.getAllDevices()).thenReturn(sampleDevices);
-        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(Collections.emptyList(), null));
+        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(Collections.emptyList()));
     }
 
 }

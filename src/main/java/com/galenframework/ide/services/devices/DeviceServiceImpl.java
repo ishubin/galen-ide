@@ -75,23 +75,18 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void syncAllBrowsersWithMaster() {
-        Optional<DeviceThread> masterDevice = findMasterDevice();
-
-        if (masterDevice.isPresent()) {
-            String originSource = masterDevice.get().getPageSource();
-            String url = masterDevice.get().getCurrentUrl();
-
-            String domSyncMethod = serviceProvider.settingsService().getSettings().getDomSyncMethod();
-
-            if ("inject".equals(domSyncMethod)) {
-                syncAllBrowsersUsingInjection(originSource, url);
-            } else {
-                syncAllBrowsersUsingProxy(originSource, url);
-            }
+    public void updateAllPages(String pageUrl, String domSyncMethod) {
+        if ("url".equals(domSyncMethod)) {
+            openUrlOnAllBrowsers(pageUrl);
+        } else if ("inject".equals(domSyncMethod)) {
+            syncAllBrowsersUsingInjection();
         } else {
-            throw new RuntimeException("Master device was not configured");
+            syncAllBrowsersUsingProxy();
         }
+    }
+
+    private void openUrlOnAllBrowsers(String pageUrl) {
+        getDeviceThreads().stream().forEach(deviceThread -> deviceThread.openUrl(pageUrl));
     }
 
     private Optional<DeviceThread> findMasterDevice() {
@@ -161,10 +156,10 @@ public class DeviceServiceImpl implements DeviceService {
         Settings settings = serviceProvider.settingsService().getSettings();
 
         getDeviceThreads().stream().filter(byNotMaster()).forEach(dt ->
-            dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
-                String reportId = testResultService.registerNewTestResultContainer(dt.getDevice().getName(), dt.getTags());
-                dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
-            })
+                dt.getDevice().getSizeProvider().forEachIteration(dt, size -> {
+                    String reportId = testResultService.registerNewTestResultContainer(dt.getDevice().getName(), dt.getTags());
+                    dt.checkLayout(settings, reportId, spec, dt.getTags(), testResultService, reportStoragePath);
+                })
         );
     }
 
@@ -305,16 +300,35 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
-    private void syncAllBrowsersUsingProxy(String originSource, String url) {
-        String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(originSource, url);
-        getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.openUrl("http://localhost:" + ideArguments.getPort() + "/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
+    private void syncAllBrowsersUsingProxy() {
+        withMasterUrlAndSource((url, originSource) -> {
+            String uniqueDomId = serviceProvider.domSnapshotService().createSnapshot(originSource, url);
+            getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.openUrl("http://localhost:" + ideArguments.getPort() + "/api/dom-snapshots/" + uniqueDomId + "/snapshot.html"));
+        });
     }
 
-    private void syncAllBrowsersUsingInjection(String originSource, String url) {
-        getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.injectSource(url, originSource));
+    private void syncAllBrowsersUsingInjection() {
+        withMasterUrlAndSource((url, originSource) ->
+            getActiveDeviceThreads().stream().filter(byNotMaster()).forEach((device) -> device.injectSource(url, originSource))
+        );
     }
 
     private Predicate<DeviceThread> byNotMaster() {
         return d -> !d.getDevice().isMaster();
+    }
+
+    private void withMasterUrlAndSource(UrlAndSource urlAndSourceProvider) {
+        Optional<DeviceThread> masterDevice = findMasterDevice();
+        if (masterDevice.isPresent()) {
+            String originSource = masterDevice.get().getPageSource();
+            String url = masterDevice.get().getCurrentUrl();
+            urlAndSourceProvider.provideUrlAndSource(url, originSource);
+        } else {
+            throw new RuntimeException("Master device was not configured");
+        }
+    }
+
+    private interface UrlAndSource {
+        void provideUrlAndSource(String url, String source);
     }
 }
