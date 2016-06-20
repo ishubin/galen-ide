@@ -5,6 +5,7 @@
     main                        #content
     file_browser_panel          #file-browser
     devices_panel               #devices-panel
+    test_setup_panel            #test-setup
     test_results_panel          #test-results
 
 

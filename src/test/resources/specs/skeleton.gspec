@@ -18,9 +18,13 @@
 
     |devices_panel should be located on the top right side of main with ${small} margin and take 62 to 75% of its width
 
-    test_results_panel:
-        below file_browser_panel ${normal_margin}
-        |stretches to main with ${normal} margin
+    test_setup_panel:
         aligned vertically left file_browser_panel
         aligned vertically right devices_panel
+        below file_browser_panel
+
+    test_results_panel:
+        below test_setup_panel ${normal_margin}
+        |stretches to main with ${normal} margin
+        aligned vertically all test_setup_panel
 
