@@ -17,6 +17,7 @@ package com.galenframework.ide.model.results;
 
 import com.galenframework.ide.devices.TestResult;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +28,8 @@ public class TestResultContainer {
     private String status = "running";
     private String name = "Unnamed";
     private List<String> tags;
+    private Date createdDate = new Date();
+    private Date finishedDate = null;
 
     public TestResultContainer(String name, List<String> tags) {
         this.uniqueId = UUID.randomUUID().toString();
@@ -42,6 +45,7 @@ public class TestResultContainer {
         this.testResult = testResult;
         if (testResult != null) {
             this.status = "finished";
+            this.finishedDate = new Date();
         }
     }
 
@@ -71,5 +75,21 @@ public class TestResultContainer {
 
     public String getUniqueId() {
         return uniqueId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getFinishedDate() {
+        return finishedDate;
+    }
+
+    public void setFinishedDate(Date finishedDate) {
+        this.finishedDate = finishedDate;
     }
 }

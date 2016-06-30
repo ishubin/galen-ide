@@ -19,6 +19,7 @@ package com.galenframework.ide.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class SynchronizedStorage<T> {
@@ -34,6 +35,13 @@ public class SynchronizedStorage<T> {
     public void clear() {
         modifyWithLock(() -> {
             writeItems.clear();
+            return null;
+        });
+    }
+
+    public void clear(Predicate<T> predicate) {
+        modifyWithLock(() -> {
+            writeItems.removeIf(predicate);
             return null;
         });
     }
@@ -69,4 +77,5 @@ public class SynchronizedStorage<T> {
         }
         return result;
     }
+
 }

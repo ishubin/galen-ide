@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services;
 
+import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.devices.DeviceServiceImpl;
@@ -30,6 +31,7 @@ import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.services.settings.SettingsServiceImpl;
 import com.galenframework.ide.services.tester.TesterService;
 import com.galenframework.ide.services.tester.TesterServiceImpl;
+import com.galenframework.ide.util.SynchronizedStorage;
 
 public class DefaultServiceProvider implements ServiceProvider {
     private final TesterServiceImpl testerService;
@@ -40,13 +42,13 @@ public class DefaultServiceProvider implements ServiceProvider {
     private final TestResultService testResultService;
     private final DomSnapshotService domSnapshotService;
 
-    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath) {
+    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath, SynchronizedStorage<TestResultContainer> testResultsStorage) {
         this.testerService = new TesterServiceImpl(this, reportStoragePath);
         this.deviceService = new DeviceServiceImpl(ideArguments, this);
         this.fileBrowserService = new FileBrowserServiceImpl(this);
         this.settingsService = new SettingsServiceImpl(this);
         this.profilesService = new ProfilesServiceImpl(this);
-        this.testResultService = new TestResultServiceImpl(this);
+        this.testResultService = new TestResultServiceImpl(this, testResultsStorage);
         this.domSnapshotService = new DomSnapshotServiceImpl(this);
     }
     @Override

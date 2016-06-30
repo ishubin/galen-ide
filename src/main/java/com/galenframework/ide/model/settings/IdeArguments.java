@@ -22,6 +22,7 @@ public class IdeArguments {
     private String profile;
     private String fileStorage;
     private int port;
+    private int keepResultsForLastMinutes = 30;
 
     public String getProfile() {
         return profile;
@@ -36,6 +37,7 @@ public class IdeArguments {
         options.addOption("p", "port", true, "Port for a server");
         options.addOption("P", "profile", true, "Profile that will be loaded on start");
         options.addOption("s", "storage", true, "Path to static file storage that will be used for storing reports");
+        options.addOption("k", "keep-results", true, "Minutes for how long it should keep all test results");
 
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
@@ -52,6 +54,7 @@ public class IdeArguments {
         ideArguments.setProfile(cmd.getOptionValue("P"));
         ideArguments.setPort(Integer.parseInt(cmd.getOptionValue("p", "4567")));
         ideArguments.setFileStorage(cmd.getOptionValue("s"));
+        ideArguments.setKeepResultsForLastMinutes(Integer.parseInt(cmd.getOptionValue("k", "30")));
 
         return ideArguments;
     }
@@ -70,5 +73,13 @@ public class IdeArguments {
 
     public void setFileStorage(String fileStorage) {
         this.fileStorage = fileStorage;
+    }
+
+    public int getKeepResultsForLastMinutes() {
+        return keepResultsForLastMinutes;
+    }
+
+    public void setKeepResultsForLastMinutes(int keepResultsForLastMinutes) {
+        this.keepResultsForLastMinutes = keepResultsForLastMinutes;
     }
 }

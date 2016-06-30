@@ -16,23 +16,28 @@
 package com.galenframework.ide;
 
 import com.galenframework.ide.controllers.*;
+import com.galenframework.ide.jobs.TestResultsStorageCleanupJob;
+import com.galenframework.ide.model.results.TestResultContainer;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.DefaultServiceProvider;
 import com.galenframework.ide.services.ServiceProvider;
+import com.galenframework.ide.util.SynchronizedStorage;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.*;
 
 import static spark.Spark.*;
 
 
 public class Main {
-
-
     private final String reportFolder;
     private final String staticFolderForSpark;
+    private final SynchronizedStorage<TestResultContainer> testResultsStorage = new SynchronizedStorage<>();
+
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
     protected Main(String fileStorage) throws IOException {
         if (fileStorage == null || fileStorage.trim().isEmpty()) {
@@ -48,7 +53,7 @@ public class Main {
         IdeArguments ideArguments = IdeArguments.parse(args);
         Main main = new Main(ideArguments.getFileStorage());
 
-        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder);
+        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder, main.testResultsStorage);
         main.initWebServer(serviceProvider, ideArguments);
     }
 
@@ -66,6 +71,8 @@ public class Main {
         new TestResultController(serviceProvider.testResultService());
         new TesterController(serviceProvider.testerService());
         new HelpController();
+
+        scheduledExecutorService.scheduleAtFixedRate(new TestResultsStorageCleanupJob(testResultsStorage, ideArguments.getKeepResultsForLastMinutes()), 1, 1, TimeUnit.MINUTES);
 
         if (ideArguments.getProfile() != null) {
             serviceProvider.profilesService().loadProfile(ideArguments.getProfile());

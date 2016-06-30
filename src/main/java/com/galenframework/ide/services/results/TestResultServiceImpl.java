@@ -27,10 +27,11 @@ import java.util.Optional;
 public class TestResultServiceImpl implements TestResultService{
 
     private final ServiceProvider serviceProvider;
-    private final SynchronizedStorage<TestResultContainer> testResults = new SynchronizedStorage<>();
+    private final SynchronizedStorage<TestResultContainer> testResults;
 
-    public TestResultServiceImpl(ServiceProvider serviceProvider) {
+    public TestResultServiceImpl(ServiceProvider serviceProvider, SynchronizedStorage<TestResultContainer> testResults) {
         this.serviceProvider = serviceProvider;
+        this.testResults = testResults;
     }
 
     @Override
