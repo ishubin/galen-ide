@@ -22,7 +22,8 @@ public class IdeArguments {
     private String profile;
     private String fileStorage;
     private int port;
-    private int keepResultsForLastMinutes = 30;
+    private int keepLastResults = 30;
+    private int cleanupPeriodInMinutes = 1;
 
     public String getProfile() {
         return profile;
@@ -34,10 +35,12 @@ public class IdeArguments {
 
     public static IdeArguments parse(String[] args) {
         Options options = new Options();
+        options.addOption("h", "help", false, "Print this message");
         options.addOption("p", "port", true, "Port for a server");
         options.addOption("P", "profile", true, "Profile that will be loaded on start");
         options.addOption("s", "storage", true, "Path to static file storage that will be used for storing reports");
-        options.addOption("k", "keep-results", true, "Minutes for how long it should keep all test results");
+        options.addOption("k", "keep-results", true, "Amount of last results to be kept");
+        options.addOption("c", "cleanup-period", true, "Minutes for how long it should keep last results");
 
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
@@ -50,13 +53,25 @@ public class IdeArguments {
             throw new RuntimeException(ex);
         }
 
+
+        if (cmd.hasOption("h")) {
+            printHelp(options);
+            System.exit(0);
+        }
+
         IdeArguments ideArguments = new IdeArguments();
         ideArguments.setProfile(cmd.getOptionValue("P"));
         ideArguments.setPort(Integer.parseInt(cmd.getOptionValue("p", "4567")));
         ideArguments.setFileStorage(cmd.getOptionValue("s"));
-        ideArguments.setKeepResultsForLastMinutes(Integer.parseInt(cmd.getOptionValue("k", "30")));
+        ideArguments.setKeepLastResults(Integer.parseInt(cmd.getOptionValue("k", "30")));
+        ideArguments.setCleanupPeriodInMinutes(Integer.parseInt(cmd.getOptionValue("c", "1")));
 
         return ideArguments;
+    }
+
+    private static void printHelp(Options options) {
+        HelpFormatter helpFormatter = new HelpFormatter();
+        helpFormatter.printHelp("galen-ide", options);
     }
 
     public int getPort() {
@@ -75,11 +90,19 @@ public class IdeArguments {
         this.fileStorage = fileStorage;
     }
 
-    public int getKeepResultsForLastMinutes() {
-        return keepResultsForLastMinutes;
+    public int getKeepLastResults() {
+        return keepLastResults;
     }
 
-    public void setKeepResultsForLastMinutes(int keepResultsForLastMinutes) {
-        this.keepResultsForLastMinutes = keepResultsForLastMinutes;
+    public void setKeepLastResults(int keepLastResults) {
+        this.keepLastResults = keepLastResults;
+    }
+
+    public int getCleanupPeriodInMinutes() {
+        return cleanupPeriodInMinutes;
+    }
+
+    public void setCleanupPeriodInMinutes(int cleanupPeriodInMinutes) {
+        this.cleanupPeriodInMinutes = cleanupPeriodInMinutes;
     }
 }

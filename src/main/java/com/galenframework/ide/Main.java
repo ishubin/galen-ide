@@ -37,7 +37,7 @@ public class Main {
     private final String staticFolderForSpark;
     private final SynchronizedStorage<TestResultContainer> testResultsStorage = new SynchronizedStorage<>();
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
     protected Main(String fileStorage) throws IOException {
         if (fileStorage == null || fileStorage.trim().isEmpty()) {
@@ -72,7 +72,12 @@ public class Main {
         new TesterController(serviceProvider.testerService());
         new HelpController();
 
-        scheduledExecutorService.scheduleAtFixedRate(new TestResultsStorageCleanupJob(testResultsStorage, ideArguments.getKeepResultsForLastMinutes()), 1, 1, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(
+            new TestResultsStorageCleanupJob(testResultsStorage, ideArguments.getKeepLastResults()),
+            ideArguments.getCleanupPeriodInMinutes(),
+            ideArguments.getCleanupPeriodInMinutes(),
+            TimeUnit.MINUTES
+        );
 
         if (ideArguments.getProfile() != null) {
             serviceProvider.profilesService().loadProfile(ideArguments.getProfile());
