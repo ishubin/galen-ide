@@ -16,20 +16,23 @@
 package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 
 public class DeviceRestartCommand extends DeviceCommand {
-    private final DeviceCommand deviceInitializationCommand;
 
-    public DeviceRestartCommand(DeviceCommand deviceInitializationCommand) {
-        super();
-        this.deviceInitializationCommand = deviceInitializationCommand;
+    public DeviceRestartCommand() {
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) throws Exception {
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         device.getDriver().quit();
-        deviceInitializationCommand.execute(device, deviceThread);
+        if (deviceExecutor.getDeviceInitializationCommand() != null) {
+            return deviceExecutor.getDeviceInitializationCommand().execute(device, deviceExecutor, taskId, settings, reportStoragePath);
+        } else {
+            return CommandExecutionResult.passed();
+        }
     }
 
     @Override

@@ -36,10 +36,9 @@ public class SizeProviderCustom extends SizeProvider {
     }
 
     @Override
-    public void forEachIteration(DeviceThread deviceThread, Consumer<Dimension> action) {
+    public void forEachIteration(Consumer<Dimension> action) {
         sizes.stream().forEach(size -> {
             Dimension dimension = size.toSeleniumDimension();
-            deviceThread.resize(dimension);
             action.accept(dimension);
         });
     }

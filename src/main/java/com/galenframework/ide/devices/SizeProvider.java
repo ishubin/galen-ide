@@ -36,5 +36,8 @@ public abstract class SizeProvider {
         }
     }
 
-    public abstract void forEachIteration(DeviceThread deviceThread, Consumer<Dimension> action);
+    public abstract void forEachIteration(Consumer<Dimension> action);
+    public boolean supportsResizing() {
+        return true;
+    }
 }

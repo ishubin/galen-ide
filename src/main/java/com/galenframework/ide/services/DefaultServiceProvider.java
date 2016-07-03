@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.services;
 
-import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.model.results.TaskResult;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.devices.DeviceServiceImpl;
@@ -25,8 +25,8 @@ import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileBrowserServiceImpl;
 import com.galenframework.ide.services.profiles.ProfilesService;
 import com.galenframework.ide.services.profiles.ProfilesServiceImpl;
-import com.galenframework.ide.services.results.TestResultService;
-import com.galenframework.ide.services.results.TestResultServiceImpl;
+import com.galenframework.ide.services.results.TaskResultService;
+import com.galenframework.ide.services.results.TaskResultServiceImpl;
 import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.services.settings.SettingsServiceImpl;
 import com.galenframework.ide.services.tester.TesterService;
@@ -39,16 +39,16 @@ public class DefaultServiceProvider implements ServiceProvider {
     private final FileBrowserService fileBrowserService;
     private final SettingsService settingsService;
     private final ProfilesService profilesService;
-    private final TestResultService testResultService;
+    private final TaskResultService testResultService;
     private final DomSnapshotService domSnapshotService;
 
-    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath, SynchronizedStorage<TestResultContainer> testResultsStorage) {
+    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath, SynchronizedStorage<TaskResult> testResultsStorage) {
         this.testerService = new TesterServiceImpl(this, reportStoragePath);
-        this.deviceService = new DeviceServiceImpl(ideArguments, this);
+        this.deviceService = new DeviceServiceImpl(ideArguments, this, reportStoragePath);
         this.fileBrowserService = new FileBrowserServiceImpl(this);
         this.settingsService = new SettingsServiceImpl(this);
         this.profilesService = new ProfilesServiceImpl(this);
-        this.testResultService = new TestResultServiceImpl(this, testResultsStorage);
+        this.testResultService = new TaskResultServiceImpl(this, testResultsStorage);
         this.domSnapshotService = new DomSnapshotServiceImpl(this);
     }
     @Override
@@ -77,7 +77,7 @@ public class DefaultServiceProvider implements ServiceProvider {
     }
 
     @Override
-    public TestResultService testResultService() {
+    public TaskResultService taskResultService() {
         return this.testResultService;
     }
 

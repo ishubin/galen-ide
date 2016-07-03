@@ -13,16 +13,23 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.controllers.actions;
+package com.galenframework.ide.devices.commands;
 
-import com.galenframework.ide.services.devices.DeviceService;
+import com.galenframework.ide.devices.Device;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 
-import java.util.Optional;
+public class DeviceClearCookiesCommand extends DeviceCommand {
 
-public class DeviceActionRestart implements DeviceAction {
     @Override
-    public Optional<Object> execute(DeviceService deviceService, String deviceId, String reportStoragePath) {
-        deviceService.restartDevice(deviceId);
-        return Optional.empty();
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
+        device.getDriver().manage().deleteAllCookies();
+        return CommandExecutionResult.passed();
+    }
+
+    @Override
+    public String getName() {
+        return "clearCookies";
     }
 }

@@ -15,15 +15,17 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.stubs;
 
+import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.commands.DeviceCommand;
+import com.galenframework.ide.model.results.TaskResult;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.devices.DeviceService;
-import org.openqa.selenium.Dimension;
 
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 public class DefaultDeviceServiceStub implements DeviceService {
     @Override
@@ -32,7 +34,7 @@ public class DefaultDeviceServiceStub implements DeviceService {
 
     @Override
     public List<Device> getAllDevices() {
-        return Collections.emptyList();
+        return emptyList();
     }
 
     @Override
@@ -61,33 +63,8 @@ public class DefaultDeviceServiceStub implements DeviceService {
     }
 
     @Override
-    public void openUrl(String deviceId, String url) {
-
-    }
-
-    @Override
-    public String checkLayout(String deviceId, String specPath, List<String> tags, String reportStoragePath) {
-        return null;
-    }
-
-    @Override
-    public void resize(String deviceId, Dimension size) {
-
-    }
-
-    @Override
-    public List<DeviceCommand> getCurrentCommands(String deviceId) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void injectScript(String deviceId, String script) {
-
-    }
-
-    @Override
-    public String runJavaScript(String deviceId, String path) {
-        return null;
+    public List<DeviceTask> getCurrentTasks(String deviceId) {
+        return emptyList();
     }
 
     @Override
@@ -96,9 +73,10 @@ public class DefaultDeviceServiceStub implements DeviceService {
     }
 
     @Override
-    public void clearCookies(String deviceId) {
-
+    public TaskResult executeTask(String deviceId, DeviceTask task) {
+        return null;
     }
+
 
     @Override
     public ServiceProvider getServiceProvider() {

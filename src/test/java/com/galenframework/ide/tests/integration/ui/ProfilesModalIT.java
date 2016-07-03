@@ -16,12 +16,12 @@
 package com.galenframework.ide.tests.integration.ui;
 
 import com.galenframework.ide.model.settings.Settings;
-import com.galenframework.ide.model.results.TestResultsOverview;
+import com.galenframework.ide.model.results.TaskResultsOverview;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
 import com.galenframework.ide.services.profiles.ProfilesService;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 public class ProfilesModalIT extends GalenTestBase {
     FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
     DeviceService deviceService = registerMockitoMock(DeviceService.class);
-    TestResultService testResultService = registerMockitoMock(TestResultService.class);
+    TaskResultService testResultService = registerMockitoMock(TaskResultService.class);
     SettingsService settingsService = registerMockitoMock(SettingsService.class);
     ProfilesService profilesService = registerMockitoMock(ProfilesService.class);
 
@@ -73,7 +73,7 @@ public class ProfilesModalIT extends GalenTestBase {
     private void configureDefaultMocks() {
         when(fileBrowserService.getFilesInPath(any())).thenReturn(emptyList());
         when(deviceService.getAllDevices()).thenReturn(emptyList());
-        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList()));
+        when(testResultService.getTestResultsOverview()).thenReturn(new TaskResultsOverview(emptyList()));
         when(settingsService.getSettings())
                 .thenReturn(settings);
         when(profilesService.getProfiles(any())).thenReturn(asList(

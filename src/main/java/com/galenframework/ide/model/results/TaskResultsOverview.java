@@ -13,16 +13,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.ide.controllers.actions;
+package com.galenframework.ide.model.results;
 
-public class DeviceActionRunJsRequest {
-    private String path;
 
-    public String getPath() {
-        return path;
+import java.util.List;
+
+public class TaskResultsOverview {
+    private final List<TaskResult> taskResults;
+
+    public TaskResultsOverview(List<TaskResult> testResults) {
+        this.taskResults = testResults;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public List<TaskResult> getTaskResults() {
+        return taskResults;
     }
 }

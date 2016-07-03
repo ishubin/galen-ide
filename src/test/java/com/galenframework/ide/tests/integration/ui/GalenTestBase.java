@@ -19,7 +19,7 @@ import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.profiles.ProfilesService;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.services.tester.TesterService;
 import com.galenframework.ide.tests.integration.components.DeviceRunner;
@@ -112,7 +112,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
         registerSessionlessMock(new DefaultFileBrowserServiceStub(), FileBrowserService.class);
         registerSessionlessMock(new DefaultProfilesServiceStub(), ProfilesService.class);
         registerSessionlessMock(new DefaultSettingsServiceStub(), SettingsService.class);
-        registerSessionlessMock(new DefaultTestResultServiceStub(), TestResultService.class);
+        registerSessionlessMock(new DefaultTestResultServiceStub(), TaskResultService.class);
         registerSessionlessMock(new DefaultTestServiceStub(), TesterService.class);
     }
 

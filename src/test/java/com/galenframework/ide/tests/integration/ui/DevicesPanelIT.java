@@ -17,11 +17,11 @@ package com.galenframework.ide.tests.integration.ui;
 
 import com.galenframework.ide.model.Size;
 import com.galenframework.ide.model.SizeVariation;
-import com.galenframework.ide.model.results.TestResultsOverview;
+import com.galenframework.ide.model.results.TaskResultsOverview;
 import com.galenframework.ide.devices.*;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 public class DevicesPanelIT extends GalenTestBase {
     FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
     DeviceService deviceService = registerMockitoMock(DeviceService.class);
-    TestResultService testResultService = registerMockitoMock(TestResultService.class);
+    TaskResultService testResultService = registerMockitoMock(TaskResultService.class);
 
     private List<Device> sampleDevices = asList(
             new Device("id1", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700))), DeviceStatus.STARTING),
@@ -73,7 +73,7 @@ public class DevicesPanelIT extends GalenTestBase {
     private void configureMocks() {
         when(fileBrowserService.getFilesInPath(any())).thenReturn(Collections.emptyList());
         when(deviceService.getAllDevices()).thenReturn(sampleDevices);
-        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(Collections.emptyList()));
+        when(testResultService.getTestResultsOverview()).thenReturn(new TaskResultsOverview(Collections.emptyList()));
     }
 
 }

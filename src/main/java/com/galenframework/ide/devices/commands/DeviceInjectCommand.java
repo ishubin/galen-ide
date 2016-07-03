@@ -16,25 +16,35 @@
 package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.utils.GalenUtils;
 
 public class DeviceInjectCommand extends DeviceCommand {
 
-    private final String script;
+    private String script;
+
+    public DeviceInjectCommand() {
+    }
 
     public DeviceInjectCommand(String script) {
         this.script = script;
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) throws Exception {
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         GalenUtils.injectJavascript(device.getDriver(), script);
+        return CommandExecutionResult.passed();
     }
 
     @Override
     public String getName() {
         return INJECT;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
     }
 
     public String getScript() {

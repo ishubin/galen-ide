@@ -15,11 +15,11 @@
 ******************************************************************************/
 package com.galenframework.ide.services.devices;
 
+import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.commands.DeviceCommand;
+import com.galenframework.ide.model.results.TaskResult;
 import com.galenframework.ide.services.Service;
-import org.openqa.selenium.Dimension;
 
 import java.util.List;
 
@@ -41,24 +41,9 @@ public interface DeviceService extends  Service {
 
     void shutdownAllDevices();
 
-    /**
-     * Opens url on specified device
-     * @param deviceId Id of device
-     * @param url Url of the website that will be open
-     */
-    void openUrl(String deviceId, String url);
-
-    String checkLayout(String deviceId, String specPath, List<String> tags, String reportStoragePath);
-
-    String runJavaScript(String deviceId, String path);
-
-    void resize(String deviceId, Dimension size);
-
-    List<DeviceCommand> getCurrentCommands(String deviceId);
-
-    void injectScript(String deviceId, String script);
+    List<DeviceTask> getCurrentTasks(String deviceId);
 
     void restartDevice(String deviceId);
 
-    void clearCookies(String deviceId);
+    TaskResult executeTask(String deviceId, DeviceTask task);
 }

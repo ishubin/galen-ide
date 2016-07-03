@@ -15,20 +15,19 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.mocks.stubs;
 
-import com.galenframework.ide.model.results.TestResultsOverview;
-import com.galenframework.ide.devices.TestResult;
+import com.galenframework.ide.model.results.*;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 
 import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-public class DefaultTestResultServiceStub implements TestResultService {
+public class DefaultTestResultServiceStub implements TaskResultService {
 
     @Override
-    public TestResultsOverview getTestResultsOverview() {
-        return new TestResultsOverview(emptyList());
+    public TaskResultsOverview getTestResultsOverview() {
+        return new TaskResultsOverview(emptyList());
     }
 
     @Override
@@ -36,22 +35,35 @@ public class DefaultTestResultServiceStub implements TestResultService {
     }
 
     @Override
-    public String registerNewTestResultContainer(String deviceName, List<String> tags) {
-        return "some-new-test-result-container";
+    public TaskResult getTaskResult(String taskId) {
+        return new TaskResult(taskId, "some task", emptyList());
     }
 
     @Override
-    public TestResult getTestResult(String reportId) {
-        return null;
+    public TaskResult registerTaskResult(String taskId, String name, List<CommandResult> commandBasicResults) {
+        return new TaskResult(taskId, name, commandBasicResults);
     }
+
+    @Override
+    public void notifyCommandCompleted(String taskId, String commandId, CommandExecutionResult commandExecutionResult) {
+    }
+
+    @Override
+    public void notifyTaskCompleted(String taskId, ExecutionStatus taskStatus) {
+    }
+
+    @Override
+    public void notifyTaskStarted(String taskId) {
+    }
+
+    @Override
+    public void notifyCommandStarted(String taskId, String commandId) {
+    }
+
 
     @Override
     public ServiceProvider getServiceProvider() {
         return null;
     }
 
-    @Override
-    public void onTestResult(String reportId, TestResult testResult) {
-
-    }
 }

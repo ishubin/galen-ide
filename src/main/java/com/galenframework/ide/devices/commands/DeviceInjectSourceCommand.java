@@ -17,7 +17,9 @@ package com.galenframework.ide.devices.commands;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 import org.openqa.selenium.JavascriptExecutor;
 
 public class DeviceInjectSourceCommand extends DeviceCommand {
@@ -30,7 +32,7 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) {
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         ((JavascriptExecutor)device.getDriver()).executeScript("var source = arguments[0]; " +
                 "function injectBody() {" +
                 "document.write(source);" +
@@ -42,6 +44,8 @@ public class DeviceInjectSourceCommand extends DeviceCommand {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        return CommandExecutionResult.passed();
     }
 
     @Override

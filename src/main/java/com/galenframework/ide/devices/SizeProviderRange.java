@@ -38,12 +38,9 @@ public class SizeProviderRange extends SizeProvider {
     }
 
     @Override
-    public void forEachIteration(DeviceThread deviceThread, Consumer<Dimension> action) {
+    public void forEachIteration(Consumer<Dimension> action) {
         List<Dimension> sizes = sizeVariation.generateVariations();
-        sizes.stream().forEach(size -> {
-            deviceThread.resize(size);
-            action.accept(size);
-        });
+        sizes.stream().forEach(action::accept);
 
     }
 }

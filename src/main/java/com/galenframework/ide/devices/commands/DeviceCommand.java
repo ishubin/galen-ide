@@ -17,17 +17,22 @@ package com.galenframework.ide.devices.commands;
 
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 
 import java.util.Date;
+import java.util.UUID;
 
 public abstract class DeviceCommand {
     public static final String INJECT = "inject";
     public static final String RUN_JS = "runJs";
 
+    private String commandId = "command-" + UUID.randomUUID().toString();
+
     private Date registeredAt = new Date();
 
-    public abstract void execute(Device device, DeviceThread deviceThread) throws Exception;
+    public abstract CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception;
 
     public abstract String getName();
 
@@ -37,6 +42,14 @@ public abstract class DeviceCommand {
 
     public void setRegisteredAt(Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public String getCommandId() {
+        return commandId;
+    }
+
+    public void setCommandId(String commandId) {
+        this.commandId = commandId;
     }
 }
 

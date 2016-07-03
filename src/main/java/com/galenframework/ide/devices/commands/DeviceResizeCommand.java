@@ -16,23 +16,30 @@
 package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.utils.GalenUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.openqa.selenium.Dimension;
 
 public class DeviceResizeCommand extends DeviceCommand {
-    private final Dimension size;
+    private int width;
+    private int height;
 
-    public DeviceResizeCommand(Dimension size) {
-        this.size = size;
+    public DeviceResizeCommand() {
+    }
+
+    public DeviceResizeCommand(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) {
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         if (device.isSupportsResizing()) {
-            GalenUtils.resizeDriver(device.getDriver(), size.width, size.height);
+            GalenUtils.resizeDriver(device.getDriver(), width, height);
         }
+        return CommandExecutionResult.passed();
     }
 
     @Override
@@ -44,11 +51,25 @@ public class DeviceResizeCommand extends DeviceCommand {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .append("size", size)
+            .append("width", width)
+            .append("height", height)
             .toString();
     }
 
-    public Dimension getSize() {
-        return size;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

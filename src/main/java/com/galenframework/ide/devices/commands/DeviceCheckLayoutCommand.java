@@ -17,6 +17,8 @@ package com.galenframework.ide.devices.commands;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galenframework.api.Galen;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.results.ExecutionStatus;
 import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.devices.*;
 import com.galenframework.reports.GalenTestInfo;
@@ -39,40 +41,27 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
     public static final String CHECK_LAYOUT = "checkLayout";
     public static final String REPORT_HTML = "report.html";
 
-    private final String spec;
-    private final String reportId;
-    private final String reportStoragePath;
-    private final List<String> tags;
-
-    @JsonIgnore
-    private final TestResultsListener testResultsListener;
-
-    @JsonIgnore
-    private final Settings settings;
+    private String spec;
+    private List<String> tags;
 
     @JsonIgnore
     private final static File onePixelImage = createOnePixelFakeImage();
 
 
-    public DeviceCheckLayoutCommand(Settings settings, String reportId, String spec, List<String> tags, TestResultsListener testResultsListener, String reportStoragePath) {
-        this.settings = settings;
-        this.reportId = reportId;
+    public DeviceCheckLayoutCommand() {
+    }
+
+    public DeviceCheckLayoutCommand(String spec, List<String> tags) {
         this.spec = spec;
         this.tags = tags;
-        this.testResultsListener = testResultsListener;
-        this.reportStoragePath = reportStoragePath;
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) {
-        TestResult testResult;
-        Dimension size = null;
-
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         try {
-            Date startedAt = new Date();
             LayoutReport layoutReport;
 
-            size = device.getDriver().manage().window().getSize();
+            Dimension size = device.getDriver().manage().window().getSize();
             if (settings.isMakeScreenshots()) {
                 layoutReport = Galen.checkLayout(
                         device.getDriver(), spec, tags);
@@ -82,29 +71,32 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
                         new SectionFilter(tags, null), null, null, onePixelImage);
             }
 
-            testResult = new TestResult(layoutReport);
-
             HtmlReportBuilder reportBuilder = new HtmlReportBuilder();
-            String reportDir = reportId + "-" + new Date().getTime();
+            String reportDir = taskId + "-" + getCommandId() + "-" + new Date().getTime();
             String reportDirPath = reportStoragePath + File.separator + reportDir;
 
             reportBuilder.build(createTestInfo(device, spec, size, layoutReport), reportDirPath);
 
-            testResult.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
-
-            testResult.setStartedAt(startedAt);
-            testResult.setEndedAt(new Date());
-
-            testResult.setSize(device.getDriver().manage().window().getSize());
+            CommandExecutionResult result = new CommandExecutionResult();
+            result.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
+            result.setStatus(identifyStatus(layoutReport));
+            result.setData(layoutReport);
+            return result;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-            testResult = new TestResult(ex);
-            testResult.setSize(size);
+            return CommandExecutionResult.error(ex);
         }
-
-        testResultsListener.onTestResult(reportId, testResult);
     }
+
+    private ExecutionStatus identifyStatus(LayoutReport layoutReport) {
+        if (layoutReport.errors() > 0) {
+            return ExecutionStatus.failed;
+        } else if (layoutReport.warnings() > 0) {
+            return ExecutionStatus.warning;
+        }
+        return ExecutionStatus.passed;
+    }
+
 
     @Override
     public String getName() {
@@ -152,16 +144,16 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         return spec;
     }
 
-    public String getReportId() {
-        return reportId;
-    }
-
-    public String getReportStoragePath() {
-        return reportStoragePath;
-    }
-
     public List<String> getTags() {
         return tags;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -169,7 +161,6 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
         return new ToStringBuilder(this)
                 .append("spec", spec)
                 .append("tags", tags)
-                .append("reportId", reportId)
                 .toString();
     }
 }

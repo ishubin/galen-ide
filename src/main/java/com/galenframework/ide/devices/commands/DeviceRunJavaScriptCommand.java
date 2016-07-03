@@ -16,54 +16,45 @@
 package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
-import com.galenframework.ide.devices.TestResult;
-import com.galenframework.ide.devices.TestResultsListener;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.utils.GalenUtils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.Date;
 
 public class DeviceRunJavaScriptCommand extends DeviceCommand {
-    private final String path;
-    private final String reportId;
-    private final TestResultsListener testResultsListener;
+    private String path;
 
-    public DeviceRunJavaScriptCommand(String path, String reportId, TestResultsListener testResultsListener) {
+    public DeviceRunJavaScriptCommand() {
+    }
+
+    public DeviceRunJavaScriptCommand(String path) {
         this.path = path;
-        this.reportId = reportId;
-        this.testResultsListener = testResultsListener;
     }
 
     public String getPath() {
         return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
-    public void execute(Device device, DeviceThread deviceThread) throws Exception {
-        TestResult testResult;
-        Date startDate = new Date();
-        try {
-            File file = GalenUtils.findFile(path);
-            Reader scriptFileReader = new FileReader(file);
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
+        File file = GalenUtils.findFile(path);
+        Reader scriptFileReader = new FileReader(file);
 
-            GalenJsExecutor js = new GalenJsExecutor();
-            js.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
-            js.putObject("driver", device.getDriver());
-            js.eval(scriptFileReader, path);
+        GalenJsExecutor js = new GalenJsExecutor();
+        js.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
+        js.putObject("driver", device.getDriver());
+        js.eval(scriptFileReader, path);
 
-            testResult = new TestResult("JS executed: " + path);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-            testResult = new TestResult(ex);
-        }
-        testResult.setStartedAt(startDate);
-        testResult.setEndedAt(new Date());
-        testResultsListener.onTestResult(reportId, testResult);
+        return CommandExecutionResult.passed();
     }
 
     @Override

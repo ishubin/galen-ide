@@ -21,11 +21,11 @@ import com.galenframework.ide.devices.SizeProviderRange;
 import com.galenframework.ide.model.Size;
 import com.galenframework.ide.model.SizeVariation;
 import com.galenframework.ide.model.devices.DeviceRequest;
-import com.galenframework.ide.model.results.TestResultsOverview;
+import com.galenframework.ide.model.results.TaskResultsOverview;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.tests.integration.components.pages.IdePage;
 import org.testng.annotations.Test;
 
@@ -42,13 +42,13 @@ public class DevicesModalIT extends GalenTestBase {
             new Device("123qweasd", "Mobile device", "firefox", asList("mobile", "iphone"), new SizeProviderCustom(asList(new Size(450, 700), new Size(500, 700)))),
             new Device("zxcvbnm", "Tablet device", "chrome", asList("tablet"), new SizeProviderRange(new SizeVariation(new Size(700, 800), new Size(900, 800), 10, false)))
     );
-    private static final TestResultsOverview EMPTY_TEST_RESULTS = new TestResultsOverview(emptyList());
+    private static final TaskResultsOverview EMPTY_TEST_RESULTS = new TaskResultsOverview(emptyList());
     private static final List<FileItem> EMPTY_FILES = emptyList();
     private static final List<Device> EMPTY_DEVICES = emptyList();
 
     FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
     DeviceService deviceService = registerMockitoMock(DeviceService.class);
-    TestResultService testResultService = registerMockitoMock(TestResultService.class);
+    TaskResultService testResultService = registerMockitoMock(TaskResultService.class);
 
 
     @Test
@@ -145,7 +145,7 @@ public class DevicesModalIT extends GalenTestBase {
 
     protected void configureInitialMockCalls(List<FileItem> fileBrowserServiceReturn,
                                              List<Device> deviceServiceReturn,
-                                             TestResultsOverview testResultsServiceReturn) {
+                                             TaskResultsOverview testResultsServiceReturn) {
         when(fileBrowserService.getFilesInPath(any())).thenReturn(fileBrowserServiceReturn);
         when(deviceService.getAllDevices()).thenReturn(deviceServiceReturn);
         when(testResultService.getTestResultsOverview()).thenReturn(testResultsServiceReturn);

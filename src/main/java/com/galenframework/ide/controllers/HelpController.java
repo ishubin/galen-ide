@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.ide.controllers;
 
-import com.galenframework.ide.controllers.actions.*;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceStatus;
 import com.galenframework.ide.devices.SizeProviderCustom;
@@ -58,8 +57,8 @@ public class HelpController {
                         new SizeProviderRange(new SizeVariation(new Size(600, 700), new Size(900, 700), 5, false)),
                         DeviceStatus.BUSY
                     ))
-                ),
-                new ApiDocRequest("POST", "/api/devices/{deviceId}/action/openUrl", "Open url in a browser", NO_DESCRIPTION,
+                )
+                /*new ApiDocRequest("POST", "/api/devices/{deviceId}/action/openUrl", "Open url in a browser", NO_DESCRIPTION,
                     asList(
                         new DeviceActionOpenUrlRequest().setUrl("http://example.com")
                     ),
@@ -89,6 +88,7 @@ public class HelpController {
                     ),
                     asList(new ActionResult("checkLayout", "device-01", new DeviceActionReportResponse("sdg897s-dg965ds8sdg-98sgsd78g-55sd7g6")))
                 )
+                */
             ));
         }, toJson());
     }

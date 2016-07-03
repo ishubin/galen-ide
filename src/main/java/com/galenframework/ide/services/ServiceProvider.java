@@ -19,7 +19,7 @@ import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.profiles.ProfilesService;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.services.tester.TesterService;
 
@@ -29,6 +29,6 @@ public interface ServiceProvider {
     FileBrowserService fileBrowserService();
     SettingsService settingsService();
     ProfilesService profilesService();
-    TestResultService testResultService();
+    TaskResultService taskResultService();
     DomSnapshotService domSnapshotService();
 }

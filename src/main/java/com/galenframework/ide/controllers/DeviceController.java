@@ -16,11 +16,13 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galenframework.ide.devices.tasks.DeviceTaskParser;
+import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.devices.DeviceRequest;
-import com.galenframework.ide.controllers.actions.*;
 import com.galenframework.ide.services.devices.DeviceService;
 
-import java.util.Optional;
+
+import java.util.UUID;
 
 import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -66,24 +68,18 @@ public class DeviceController {
         }, toJson());
 
 
-        post("api/devices/:deviceId/actions/:actionName", (req, res) -> {
+        post("api/devices/:deviceId/tasks", (req, res) -> {
             String deviceId = req.params("deviceId");
-            String actionName = req.params("actionName");
             String requestBody = req.body();
 
-            DeviceAction deviceAction = DeviceAction.parseAction(actionName, requestBody);
-            Optional<Object> result = deviceAction.execute(deviceService, deviceId, reportStoragePath);
-            Object resultObject = null;
-
-            if (result.isPresent()) {
-                resultObject = result.get();
-            }
-            return new ActionResult(actionName, deviceId, resultObject);
+            DeviceTask task = DeviceTaskParser.parseTask(mapper, mapper.readTree(requestBody));
+            return deviceService.executeTask(deviceId, task);
         }, toJson());
 
-        get("api/devices/:deviceId/actions", (req, res) -> {
+
+        get("api/devices/:deviceId/tasks", (req, res) -> {
             String deviceId = req.params("deviceId");
-            return deviceService.getCurrentCommands(deviceId);
+            return deviceService.getCurrentTasks(deviceId);
         }, toJson());
     }
 }

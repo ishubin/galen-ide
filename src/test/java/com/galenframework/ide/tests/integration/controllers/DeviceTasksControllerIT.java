@@ -15,6 +15,10 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.controllers;
 
+import com.galenframework.ide.devices.tasks.DeviceTask;
+import com.galenframework.ide.model.results.CommandResult;
+import com.galenframework.ide.model.results.ExecutionStatus;
+import com.galenframework.ide.model.results.TaskResult;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.tests.integration.components.api.Response;
 import org.openqa.selenium.Dimension;
@@ -22,30 +26,33 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
-public class DeviceActionsControllerIT extends ApiTestBase {
+public class DeviceTasksControllerIT extends ApiTestBase {
 
     DeviceService deviceService = registerMock(DeviceService.class);
 
     @Test
-    public void should_post_openUrl_action() throws IOException {
-        Response response = postJson("/api/devices/device01/actions/openUrl",
-            "{\"url\":\"http://example.com/blah\"}"
+    public void should_post_openUrl_task() throws IOException {
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "openUrl", ExecutionStatus.planned)))
+        );
+
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"openUrl\",\"parameters\":{\"url\":\"http://example.com/blah\"}}]}"
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"openUrl\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).openUrl(eq("device01"), eq("http://example.com/blah"));
+        assertEquals(response.getBody(), "{\"name\":\"some task\",\"taskId\":\"some-task-id\",\"status\":\"planned\",\"commands\":[{\"status\":\"planned\",\"externalReport\":null,\"errorMessage\":null,\"commandId\":\"some-command-id\",\"name\":\"openUrl\",\"startedDate\":null,\"finishedDate\":null}],\"startedDate\":null,\"finishedDate\":null}");
+        verify(deviceService).executeTask(eq("device01"), anyObject());
     }
 
-    @Test
+    /*@Test
     public void should_post_resize_action() throws IOException {
         Response response = postJson("/api/devices/device01/actions/resize",
             "{\"width\":600, \"height\": 450}"
@@ -111,5 +118,5 @@ public class DeviceActionsControllerIT extends ApiTestBase {
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), "{\"actionName\":\"clearCookies\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).clearCookies(eq("device01"));
-    }
+    }*/
 }

@@ -16,20 +16,25 @@
 package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class DeviceOpenUrlCommand extends DeviceCommand {
-    private final String url;
+    private String url;
+
+    public DeviceOpenUrlCommand() {
+    }
 
     public DeviceOpenUrlCommand(String url) {
         this.url = url;
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) {
-        System.out.println("Opening " + url);
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         device.getDriver().get(url);
+        return CommandExecutionResult.passed();
     }
 
     @Override
@@ -39,6 +44,10 @@ public class DeviceOpenUrlCommand extends DeviceCommand {
 
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override

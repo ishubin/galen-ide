@@ -17,7 +17,9 @@ package com.galenframework.ide.devices.commands;
 
 import com.galenframework.ide.devices.DriverProvider;
 import com.galenframework.ide.devices.Device;
-import com.galenframework.ide.devices.DeviceThread;
+import com.galenframework.ide.devices.DeviceExecutor;
+import com.galenframework.ide.model.results.CommandExecutionResult;
+import com.galenframework.ide.model.settings.Settings;
 
 public class DeviceCreateDriverFromProvider extends DeviceCommand {
     private final DriverProvider driverProvider;
@@ -28,7 +30,7 @@ public class DeviceCreateDriverFromProvider extends DeviceCommand {
     }
 
     @Override
-    public void execute(Device device, DeviceThread deviceThread) throws Exception {
+    public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
         if (device.getDriver() != null) {
             try {
                 device.getDriver().quit();
@@ -37,6 +39,7 @@ public class DeviceCreateDriverFromProvider extends DeviceCommand {
             }
         }
         device.setDriver(driverProvider.provideDriver());
+        return CommandExecutionResult.passed();
     }
 
     @Override

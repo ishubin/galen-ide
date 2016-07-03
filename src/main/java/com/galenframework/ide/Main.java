@@ -16,8 +16,8 @@
 package com.galenframework.ide;
 
 import com.galenframework.ide.controllers.*;
-import com.galenframework.ide.jobs.TestResultsStorageCleanupJob;
-import com.galenframework.ide.model.results.TestResultContainer;
+import com.galenframework.ide.jobs.TaskResultsStorageCleanupJob;
+import com.galenframework.ide.model.results.TaskResult;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.services.DefaultServiceProvider;
 import com.galenframework.ide.services.ServiceProvider;
@@ -35,7 +35,7 @@ import static spark.Spark.*;
 public class Main {
     private final String reportFolder;
     private final String staticFolderForSpark;
-    private final SynchronizedStorage<TestResultContainer> testResultsStorage = new SynchronizedStorage<>();
+    private final SynchronizedStorage<TaskResult> taskResultsStorage = new SynchronizedStorage<>();
 
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
@@ -53,7 +53,7 @@ public class Main {
         IdeArguments ideArguments = IdeArguments.parse(args);
         Main main = new Main(ideArguments.getFileStorage());
 
-        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder, main.testResultsStorage);
+        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder, main.taskResultsStorage);
         main.initWebServer(serviceProvider, ideArguments);
     }
 
@@ -68,12 +68,12 @@ public class Main {
         new FileBrowserController(serviceProvider.fileBrowserService());
         new SettingsController(serviceProvider.settingsService());
         new ProfilesController(serviceProvider.profilesService(), serviceProvider.settingsService());
-        new TestResultController(serviceProvider.testResultService());
+        new TaskResultController(serviceProvider.taskResultService());
         new TesterController(serviceProvider.testerService());
         new HelpController();
 
         scheduledExecutorService.scheduleAtFixedRate(
-            new TestResultsStorageCleanupJob(testResultsStorage, ideArguments.getKeepLastResults()),
+            new TaskResultsStorageCleanupJob(taskResultsStorage, ideArguments.getKeepLastResults()),
             ideArguments.getCleanupPeriodInMinutes(),
             ideArguments.getCleanupPeriodInMinutes(),
             TimeUnit.MINUTES

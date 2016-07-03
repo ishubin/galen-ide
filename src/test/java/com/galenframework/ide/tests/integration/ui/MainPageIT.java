@@ -15,11 +15,11 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.ui;
 
-import com.galenframework.ide.model.results.TestResultsOverview;
+import com.galenframework.ide.model.results.TaskResultsOverview;
 import com.galenframework.ide.services.devices.DeviceService;
 import com.galenframework.ide.services.filebrowser.FileBrowserService;
 import com.galenframework.ide.services.filebrowser.FileItem;
-import com.galenframework.ide.services.results.TestResultService;
+import com.galenframework.ide.services.results.TaskResultService;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class MainPageIT extends GalenTestBase {
 
     FileBrowserService fileBrowserService = registerMockitoMock(FileBrowserService.class);
     DeviceService deviceService = registerMockitoMock(DeviceService.class);
-    TestResultService testResultService = registerMockitoMock(TestResultService.class);
+    TaskResultService testResultService = registerMockitoMock(TaskResultService.class);
 
     @Test
     public void initialPage_isDisplayedCorrectly() throws InterruptedException, IOException {
@@ -41,7 +41,7 @@ public class MainPageIT extends GalenTestBase {
                 new FileItem(false, "home.gspec", "/home.gspec", true)
         ));
         when(deviceService.getAllDevices()).thenReturn(emptyList());
-        when(testResultService.getTestResultsOverview()).thenReturn(new TestResultsOverview(emptyList()));
+        when(testResultService.getTestResultsOverview()).thenReturn(new TaskResultsOverview(emptyList()));
 
         loadDefaultTestUrl();
         checkLayout("/specs/tests/initial-page.gspec");

@@ -15,21 +15,26 @@
 ******************************************************************************/
 package com.galenframework.ide.services.results;
 
-import com.galenframework.ide.model.results.TestResultsOverview;
-import com.galenframework.ide.devices.TestResult;
-import com.galenframework.ide.devices.TestResultsListener;
+import com.galenframework.ide.model.results.*;
 import com.galenframework.ide.services.Service;
 
 import java.util.List;
 
-public interface TestResultService extends TestResultsListener, Service {
+public interface TaskResultService extends Service {
 
-    TestResultsOverview getTestResultsOverview();
+    TaskResultsOverview getTestResultsOverview();
 
     void clearAllTestResults();
 
-    String registerNewTestResultContainer(String deviceName,
-                                          List<String> tags);
+    TaskResult getTaskResult(String taskId);
 
-    TestResult getTestResult(String reportId);
+    TaskResult registerTaskResult(String taskId, String name, List<CommandResult> commandBasicResults);
+
+    void notifyCommandCompleted(String taskId, String commandId, CommandExecutionResult commandExecutionResult);
+
+    void notifyTaskCompleted(String taskId, ExecutionStatus taskStatus);
+
+    void notifyTaskStarted(String taskId);
+
+    void notifyCommandStarted(String taskId, String commandId);
 }
