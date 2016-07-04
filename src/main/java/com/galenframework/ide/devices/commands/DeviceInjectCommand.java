@@ -40,7 +40,7 @@ public class DeviceInjectCommand extends DeviceCommand {
 
     @Override
     public String getName() {
-        return INJECT;
+        return "inject";
     }
 
     public void setScript(String script) {

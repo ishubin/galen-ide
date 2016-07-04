@@ -39,6 +39,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -80,7 +81,24 @@ public class DeviceServiceImpl implements DeviceService {
         return withMandatoryDevice(deviceId, deviceExecutor -> executeTask(deviceExecutor, task));
     }
 
+    private final static AtomicLong _uniqueId = new AtomicLong(new Date().getTime());
+
+    private String generateUniqueId() {
+        return Long.toString(_uniqueId.incrementAndGet(), 36);
+    }
+
+    private void provideUniqueIdsToTaskAndCommands(DeviceTask task) {
+        task.setTaskId(generateUniqueId());
+        if (task.getCommands() != null) {
+            for (DeviceCommand command : task.getCommands()) {
+                command.setCommandId(generateUniqueId());
+            }
+        }
+    }
+
     private TaskResult executeTask(DeviceExecutor deviceExecutor, DeviceTask task) {
+        provideUniqueIdsToTaskAndCommands(task);
+
         List<CommandResult> commandBasicResults = task.getCommands().stream().map(command ->
                 new CommandResult(command.getCommandId(), command.getName(), ExecutionStatus.planned)
         ).collect(toCollection(LinkedList::new));

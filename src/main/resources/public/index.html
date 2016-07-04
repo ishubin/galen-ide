@@ -200,41 +200,44 @@
                         <tr>
                             <th></th>
                             <th>Device</th>
-                            <th>Size</th>
+                            <th>Actions</th>
                             <th>Duration</th>
                             <th>Details</th>
-                            <th>Report</th>
+                            <th>Reports</th>
                         </tr>
                         </thead>
                         <tbody>
                         {{#each tests}}
                         <tr>
                             <td>
-                                {{#if testResult}}
-                                    <span class="test-status test-status-{{testResult/status}}">
-                                        <span class="glyphicon glyphicon-ok test-status-icon test-status-icon-passed" aria-hidden="true"></span>
-                                        <span class="glyphicon glyphicon-remove test-status-icon test-status-icon-failed" aria-hidden="true"></span>
-                                        <span class="glyphicon glyphicon-flash test-status-icon test-status-icon-warning" aria-hidden="true"></span>
-                                    </span>
-                                {{else}}
-                                    <span class="test-status test-status-running">
-                                        <span class="glyphicon glyphicon-repeat test-status-icon test-status-icon-running" aria-hidden="true"></span>
-                                    </span>
-                                {{/if}}
+                                <span class="test-status test-status-{{status}}">
+                                    <span class="glyphicon glyphicon-ok test-status-icon test-status-icon-passed" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-remove test-status-icon test-status-icon-failed" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-flash test-status-icon test-status-icon-warning" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-repeat test-status-icon test-status-icon-running" aria-hidden="true"></span>
+                                </span>
                             </td>
                             <td>
                                 {{name}}
                             </td>
                             <td>
-                                {{#if testResult}}
-                                    {{#if testResult/size}}
-                                        <code>{{testResult/size/width}}x{{testResult/size/height}}</code>
-                                    {{/if}}
-                                {{/if}}
+                                <ul>
+                                    {{#each commands}}
+                                    <li>
+                                        <span class="test-status test-status-{{status}}">
+                                            <span class="glyphicon glyphicon-ok test-status-icon test-status-icon-passed" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-remove test-status-icon test-status-icon-failed" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-flash test-status-icon test-status-icon-warning" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-repeat test-status-icon test-status-icon-running" aria-hidden="true"></span>
+                                        </span>
+                                        <span>{{name}}</span>
+                                    </li>
+                                    {{/each}}
+                                </ul>
                             </td>
                             <td>
-                                {{#if testResult}}
-                                    {{formatDurationHumanReadable testResult/duration}}
+                                {{#if duration}}
+                                    {{formatDurationHumanReadable duration}}
                                 {{/if}}
                             </td>
                             <td>
@@ -254,13 +257,9 @@
                                 {{/if}}
                             </td>
                             <td>
-                                {{#if testResult}}
-                                    {{#with testResult}}
-                                        {{#if externalReport}}
-                                            <a href="/reports/{{externalReport}}" target="_blank">Report</a>
-                                        {{/if}}
-                                    {{/with}}
-                                {{/if}}
+                                {{#each externalReports}}
+                                     <a href="/reports/{{this}}" target="_blank">Report</a>
+                                {{/each}}
                             </td>
                         </tr>
                         {{/each}}

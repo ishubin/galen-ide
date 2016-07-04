@@ -88,7 +88,12 @@ public class DeviceExecutor extends Thread {
                 } catch (Exception e) {
                     logger.error(format("Task \"%s\" has crashed at command \"%s\"", task.getName(), command.getName()), e);
                     hasTaskCrashed = true;
+
                     taskResultService.notifyCommandCompleted(task.getTaskId(), command.getCommandId(), CommandExecutionResult.error(e));
+                    while (it.hasNext()) {
+                        command = it.next();
+                        taskResultService.notifyCommandCompleted(task.getTaskId(), command.getCommandId(), CommandExecutionResult.skipped());
+                    }
                 }
             }
 

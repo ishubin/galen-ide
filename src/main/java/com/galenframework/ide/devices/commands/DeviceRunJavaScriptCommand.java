@@ -59,6 +59,6 @@ public class DeviceRunJavaScriptCommand extends DeviceCommand {
 
     @Override
     public String getName() {
-        return DeviceCommand.RUN_JS;
+        return "runJs";
     }
 }

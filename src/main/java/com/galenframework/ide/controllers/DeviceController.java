@@ -16,13 +16,12 @@
 package com.galenframework.ide.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galenframework.ide.devices.commands.DeviceCommand;
 import com.galenframework.ide.devices.tasks.DeviceTaskParser;
 import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.devices.DeviceRequest;
 import com.galenframework.ide.services.devices.DeviceService;
 
-
-import java.util.UUID;
 
 import static com.galenframework.ide.util.JsonTransformer.toJson;
 import static spark.Spark.*;
@@ -31,11 +30,9 @@ public class DeviceController {
 
     private final DeviceService deviceService;
     private ObjectMapper mapper = new ObjectMapper();
-    private final String reportStoragePath;
 
-    public DeviceController(DeviceService deviceService, String reportFolderStorage) {
+    public DeviceController(DeviceService deviceService) {
         this.deviceService = deviceService;
-        this.reportStoragePath = reportFolderStorage;
         initRoutes();
     }
 
@@ -82,4 +79,6 @@ public class DeviceController {
             return deviceService.getCurrentTasks(deviceId);
         }, toJson());
     }
+
+
 }

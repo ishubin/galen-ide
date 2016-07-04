@@ -2,11 +2,10 @@ package com.galenframework.ide.devices.tasks;
 
 import com.galenframework.ide.devices.commands.DeviceCommand;
 import java.util.List;
-import java.util.UUID;
 
 public class DeviceTask {
     private String name;
-    private String taskId = "task-" + UUID.randomUUID().toString();
+    private String taskId;
 
     private List<DeviceCommand> commands;
 
@@ -41,4 +40,6 @@ public class DeviceTask {
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
+
+
 }

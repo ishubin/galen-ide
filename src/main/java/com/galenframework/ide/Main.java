@@ -63,7 +63,7 @@ public class Main {
         externalStaticFileLocation(staticFolderForSpark);
         System.out.println("Reports are in: " + reportFolder);
 
-        new DeviceController(serviceProvider.deviceService(), reportFolder);
+        new DeviceController(serviceProvider.deviceService());
         new DomSnapshotController(serviceProvider.domSnapshotService());
         new FileBrowserController(serviceProvider.fileBrowserService());
         new SettingsController(serviceProvider.settingsService());

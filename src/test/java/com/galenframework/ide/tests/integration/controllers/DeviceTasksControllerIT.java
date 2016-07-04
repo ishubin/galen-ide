@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.controllers;
 
-import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.results.CommandResult;
 import com.galenframework.ide.model.results.ExecutionStatus;
 import com.galenframework.ide.model.results.TaskResult;
@@ -27,7 +26,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,22 +46,26 @@ public class DeviceTasksControllerIT extends ApiTestBase {
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"name\":\"some task\",\"taskId\":\"some-task-id\",\"status\":\"planned\",\"commands\":[{\"status\":\"planned\",\"externalReport\":null,\"errorMessage\":null,\"commandId\":\"some-command-id\",\"name\":\"openUrl\",\"startedDate\":null,\"finishedDate\":null}],\"startedDate\":null,\"finishedDate\":null}");
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "openUrl"));
+        verify(deviceService).executeTask(eq("device01"), anyObject());
+    }
+
+    @Test
+    public void should_post_resize_action() throws IOException {
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "resize", ExecutionStatus.planned)))
+        );
+
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"resize\",\"parameters\":{\"width\":1024,\"height\":768}}]}"
+        );
+
+        assertEquals(response.getCode(), 200);
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "resize"));
         verify(deviceService).executeTask(eq("device01"), anyObject());
     }
 
     /*@Test
-    public void should_post_resize_action() throws IOException {
-        Response response = postJson("/api/devices/device01/actions/resize",
-            "{\"width\":600, \"height\": 450}"
-        );
-
-        assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"resize\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).resize(eq("device01"), eq(new Dimension(600, 450)));
-    }
-
-    @Test
     public void should_post_checkLayout_action() throws IOException {
         when(deviceService.checkLayout(anyString(), anyString(), any(), anyString()))
             .thenReturn("some-report-id");
@@ -119,4 +121,10 @@ public class DeviceTasksControllerIT extends ApiTestBase {
         assertEquals(response.getBody(), "{\"actionName\":\"clearCookies\",\"deviceId\":\"device01\",\"result\":null}");
         verify(deviceService).clearCookies(eq("device01"));
     }*/
+
+    private String expectedTaskResultJsonForSingleCommand(String taskId, String taskName, String commandId, String commandName) {
+        return "{\"name\":\"" + taskName + "\",\"taskId\":\"" + taskId + "\",\"status\":\"planned\",\"commands\":[" +
+            "{\"status\":\"planned\",\"externalReport\":null,\"errorMessage\":null,\"commandId\":\"" + commandId + "\",\"name\":\"" + commandName + "\"," +
+            "\"startedDate\":null,\"finishedDate\":null}],\"startedDate\":null,\"finishedDate\":null}";
+    }
 }

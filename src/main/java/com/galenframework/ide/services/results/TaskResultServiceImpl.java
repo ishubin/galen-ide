@@ -66,12 +66,18 @@ public class TaskResultServiceImpl implements TaskResultService {
 
     @Override
     public void notifyTaskStarted(String taskId) {
-        withTask(taskId, (task) -> task.setStartedDate(new Date()));
+        withTask(taskId, (task) -> {
+            task.setStartedDate(new Date());
+            task.setStatus(ExecutionStatus.running);
+        });
     }
 
     @Override
     public void notifyCommandStarted(String taskId, String commandId) {
-        withCommandInTask(taskId, commandId, (command) -> command.setStartedDate(new Date()));
+        withCommandInTask(taskId, commandId, (command) -> {
+            command.setStartedDate(new Date());
+            command.setStatus(ExecutionStatus.running);
+        });
     }
 
     @Override

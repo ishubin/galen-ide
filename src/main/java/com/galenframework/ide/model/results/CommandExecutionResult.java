@@ -61,4 +61,8 @@ public class CommandExecutionResult {
     public String getErrorMessage() {
         return errorMessage;
     }
+
+    public static CommandExecutionResult skipped() {
+        return new CommandExecutionResult(ExecutionStatus.skipped);
+    }
 }

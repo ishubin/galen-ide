@@ -284,48 +284,117 @@ var APIMock = {
     results: {
         get: function(callback) {
             callback({
-                "testResults": [
-                    {
-                        "uniqueId": "f02b5d55-bfc8-4561-a7e0-5a8dd0af0036",
-                        "testResult": {
-                            "size": {
-                                "width": 600,
-                                "height": 500
-                            },
-                            "errorMessages": [
-                                "\"welcome_block\" is absent on page",
-                                "\"welcome_block\" is absent on page",
-                                "\"greeting\" is absent on page",
-                                "\"greeting\" is absent on page",
-                                "\"greeting\" is absent on page",
-                                "\"greeting\" is absent on page",
-                                "\"greeting\" is absent on page",
-                                "\"login_button\" is absent on page",
-                                "\"login_button\" is absent on page",
-                                "\"login_button\" is absent on page",
-                                "\"login_button\" is absent on page"
-                            ],
-                            "errors": 11,
-                            "warnings": 0,
-                            "hasCrashed": false,
-                            "status": "failed",
-                            "exception": null,
-                            "externalReport": "f02b5d55-bfc8-4561-a7e0-5a8dd0af0036-1455729714622/1-specs-welcomepage.gspec-on-some-desktop-with-size-1024x768.html",
-                            "startedAt": 1455729712981,
-                            "endedAt": 1455729714670,
-                            "duration": 1689
-                        },
-                        "status": "finished",
-                        "name": "Some desktop",
-                        "tags": [
-                            "desktop"
-                        ]
-                    }
-                ],
-                "lastTestCommand": {
-                    "specPath": "specs/welcomePage.gspec"
-                }
-            });
+               "taskResults": [
+                 {
+                   "name": "Test on mobile",
+                   "taskId": "iq8gqzjk",
+                   "status": "passed",
+                   "commands": [
+                     {
+                       "status": "passed",
+                       "externalReport": null,
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjl",
+                       "name": "openUrl",
+                       "startedDate": 1467663250602,
+                       "finishedDate": 1467663251248
+                     },
+                     {
+                       "status": "passed",
+                       "externalReport": null,
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjm",
+                       "name": "resize",
+                       "startedDate": 1467663251248,
+                       "finishedDate": 1467663251337
+                     },
+                     {
+                       "status": "passed",
+                       "externalReport": "iq8gqzjk-iq8gqzjn-1467663255524/1-specs-welcomepage.gspec-on-mobile-emulation-with-size-1229x668.html",
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjn",
+                       "name": "checkLayout",
+                       "startedDate": 1467663251337,
+                       "finishedDate": 1467663255655
+                     }
+                   ],
+                   "startedDate": 1467663250602,
+                   "finishedDate": 1467663255655
+                 },
+                 {
+                   "name": "Test on tablet",
+                   "taskId": "iq8gqzjo",
+                   "status": "passed",
+                   "commands": [
+                     {
+                       "status": "passed",
+                       "externalReport": null,
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjp",
+                       "name": "openUrl",
+                       "startedDate": 1467663255656,
+                       "finishedDate": 1467663255860
+                     },
+                     {
+                       "status": "passed",
+                       "externalReport": null,
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjq",
+                       "name": "resize",
+                       "startedDate": 1467663255860,
+                       "finishedDate": 1467663255911
+                     },
+                     {
+                       "status": "passed",
+                       "externalReport": "iq8gqzjo-iq8gqzjr-1467663258972/1-specs-welcomepage.gspec-on-mobile-emulation-with-size-650x600.html",
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjr",
+                       "name": "checkLayout",
+                       "startedDate": 1467663255911,
+                       "finishedDate": 1467663259023
+                     }
+                   ],
+                   "startedDate": 1467663255656,
+                   "finishedDate": 1467663259023
+                 },
+                 {
+                   "name": "Test on desktop",
+                   "taskId": "iq8gqzjs",
+                   "status": "passed",
+                   "commands": [
+                     {
+                       "status": "passed",
+                       "externalReport": null,
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjt",
+                       "name": "openUrl",
+                       "startedDate": 1467663259023,
+                       "finishedDate": 1467663259229
+                     },
+                     {
+                       "status": "passed",
+                       "externalReport": null,
+                       "errorMessage": null,
+                       "commandId": "iq8gqzju",
+                       "name": "resize",
+                       "startedDate": 1467663259229,
+                       "finishedDate": 1467663259286
+                     },
+                     {
+                       "status": "passed",
+                       "externalReport": "iq8gqzjs-iq8gqzjv-1467663262017/1-specs-welcomepage.gspec-on-mobile-emulation-with-size-1024x700.html",
+                       "errorMessage": null,
+                       "commandId": "iq8gqzjv",
+                       "name": "checkLayout",
+                       "startedDate": 1467663259291,
+                       "finishedDate": 1467663262059
+                     }
+                   ],
+                   "startedDate": 1467663259023,
+                   "finishedDate": 1467663262059
+                 }
+               ]
+                 });
         }
     },
     help: {

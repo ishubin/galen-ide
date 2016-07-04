@@ -22,13 +22,10 @@ import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
 
 import java.util.Date;
-import java.util.UUID;
 
 public abstract class DeviceCommand {
-    public static final String INJECT = "inject";
-    public static final String RUN_JS = "runJs";
 
-    private String commandId = "command-" + UUID.randomUUID().toString();
+    private String commandId;
 
     private Date registeredAt = new Date();
 

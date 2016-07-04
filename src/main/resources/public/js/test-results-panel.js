@@ -7,8 +7,8 @@ extend(TestResultsPanel, UIComponent);
 
 TestResultsPanel.prototype.show = function (results) {
     this.render({
-        tests: results.testResults,
-        overview: this._createTestsOverview(results.testResults)
+        tests: this._enrichWithExtraInfo(results.taskResults),
+        overview: this._createTestsOverview(results.taskResults)
     });
 };
 TestResultsPanel.prototype.update = function () {
@@ -34,20 +34,40 @@ TestResultsPanel.prototype.waitForTestResults = function () {
         that.update();
     }, 1000);
 };
-TestResultsPanel.prototype._createTestsOverview = function (results) {
+TestResultsPanel.prototype._enrichWithExtraInfo = function (taskResults) {
+    for (var i = 0; i < taskResults.length; i++) {
+        if  (taskResults[i].finishedDate !== null && taskResults[i].startedDate !== null) {
+            taskResults[i].duration = taskResults[i].finishedDate - taskResults[i].startedDate;
+        }
+
+        var externalReports = [];
+
+        if (taskResults[i].commands != null) {
+            for (var j = 0; j < taskResults[i].commands.length; j++) {
+                if (taskResults[i].commands[j].externalReport !== null) {
+                    externalReports.push(taskResults[i].commands[j].externalReport);
+                }
+            }
+        }
+
+        taskResults[i].externalReports = externalReports;
+    }
+    return taskResults;
+};
+TestResultsPanel.prototype._createTestsOverview = function (taskResults) {
     var firstTimestamp = -1;
     var lastTimestamp = -1;
 
     var allTestsAreFinished = true;
 
-    for (var i = 0; i < results.length; i++) {
-        if (results[i].status === "finished" && results[i].testResult !== null && results[i].testResult !== undefined) {
-            if (firstTimestamp < 0 || firstTimestamp > results[i].testResult.startedAt) {
-                firstTimestamp = results[i].testResult.startedAt;
+    for (var i = 0; i < taskResults.length; i++) {
+        if  (taskResults[i].finishedDate !== null) {
+            if (firstTimestamp < 0 || firstTimestamp > taskResults[i].startedDate) {
+                firstTimestamp = taskResults[i].startedDate;
             }
 
-            if (lastTimestamp < 0 || lastTimestamp < results[i].testResult.endedAt) {
-                lastTimestamp = results[i].testResult.endedAt;
+            if (lastTimestamp < 0 || lastTimestamp < taskResults[i].finishedDate) {
+                lastTimestamp = taskResults[i].finishedDate;
             }
 
         } else {

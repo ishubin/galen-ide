@@ -65,7 +65,7 @@ send_task "$DEVICE_ID" '{
     }, { 
         "name":"resize",
         "parameters": {
-            "width": 1024,
+            "width": 100,
             "height": 700
         }
     }, { 
