@@ -22,7 +22,6 @@ import com.galenframework.ide.model.results.TaskResult;
 import com.galenframework.ide.services.ServiceProvider;
 import com.galenframework.ide.services.devices.DeviceService;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;

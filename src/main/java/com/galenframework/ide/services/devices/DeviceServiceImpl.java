@@ -39,6 +39,9 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.util.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -52,13 +55,15 @@ public class DeviceServiceImpl implements DeviceService {
     private final ServiceProvider serviceProvider;
     private final IdeArguments ideArguments;
     private final String reportStoragePath;
+    private final ScheduledExecutorService scheduledExecutorService;
 
     private SynchronizedStorage<DeviceExecutor> devices = new SynchronizedStorage<>();
 
-    public DeviceServiceImpl(IdeArguments ideArguments, ServiceProvider serviceProvider, String reportStoragePath) {
+    public DeviceServiceImpl(IdeArguments ideArguments, ServiceProvider serviceProvider, String reportStoragePath, ScheduledExecutorService scheduledExecutorService) {
         this.serviceProvider = serviceProvider;
         this.ideArguments = ideArguments;
         this.reportStoragePath = reportStoragePath;
+        this.scheduledExecutorService = scheduledExecutorService;
     }
 
     @Override
@@ -168,7 +173,7 @@ public class DeviceServiceImpl implements DeviceService {
                 verifyMasterIsAbsent();
                 deviceExecutor.getDevice().setMaster(true);
             }
-            addDeviceThread(deviceExecutor);
+            addDeviceExecutor(deviceExecutor);
         }
         return deviceExecutor;
     }
@@ -237,9 +242,12 @@ public class DeviceServiceImpl implements DeviceService {
         return size.getWidth() + "x" + size.getHeight();
     }
 
-    public void addDeviceThread(DeviceExecutor deviceThread) {
-        devices.add(deviceThread);
-        deviceThread.start();
+
+    private void addDeviceExecutor(DeviceExecutor deviceExecutor) {
+        devices.add(deviceExecutor);
+
+        ScheduledFuture<?> deviceScheduledFuture = scheduledExecutorService.scheduleAtFixedRate(deviceExecutor, 0, 100, TimeUnit.MILLISECONDS);
+        deviceExecutor.setScheduledFuture(deviceScheduledFuture);
     }
 
     private Predicate<DeviceExecutor> byDeviceIdOrName(String requestedDeviceId) {
@@ -250,9 +258,14 @@ public class DeviceServiceImpl implements DeviceService {
     public void shutdownDevice(String deviceId) {
         Optional<DeviceExecutor> deviceOption = devices.stream().filter(byDeviceIdOrName(deviceId)).findFirst();
         if (deviceOption.isPresent()) {
-            DeviceExecutor deviceThread = deviceOption.get();
-            deviceThread.shutdownDevice();
-            devices.remove(deviceThread);
+            DeviceExecutor deviceExecutor = deviceOption.get();
+            deviceExecutor.shutdownDevice();
+            devices.remove(deviceExecutor);
+
+            ScheduledFuture<?> future = deviceExecutor.getScheduledFuture();
+            if (future != null) {
+                future.cancel(false);
+            }
         } else {
             throw new RuntimeException("Unknown device: " + deviceId);
         }

@@ -11,6 +11,7 @@ public class CommandExecutionResult {
     @JsonIgnore
     private Object data;
     private String errorMessage;
+    private String externalReportFolder;
 
     public CommandExecutionResult() {
     }
@@ -64,5 +65,13 @@ public class CommandExecutionResult {
 
     public static CommandExecutionResult skipped() {
         return new CommandExecutionResult(ExecutionStatus.skipped);
+    }
+
+    public void setExternalReportFolder(String externalReportFolder) {
+        this.externalReportFolder = externalReportFolder;
+    }
+
+    public String getExternalReportFolder() {
+        return externalReportFolder;
     }
 }

@@ -15,18 +15,20 @@
 ******************************************************************************/
 package com.galenframework.ide.devices.commands;
 
-import com.galenframework.ide.devices.DriverProvider;
 import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceExecutor;
 import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
+import org.openqa.selenium.WebDriver;
+
+import java.util.function.Supplier;
 
 public class DeviceCreateDriverFromProvider extends DeviceCommand {
-    private final DriverProvider driverProvider;
+    private final Supplier<WebDriver> driverSupplier;
 
-    public DeviceCreateDriverFromProvider(DriverProvider driverProvider) {
+    public DeviceCreateDriverFromProvider(Supplier<WebDriver> driverSupplier) {
         super();
-        this.driverProvider = driverProvider;
+        this.driverSupplier = driverSupplier;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class DeviceCreateDriverFromProvider extends DeviceCommand {
                 ex.printStackTrace();
             }
         }
-        device.setDriver(driverProvider.provideDriver());
+        device.setDriver(driverSupplier.get());
         return CommandExecutionResult.passed();
     }
 

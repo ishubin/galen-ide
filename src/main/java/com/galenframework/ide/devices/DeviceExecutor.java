@@ -22,14 +22,15 @@ import com.galenframework.ide.devices.commands.*;
 import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.services.settings.SettingsService;
-import com.galenframework.ide.util.Callback;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -45,6 +46,7 @@ public class DeviceExecutor extends Thread {
 
     // Used for restarting device
     private DeviceCommand deviceInitializationCommand = null;
+    private ScheduledFuture<?> scheduledFuture;
 
     public DeviceExecutor(Device device, TaskResultService taskResultService, SettingsService settingsService, String reportStoragePath) {
         this.device = device;
@@ -55,21 +57,18 @@ public class DeviceExecutor extends Thread {
 
     @Override
     public void run() {
-        while(device.isActive()) {
-            if (!tasks.isEmpty()) {
-                try {
-                    DeviceTask task = withTaskLock(tasks::poll);
-                    if (task != null) {
-                        device.setStatus(DeviceStatus.BUSY);
-                        executeTask(task);
-                        device.setStatus(DeviceStatus.READY);
-                    }
-                } catch (Exception e) {
-                    logger.error("Error executing task", e);
+        if (device.isActive() && !tasks.isEmpty()) {
+            try {
+                DeviceTask task = withTaskLock(tasks::poll);
+                if (task != null) {
+                    device.setStatus(DeviceStatus.BUSY);
+                    executeTask(task);
+                    device.setStatus(DeviceStatus.READY);
                 }
+            } catch (Exception e) {
+                logger.error("Error executing task", e);
             }
         }
-        device.setStatus(DeviceStatus.SHUTDOWN);
     }
 
     private void executeTask(DeviceTask task) {
@@ -159,11 +158,11 @@ public class DeviceExecutor extends Thread {
     }
 
 
-    private <A> A withTaskLock(Callback<A> callback) {
+    private <A> A withTaskLock(Supplier<A> callback) {
         tasksLock.lock();
         A result;
         try {
-            result = callback.apply();
+            result = callback.get();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
@@ -187,5 +186,13 @@ public class DeviceExecutor extends Thread {
                 return null;
             });
         }
+    }
+
+    public void setScheduledFuture(ScheduledFuture<?> scheduledFuture) {
+        this.scheduledFuture = scheduledFuture;
+    }
+
+    public ScheduledFuture<?> getScheduledFuture() {
+        return scheduledFuture;
     }
 }

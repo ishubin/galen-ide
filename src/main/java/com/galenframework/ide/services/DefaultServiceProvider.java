@@ -33,6 +33,8 @@ import com.galenframework.ide.services.tester.TesterService;
 import com.galenframework.ide.services.tester.TesterServiceImpl;
 import com.galenframework.ide.util.SynchronizedStorage;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 public class DefaultServiceProvider implements ServiceProvider {
     private final TesterServiceImpl testerService;
     private final DeviceService deviceService;
@@ -42,9 +44,9 @@ public class DefaultServiceProvider implements ServiceProvider {
     private final TaskResultService testResultService;
     private final DomSnapshotService domSnapshotService;
 
-    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath, SynchronizedStorage<TaskResult> testResultsStorage) {
+    public DefaultServiceProvider(IdeArguments ideArguments, String reportStoragePath, SynchronizedStorage<TaskResult> testResultsStorage, ScheduledExecutorService scheduledExecutorService) {
         this.testerService = new TesterServiceImpl(this, reportStoragePath);
-        this.deviceService = new DeviceServiceImpl(ideArguments, this, reportStoragePath);
+        this.deviceService = new DeviceServiceImpl(ideArguments, this, reportStoragePath, scheduledExecutorService);
         this.fileBrowserService = new FileBrowserServiceImpl(this);
         this.settingsService = new SettingsServiceImpl(this);
         this.profilesService = new ProfilesServiceImpl(this);

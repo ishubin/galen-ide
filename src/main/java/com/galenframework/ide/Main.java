@@ -37,7 +37,7 @@ public class Main {
     private final String staticFolderForSpark;
     private final SynchronizedStorage<TaskResult> taskResultsStorage = new SynchronizedStorage<>();
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(7);
 
     protected Main(String fileStorage) throws IOException {
         if (fileStorage == null || fileStorage.trim().isEmpty()) {
@@ -53,7 +53,7 @@ public class Main {
         IdeArguments ideArguments = IdeArguments.parse(args);
         Main main = new Main(ideArguments.getFileStorage());
 
-        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder, main.taskResultsStorage);
+        ServiceProvider serviceProvider = new DefaultServiceProvider(ideArguments, main.reportFolder, main.taskResultsStorage, main.scheduledExecutorService);
         main.initWebServer(serviceProvider, ideArguments);
     }
 
@@ -73,7 +73,7 @@ public class Main {
         new HelpController();
 
         scheduledExecutorService.scheduleAtFixedRate(
-            new TaskResultsStorageCleanupJob(taskResultsStorage, ideArguments.getKeepLastResults()),
+            new TaskResultsStorageCleanupJob(taskResultsStorage, ideArguments.getKeepLastResults(), ideArguments.getZombieResultsTimeout(), reportFolder),
             ideArguments.getCleanupPeriodInMinutes(),
             ideArguments.getCleanupPeriodInMinutes(),
             TimeUnit.MINUTES
@@ -91,7 +91,7 @@ public class Main {
     }
 
     private String createTempReportFolder() throws IOException {
-        return Files.createTempDirectory("galen-instant-tester-reports").toString();
+        return Files.createTempDirectory("galen-ide-reports").toString();
     }
 
 }

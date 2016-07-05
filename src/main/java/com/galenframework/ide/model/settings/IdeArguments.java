@@ -24,6 +24,7 @@ public class IdeArguments {
     private int port;
     private int keepLastResults = 30;
     private int cleanupPeriodInMinutes = 1;
+    private int zombieResultsTimeout = 10;
 
     public String getProfile() {
         return profile;
@@ -40,7 +41,8 @@ public class IdeArguments {
         options.addOption("P", "profile", true, "Profile that will be loaded on start");
         options.addOption("s", "storage", true, "Path to static file storage that will be used for storing reports");
         options.addOption("k", "keep-results", true, "Amount of last results to be kept");
-        options.addOption("c", "cleanup-period", true, "Minutes for how long it should keep last results");
+        options.addOption("c", "cleanup-period", true, "Period in minutes in which it should run task cleanups");
+        options.addOption("z", "zombie-results-timeout", true, "Minutes for how long it should keep unfinished results");
 
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
@@ -104,5 +106,13 @@ public class IdeArguments {
 
     public void setCleanupPeriodInMinutes(int cleanupPeriodInMinutes) {
         this.cleanupPeriodInMinutes = cleanupPeriodInMinutes;
+    }
+
+    public int getZombieResultsTimeout() {
+        return zombieResultsTimeout;
+    }
+
+    public void setZombieResultsTimeout(int zombieResultsTimeout) {
+        this.zombieResultsTimeout = zombieResultsTimeout;
     }
 }

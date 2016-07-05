@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class SynchronizedStorage<T> {
@@ -64,11 +65,11 @@ public class SynchronizedStorage<T> {
         });
     }
 
-    private <A> A modifyWithLock(Callback<A> returnFunc) {
+    private <A> A modifyWithLock(Supplier<A> returnFunc) {
         lock.lock();
         A result;
         try {
-            result = returnFunc.apply();
+            result = returnFunc.get();
             readItems = new ArrayList<>(writeItems);
         } catch (Exception ex) {
             throw new RuntimeException(ex);

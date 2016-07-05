@@ -72,13 +72,15 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             }
 
             HtmlReportBuilder reportBuilder = new HtmlReportBuilder();
-            String reportDir = taskId + "-" + getCommandId() + "-" + new Date().getTime();
+            String reportDir = taskId + "-" + getCommandId();
+
             String reportDirPath = reportStoragePath + File.separator + reportDir;
 
             reportBuilder.build(createTestInfo(device, spec, size, layoutReport), reportDirPath);
 
             CommandExecutionResult result = new CommandExecutionResult();
             result.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
+            result.setExternalReportFolder(reportDir);
             result.setStatus(identifyStatus(layoutReport));
             result.setData(layoutReport);
             return result;
