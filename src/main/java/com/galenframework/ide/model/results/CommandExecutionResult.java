@@ -19,13 +19,16 @@ package com.galenframework.ide.model.results;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.Collections;
+import java.util.List;
+
 public class CommandExecutionResult {
     private ExecutionStatus status = ExecutionStatus.planned;
     private String externalReport;
 
     @JsonIgnore
     private Object data;
-    private String errorMessage;
+    private List<String> errorMessages;
     private String externalReportFolder;
 
     public CommandExecutionResult() {
@@ -66,16 +69,8 @@ public class CommandExecutionResult {
     public static CommandExecutionResult error(Throwable ex) {
         CommandExecutionResult result = new CommandExecutionResult();
         result.setStatus(ExecutionStatus.failed);
-        result.setErrorMessage(ExceptionUtils.getMessage(ex) + "\n" + ExceptionUtils.getStackTrace(ex));
+        result.setErrorMessages(Collections.singletonList(ExceptionUtils.getMessage(ex) + "\n" + ExceptionUtils.getStackTrace(ex)));
         return result;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     public static CommandExecutionResult skipped() {
@@ -88,5 +83,13 @@ public class CommandExecutionResult {
 
     public String getExternalReportFolder() {
         return externalReportFolder;
+    }
+
+    public List<String> getErrorMessages() {
+        return errorMessages;
+    }
+
+    public void setErrorMessages(List<String> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 }

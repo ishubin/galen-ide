@@ -42,15 +42,23 @@ TestResultsPanel.prototype._enrichWithExtraInfo = function (taskResults) {
 
         var externalReports = [];
 
+        var errorMessages = [];
+
         if (taskResults[i].commands != null) {
             for (var j = 0; j < taskResults[i].commands.length; j++) {
                 if (taskResults[i].commands[j].externalReport !== null) {
                     externalReports.push(taskResults[i].commands[j].externalReport);
                 }
+                if (taskResults[i].commands[j].errorMessages !== null && taskResults[i].commands[j].errorMessages !== undefined) {
+                    for (var k = 0; k < taskResults[i].commands[j].errorMessages.length; k++) {
+                        errorMessages.push(taskResults[i].commands[j].errorMessages[k]);
+                    }
+                }
             }
         }
 
         taskResults[i].externalReports = externalReports;
+        taskResults[i].errorMessages = errorMessages;
     }
     return taskResults;
 };

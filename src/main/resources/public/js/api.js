@@ -383,7 +383,7 @@ var APIMock = {
                      {
                        "status": "passed",
                        "externalReport": "iq8gqzjs-iq8gqzjv-1467663262017/1-specs-welcomepage.gspec-on-mobile-emulation-with-size-1024x700.html",
-                       "errorMessage": null,
+                       "errorMessages": ["error 1", "error 2"],
                        "commandId": "iq8gqzjv",
                        "name": "checkLayout",
                        "startedDate": 1467663259291,

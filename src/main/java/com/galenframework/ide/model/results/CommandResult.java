@@ -64,7 +64,7 @@ public class CommandResult extends CommandExecutionResult {
     public void copyData(CommandExecutionResult commandExecutionResult) {
         setData(commandExecutionResult.getData());
         setStatus(commandExecutionResult.getStatus());
-        setErrorMessage(commandExecutionResult.getErrorMessage());
+        setErrorMessages(commandExecutionResult.getErrorMessages());
         setExternalReport(commandExecutionResult.getExternalReport());
     }
 }

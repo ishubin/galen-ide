@@ -25,6 +25,8 @@ import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.speclang2.pagespec.SectionFilter;
+import com.galenframework.validation.ValidationError;
+import com.galenframework.validation.ValidationResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Dimension;
@@ -82,12 +84,26 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
             result.setExternalReport(reportDir + "/" + findTestHtmlFileIn(reportDirPath));
             result.setExternalReportFolder(reportDir);
             result.setStatus(identifyStatus(layoutReport));
+            result.setErrorMessages(provideErrorMessages(layoutReport));
             result.setData(layoutReport);
             return result;
 
         } catch (Exception ex) {
             return CommandExecutionResult.error(ex);
         }
+    }
+
+    private List<String> provideErrorMessages(LayoutReport layoutReport) {
+        if (layoutReport.getValidationErrorResults() != null) {
+            List<String> errorMessages = new LinkedList<>();
+            for (ValidationResult validationResult : layoutReport.getValidationErrorResults()) {
+                if (validationResult.getError() != null && validationResult.getError().getMessages() != null) {
+                    errorMessages.addAll(validationResult.getError().getMessages());
+                }
+            }
+            return errorMessages;
+        }
+        return null;
     }
 
     private ExecutionStatus identifyStatus(LayoutReport layoutReport) {

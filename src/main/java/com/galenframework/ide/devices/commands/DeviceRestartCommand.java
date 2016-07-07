@@ -19,19 +19,30 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceExecutor;
 import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DeviceRestartCommand extends DeviceCommand {
+    private final static Logger logger = LoggerFactory.getLogger(DeviceExecutor.class);
 
     public DeviceRestartCommand() {
     }
 
     @Override
     public CommandExecutionResult execute(Device device, DeviceExecutor deviceExecutor, String taskId, Settings settings, String reportStoragePath) throws Exception {
-        device.getDriver().quit();
+        quitDriverSafely(device);
         if (deviceExecutor.getDeviceInitializationCommand() != null) {
             return deviceExecutor.getDeviceInitializationCommand().execute(device, deviceExecutor, taskId, settings, reportStoragePath);
         } else {
             return CommandExecutionResult.passed();
+        }
+    }
+
+    private void quitDriverSafely(Device device) {
+        try {
+            device.getDriver().quit();
+        } catch (Exception ex) {
+            logger.error("Couldn't quit driver", ex);
         }
     }
 

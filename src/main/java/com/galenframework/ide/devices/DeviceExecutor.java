@@ -36,7 +36,7 @@ import static java.lang.String.format;
 
 public class DeviceExecutor extends Thread {
     protected final Device device;
-    private final Logger logger = LoggerFactory.getLogger(DeviceExecutor.class);
+    private final static Logger logger = LoggerFactory.getLogger(DeviceExecutor.class);
 
     private final Queue<DeviceTask> tasks = new LinkedBlockingQueue<>();
     private final ReentrantLock tasksLock = new ReentrantLock();

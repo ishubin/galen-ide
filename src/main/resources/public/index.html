@@ -246,14 +246,16 @@
                                             <span class="test-status-{{status}}">
                                                 {{errors}} errors, {{warnings}} warnings
                                             </span>
-                                    <ul class="error-messages">
-                                        {{#each errorMessages}}
-                                        <li>
-                                            {{this}}
-                                        </li>
-                                        {{/each}}
-                                    </ul>
                                     {{/with}}
+                                {{/if}}
+                                {{#if errorMessages}}
+                                <ul class="error-messages">
+                                    {{#each errorMessages}}
+                                    <li>
+                                        {{this}}
+                                    </li>
+                                    {{/each}}
+                                </ul>
                                 {{/if}}
                             </td>
                             <td>
