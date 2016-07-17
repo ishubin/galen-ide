@@ -26,8 +26,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 
+import static com.galenframework.ide.model.results.CommandExecutionResult.passed;
+
 public class DeviceRunJavaScriptCommand extends DeviceCommand {
     private String path;
+    private String content;
 
     public DeviceRunJavaScriptCommand() {
     }
@@ -52,13 +55,30 @@ public class DeviceRunJavaScriptCommand extends DeviceCommand {
         GalenJsExecutor js = new GalenJsExecutor();
         js.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
         js.putObject("driver", device.getDriver());
-        js.eval(scriptFileReader, path);
+        js.putObject("taskId", taskId);
+        js.putObject("commandId", getCommandId());
 
-        return CommandExecutionResult.passed();
+        if (path != null) {
+            js.eval(scriptFileReader, path);
+        } else if (content != null) {
+            js.eval(content);
+        } else {
+            throw new IllegalArgumentException("Both path and content are null");
+        }
+
+        return passed();
     }
 
     @Override
     public String getName() {
         return "runJs";
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

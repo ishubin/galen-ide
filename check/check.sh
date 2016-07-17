@@ -29,7 +29,7 @@ send_task "$DEVICE_ID_1" '{
     }, { 
         "name":"checkLayout",
         "parameters": {
-            "spec": "specs/welcomePage.gspec",
+            "path": "specs/welcomePage.gspec",
             "tags": ["mobile"]
         }
     }]
@@ -51,7 +51,7 @@ send_task "$DEVICE_ID_2" '{
     }, { 
         "name":"checkLayout",
         "parameters": {
-            "spec": "specs/welcomePage.gspec",
+            "path": "specs/welcomePage.gspec",
             "tags": ["tablet"]
         }
     }]
@@ -67,13 +67,13 @@ send_task "$DEVICE_ID_3" '{
     }, { 
         "name":"resize",
         "parameters": {
-            "width": 100,
+            "width": 1024,
             "height": 700
         }
     }, { 
         "name":"checkLayout",
         "parameters": {
-            "spec": "specs/welcomePage.gspec",
+            "path": "specs/welcomePage.gspec",
             "tags": ["desktop"]
         }
     }]
