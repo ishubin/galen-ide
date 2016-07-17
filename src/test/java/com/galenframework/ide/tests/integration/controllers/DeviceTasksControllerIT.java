@@ -138,24 +138,45 @@ public class DeviceTasksControllerIT extends ApiTestBase {
             )))
         );
     }
-/*
+
     @Test
     public void should_post_restart_action() throws IOException {
-        Response response = postJson("/api/devices/device01/actions/restart", "");
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "restart", ExecutionStatus.planned)))
+        );
+
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"restart\",\"parameters\":{}}]}"
+        );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"restart\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).restartDevice(eq("device01"));
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "restart"));
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceRestartCommand()
+            )))
+        );
     }
+
 
     @Test
     public void should_post_clearCookies_action() throws IOException {
-        Response response = postJson("/api/devices/device01/actions/clearCookies", "");
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "clearCookies", ExecutionStatus.planned)))
+        );
+
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"clearCookies\",\"parameters\":{}}]}"
+        );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"clearCookies\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).clearCookies(eq("device01"));
-    }*/
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "clearCookies"));
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceClearCookiesCommand()
+            )))
+        );
+    }
 
     private String expectedTaskResultJsonForSingleCommand(String taskId, String taskName, String commandId, String commandName) {
         return "{\"name\":\"" + taskName + "\",\"taskId\":\"" + taskId + "\",\"status\":\"planned\",\"commands\":[" +

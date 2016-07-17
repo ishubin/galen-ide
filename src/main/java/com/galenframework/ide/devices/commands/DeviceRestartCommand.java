@@ -19,6 +19,9 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceExecutor;
 import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,5 +52,35 @@ public class DeviceRestartCommand extends DeviceCommand {
     @Override
     public String getName() {
         return "restart";
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getCommandId())
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceRestartCommand)) {
+            return false;
+        } else {
+            DeviceRestartCommand rhs = (DeviceRestartCommand) obj;
+            return new EqualsBuilder()
+                .append(rhs.getCommandId(), this.getCommandId())
+                .isEquals();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("commandId", getCommandId())
+            .toString();
     }
 }
