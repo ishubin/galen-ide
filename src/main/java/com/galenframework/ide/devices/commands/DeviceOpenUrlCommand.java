@@ -19,6 +19,8 @@ import com.galenframework.ide.devices.Device;
 import com.galenframework.ide.devices.DeviceExecutor;
 import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class DeviceOpenUrlCommand extends DeviceCommand {
@@ -51,9 +53,35 @@ public class DeviceOpenUrlCommand extends DeviceCommand {
     }
 
     @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getCommandId())
+            .append(url)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceOpenUrlCommand)) {
+            return false;
+        } else {
+            DeviceOpenUrlCommand rhs = (DeviceOpenUrlCommand) obj;
+            return new EqualsBuilder()
+                .append(rhs.getCommandId(), this.getCommandId())
+                .append(rhs.url, this.url)
+                .isEquals();
+        }
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("url", url)
-                .toString();
+            .append("url", url)
+            .append("commandId", getCommandId())
+            .toString();
     }
 }

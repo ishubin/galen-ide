@@ -16,6 +16,10 @@
 package com.galenframework.ide.devices.tasks;
 
 import com.galenframework.ide.devices.commands.DeviceCommand;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.List;
 
 public class DeviceTask {
@@ -56,5 +60,39 @@ public class DeviceTask {
         this.taskId = taskId;
     }
 
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(taskId)
+            .append(name)
+            .append(commands)
+            .toHashCode();
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceTask)) {
+            return false;
+        } else {
+            DeviceTask rhs = (DeviceTask) obj;
+            return new EqualsBuilder()
+                .append(rhs.taskId, this.taskId)
+                .append(rhs.name, this.name)
+                .append(rhs.commands, this.commands)
+                .isEquals();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("taskId", taskId)
+            .append("name", name)
+            .append("commands", getCommands())
+            .toString();
+    }
 }

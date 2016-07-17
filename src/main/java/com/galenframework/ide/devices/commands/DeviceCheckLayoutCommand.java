@@ -32,6 +32,8 @@ import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.specs.page.PageSpec;
 import com.galenframework.validation.ValidationResult;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Dimension;
 
@@ -216,19 +218,53 @@ public class DeviceCheckLayoutCommand extends DeviceCommand {
     }
 
     @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getCommandId())
+            .append(path)
+            .append(content)
+            .append(vars)
+            .append(tags)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceCheckLayoutCommand)) {
+            return false;
+        } else {
+            DeviceCheckLayoutCommand rhs = (DeviceCheckLayoutCommand) obj;
+            return new EqualsBuilder()
+                .append(rhs.getCommandId(), this.getCommandId())
+                .append(rhs.path, this.path)
+                .append(rhs.content, this.content)
+                .append(rhs.vars, this.vars)
+                .append(rhs.tags, this.tags)
+                .isEquals();
+        }
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("path", path)
-                .append("tags", tags)
-                .toString();
+            .append("path", path)
+            .append("content", content)
+            .append("vars", vars)
+            .append("tags", tags)
+            .toString();
     }
 
     public Map<String, Object> getVars() {
         return vars;
     }
 
-    public void setVars(Map<String, Object> vars) {
+    public DeviceCheckLayoutCommand setVars(Map<String, Object> vars) {
         this.vars = vars;
+        return this;
     }
 
     public String getContent() {

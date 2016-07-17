@@ -20,6 +20,8 @@ import com.galenframework.ide.devices.DeviceExecutor;
 import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.utils.GalenUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class DeviceResizeCommand extends DeviceCommand {
@@ -47,6 +49,33 @@ public class DeviceResizeCommand extends DeviceCommand {
         return "resize";
     }
 
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getCommandId())
+            .append(width)
+            .append(height)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceResizeCommand)) {
+            return false;
+        } else {
+            DeviceResizeCommand rhs = (DeviceResizeCommand) obj;
+            return new EqualsBuilder()
+                .append(rhs.getCommandId(), this.getCommandId())
+                .append(rhs.width, this.width)
+                .append(rhs.height, this.height)
+                .isEquals();
+        }
+    }
 
     @Override
     public String toString() {

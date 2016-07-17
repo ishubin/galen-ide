@@ -15,6 +15,10 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.controllers;
 
+import com.galenframework.ide.devices.commands.DeviceCheckLayoutCommand;
+import com.galenframework.ide.devices.commands.DeviceOpenUrlCommand;
+import com.galenframework.ide.devices.commands.DeviceResizeCommand;
+import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.results.CommandResult;
 import com.galenframework.ide.model.results.ExecutionStatus;
 import com.galenframework.ide.model.results.TaskResult;
@@ -24,6 +28,7 @@ import org.openqa.selenium.Dimension;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.*;
@@ -47,7 +52,11 @@ public class DeviceTasksControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "openUrl"));
-        verify(deviceService).executeTask(eq("device01"), anyObject());
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceOpenUrlCommand("http://example.com/blah")
+            )))
+        );
     }
 
     @Test
@@ -62,23 +71,38 @@ public class DeviceTasksControllerIT extends ApiTestBase {
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "resize"));
-        verify(deviceService).executeTask(eq("device01"), anyObject());
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceResizeCommand(1024, 768)
+            )))
+        );
     }
 
-    /*@Test
+    @Test
     public void should_post_checkLayout_action() throws IOException {
-        when(deviceService.checkLayout(anyString(), anyString(), any(), anyString()))
-            .thenReturn("some-report-id");
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "checkLayout", ExecutionStatus.planned)))
+        );
 
-        Response response = postJson("/api/devices/device01/actions/checkLayout",
-            "{\"path\":\"homepage.gspec\", \"tags\": [\"mobile\"]}"
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"checkLayout\",\"parameters\":" +
+                "{\"path\":\"homepage.gspec\", \"tags\": [\"mobile\"], \"vars\":{\"someStringVar\":\"some value\",\"someIntVar\":1234}}}]}"
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"checkLayout\",\"deviceId\":\"device01\",\"result\":{\"reportId\":\"some-report-id\"}}");
-        verify(deviceService).checkLayout(eq("device01"), eq("homepage.gspec"), eq(singletonList("mobile")), any());
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "checkLayout"));
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceCheckLayoutCommand("homepage.gspec", asList("mobile"))
+                .setVars(new HashMap<String, Object>() {{
+                    put("someStringVar", "some value");
+                    put("someIntVar", 1234);
+                }})
+            )))
+        );
     }
 
+    /*
     @Test
     public void should_post_inject_action() throws IOException {
         Response response = postJson("/api/devices/device01/actions/inject",
