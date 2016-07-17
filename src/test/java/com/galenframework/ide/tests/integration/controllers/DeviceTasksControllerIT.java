@@ -124,7 +124,7 @@ public class DeviceTasksControllerIT extends ApiTestBase {
 
     private String expectedTaskResultJsonForSingleCommand(String taskId, String taskName, String commandId, String commandName) {
         return "{\"name\":\"" + taskName + "\",\"taskId\":\"" + taskId + "\",\"status\":\"planned\",\"commands\":[" +
-            "{\"status\":\"planned\",\"externalReport\":null,\"errorMessage\":null,\"commandId\":\"" + commandId + "\",\"name\":\"" + commandName + "\"," +
+            "{\"status\":\"planned\",\"externalReport\":null,\"errorMessages\":null,\"externalReportFolder\":null,\"commandId\":\"" + commandId + "\",\"name\":\"" + commandName + "\"," +
             "\"startedDate\":null,\"finishedDate\":null}],\"startedDate\":null,\"finishedDate\":null}";
     }
 }
