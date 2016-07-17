@@ -21,6 +21,9 @@ import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.utils.GalenUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -81,4 +84,42 @@ public class DeviceRunJavaScriptCommand extends DeviceCommand {
     public void setContent(String content) {
         this.content = content;
     }
+
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getCommandId())
+            .append(path)
+            .append(content)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceRunJavaScriptCommand)) {
+            return false;
+        } else {
+            DeviceRunJavaScriptCommand rhs = (DeviceRunJavaScriptCommand) obj;
+            return new EqualsBuilder()
+                .append(rhs.getCommandId(), this.getCommandId())
+                .append(rhs.path, this.path)
+                .append(rhs.content, this.content)
+                .isEquals();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("path", path)
+            .append("content", content)
+            .append("commandId", getCommandId())
+            .toString();
+    }
+
 }

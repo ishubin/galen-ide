@@ -15,10 +15,7 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.controllers;
 
-import com.galenframework.ide.devices.commands.DeviceCheckLayoutCommand;
-import com.galenframework.ide.devices.commands.DeviceInjectCommand;
-import com.galenframework.ide.devices.commands.DeviceOpenUrlCommand;
-import com.galenframework.ide.devices.commands.DeviceResizeCommand;
+import com.galenframework.ide.devices.commands.*;
 import com.galenframework.ide.devices.tasks.DeviceTask;
 import com.galenframework.ide.model.results.CommandResult;
 import com.galenframework.ide.model.results.ExecutionStatus;
@@ -123,20 +120,25 @@ public class DeviceTasksControllerIT extends ApiTestBase {
         );
     }
 
-    /*@Test
+    @Test
     public void should_post_runJs_action() throws IOException {
-        when(deviceService.runJavaScript(anyString(), anyString()))
-            .thenReturn("some-report-id");
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "runJs", ExecutionStatus.planned)))
+        );
 
-        Response response = postJson("/api/devices/device01/actions/runJs",
-            "{\"path\": \"somescript.js\"}"
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"runJs\",\"parameters\":{\"path\": \"some-script.js\"}}]}"
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"runJs\",\"deviceId\":\"device01\",\"result\":{\"reportId\":\"some-report-id\"}}");
-        verify(deviceService).runJavaScript(eq("device01"), eq("somescript.js"));
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "runJs"));
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceRunJavaScriptCommand("some-script.js")
+            )))
+        );
     }
-
+/*
     @Test
     public void should_post_restart_action() throws IOException {
         Response response = postJson("/api/devices/device01/actions/restart", "");
