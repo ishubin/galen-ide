@@ -8,15 +8,15 @@ function TestSetupPanel(app) {
 }
 extend(TestSetupPanel, UIComponent);
 
-TestSetupPanel.prototype.runTest = function (specPath) {
+TestSetupPanel.prototype.runTest = function (path) {
     var that = this;
     this.collectModel(this.model, function (testSetup) {
-        testSetup.specPath = specPath;
+        testSetup.path = path;
         API.tester.test(testSetup, function () {
             that.app.waitForTestResults();
         });
 
-        testSetup.lastTestCommand = {specPath: specPath};
+        testSetup.lastTestCommand = {path: path};
         that.render(testSetup);
         that.setModel(this.model, testSetup);
     });
@@ -25,8 +25,8 @@ TestSetupPanel.prototype.$behavior = function () {
     return {
         click: {
             ".action-rerun-test": function ($element) {
-                var specPath = $element.attr("data-file-path");
-                this.app.runTest(specPath);
+                var path = $element.attr("data-file-path");
+                this.runTest(path);
             },
             ".file-item": function ($element) {
                 var filePath = $element.attr("data-file-path");

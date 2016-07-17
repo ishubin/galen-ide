@@ -16,16 +16,16 @@
 package com.galenframework.ide.model;
 
 public class TestCommand {
-    private String specPath;
+    private String path;
     private String pageUrl;
     private String domSyncMethod;
 
-    public String getSpecPath() {
-        return specPath;
+    public String getPath() {
+        return path;
     }
 
-    public void setSpecPath(String specPath) {
-        this.specPath = specPath;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getPageUrl() {

@@ -36,7 +36,7 @@ public class TesterController {
         post("/api/tester/test", (request, response) -> {
             TestCommand testCommand = mapper.readValue(request.body(), TestCommand.class);
             testerService.runtTest(testCommand);
-            return "Started testing: " + testCommand.getSpecPath();
+            return "Started testing: " + testCommand.getPath();
         });
     }
 }
