@@ -20,6 +20,9 @@ import com.galenframework.ide.devices.DeviceExecutor;
 import com.galenframework.ide.model.results.CommandExecutionResult;
 import com.galenframework.ide.model.settings.Settings;
 import com.galenframework.utils.GalenUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class DeviceInjectCommand extends DeviceCommand {
 
@@ -50,4 +53,39 @@ public class DeviceInjectCommand extends DeviceCommand {
     public String getScript() {
         return script;
     }
+
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getCommandId())
+            .append(script)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        } else if(obj == this) {
+            return true;
+        } else if(!(obj instanceof DeviceInjectCommand)) {
+            return false;
+        } else {
+            DeviceInjectCommand rhs = (DeviceInjectCommand) obj;
+            return new EqualsBuilder()
+                .append(rhs.getCommandId(), this.getCommandId())
+                .append(rhs.script, this.script)
+                .isEquals();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("script", script)
+            .append("commandId", getCommandId())
+            .toString();
+    }
+
 }

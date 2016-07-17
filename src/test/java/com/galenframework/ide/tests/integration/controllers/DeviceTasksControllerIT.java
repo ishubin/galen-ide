@@ -16,6 +16,7 @@
 package com.galenframework.ide.tests.integration.controllers;
 
 import com.galenframework.ide.devices.commands.DeviceCheckLayoutCommand;
+import com.galenframework.ide.devices.commands.DeviceInjectCommand;
 import com.galenframework.ide.devices.commands.DeviceOpenUrlCommand;
 import com.galenframework.ide.devices.commands.DeviceResizeCommand;
 import com.galenframework.ide.devices.tasks.DeviceTask;
@@ -102,19 +103,27 @@ public class DeviceTasksControllerIT extends ApiTestBase {
         );
     }
 
-    /*
+
     @Test
     public void should_post_inject_action() throws IOException {
-        Response response = postJson("/api/devices/device01/actions/inject",
-            "{\"script\": \"document.body.writeln('Hello');\"}"
+        when(deviceService.executeTask(anyString(), anyObject())).thenReturn(
+            new TaskResult("some-task-id", "some task", asList(new CommandResult("some-command-id", "inject", ExecutionStatus.planned)))
+        );
+
+        Response response = postJson("/api/devices/device01/tasks",
+            "{\"name\":\"some task\",\"commands\":[{\"name\":\"inject\",\"parameters\":{\"script\": \"document.body.writeln('Hello');\"}}]}"
         );
 
         assertEquals(response.getCode(), 200);
-        assertEquals(response.getBody(), "{\"actionName\":\"inject\",\"deviceId\":\"device01\",\"result\":null}");
-        verify(deviceService).injectScript(eq("device01"), eq("document.body.writeln('Hello');"));
+        assertEquals(response.getBody(), expectedTaskResultJsonForSingleCommand("some-task-id", "some task", "some-command-id", "inject"));
+        verify(deviceService).executeTask(eq("device01"),
+            eq(new DeviceTask("some task", asList(
+                new DeviceInjectCommand("document.body.writeln('Hello');")
+            )))
+        );
     }
 
-    @Test
+    /*@Test
     public void should_post_runJs_action() throws IOException {
         when(deviceService.runJavaScript(anyString(), anyString()))
             .thenReturn("some-report-id");
