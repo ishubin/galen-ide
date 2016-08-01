@@ -15,7 +15,9 @@
 ******************************************************************************/
 package com.galenframework.ide.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.ide.model.DomSnapshot;
+import com.galenframework.ide.model.DomSnapshotRequest;
 import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
 
 import java.util.Optional;
@@ -25,6 +27,7 @@ import static spark.Spark.*;
 public class DomSnapshotController {
 
     private final DomSnapshotService domSnapshotService;
+    ObjectMapper mapper = new ObjectMapper();
 
     public DomSnapshotController(DomSnapshotService domSnapshotService) {
         this.domSnapshotService = domSnapshotService;
@@ -32,6 +35,17 @@ public class DomSnapshotController {
     }
 
     public void initRoutes() {
+        post("/api/dom-snapshots", (req, res) -> {
+            String url = req.params().get("url");
+            String source = req.params().get("source");
+            if (url == null || source == null) {
+                DomSnapshotRequest snapshotRequest = mapper.readValue(req.body(), DomSnapshotRequest.class);
+                url = snapshotRequest.getUrl();
+                source = snapshotRequest.getSource();
+            }
+            return domSnapshotService.createSnapshot(source, url);
+        });
+
         get("/api/dom-snapshots/:domId/snapshot.html", (req, res) -> {
             res.header("Content-Type", "text/html");
             String domId = req.params("domId");
