@@ -26,13 +26,13 @@ send_task "$DEVICE_ID" '{
     }, { 
         "name":"runJs",
         "parameters": {
-        "content": "var homePage = new $page(\"Home page\", {\"loginButton\": \".button-login\"})(driver); var loginPage = new $page(\"Login page\", {\"loginTextfield\": \"input[name=\"login.username\"]\"})(driver); homePage.loginButton.click(); loginPage.waitForIt();"
+        "path": "test-scripts/gotoLogin.js"
         }
     }, { 
         "name":"checkLayout",
         "parameters": {
             "path": "specs/loginPage.gspec",
-            "tags": ["desktop"]
+            "tags": ["mobile"]
         }
     }]
 }' | jq .
