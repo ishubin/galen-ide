@@ -44,7 +44,7 @@ public class ProfilesModalIT extends GalenTestBase {
             .setHomeDirectory("target");
 
     @Test
-    public void loadProfilesModal_isDisplayedCorrectly() throws InterruptedException, IOException {
+    public void load_profiles_modal_should_look_good() throws InterruptedException, IOException {
         configureDefaultMocks();
 
         IdePage page = new IdePage(getDriver()).waitForIt();
@@ -55,7 +55,7 @@ public class ProfilesModalIT extends GalenTestBase {
     }
 
     @Test
-    public void whenClickingTheProfile_itShouldInvoke_profileService_loadProfile() throws InterruptedException {
+    public void when_clicking_the_profile_it_should_invoke_profileService_loadProfile() throws InterruptedException {
         configureDefaultMocks();
         loadDefaultTestUrl();
 

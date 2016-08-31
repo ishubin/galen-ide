@@ -35,7 +35,7 @@ public class MainPageIT extends GalenTestBase {
     TaskResultService testResultService = registerMockitoMock(TaskResultService.class);
 
     @Test
-    public void initialPage_isDisplayedCorrectly() throws InterruptedException, IOException {
+    public void initial_page_should_look_good() throws InterruptedException, IOException {
         when(fileBrowserService.getFilesInPath(any())).thenReturn(asList(
                 new FileItem(true, "folder1", "/folder1", false),
                 new FileItem(false, "home.gspec", "/home.gspec", true)

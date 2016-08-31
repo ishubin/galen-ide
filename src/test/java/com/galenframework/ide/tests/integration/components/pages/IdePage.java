@@ -36,9 +36,10 @@ public class IdePage extends GalenPage<IdePage> {
     public final DevicePanel devicesPanel = new DevicePanel(this, cssSelector("#devices-panel"));
 
     public final DeviceModal deviceModal = new DeviceModal(this, cssSelector(".modal-dialog[data-modal='device-modal']"));
+    public final TestResultPanel testResultPanel = new TestResultPanel(this, cssSelector("#test-results"));
 
     @Override
     public List<WebComponent> availabilityElements() {
-        return asList(header, devicesPanel);
+        return asList(header, devicesPanel, testResultPanel);
     }
 }

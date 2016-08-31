@@ -52,7 +52,7 @@ public class DevicesModalIT extends GalenTestBase {
 
 
     @Test
-    public void addNewDeviceModal_shouldLookGood() throws IOException {
+    public void add_new_device_modal_should_look_good() throws IOException {
         configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
 
         IdePage page = new IdePage(getDriver()).waitForIt();
@@ -63,7 +63,7 @@ public class DevicesModalIT extends GalenTestBase {
     }
 
     @Test
-    public void allSizeProvidersPanels_shouldLookGood() throws IOException {
+    public void all_size_provider_panels_should_look_good() throws IOException {
         configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
 
         IdePage page = new IdePage(getDriver()).waitForIt();
@@ -80,7 +80,7 @@ public class DevicesModalIT extends GalenTestBase {
     }
 
     @Test
-    public void whenAddingNewDevice_itShouldInvoke_deviceService_createDevice() {
+    public void when_adding_new_device_it_should_invoke_deviceService_createDevice() {
         configureInitialMockCalls(EMPTY_FILES, EMPTY_DEVICES, EMPTY_TEST_RESULTS);
         loadDefaultTestUrl();
 
@@ -108,7 +108,7 @@ public class DevicesModalIT extends GalenTestBase {
     }
 
     @Test
-    public void tableWithDevices_shouldLookGood() throws InterruptedException, IOException {
+    public void table_with_devices_should_look_good() throws InterruptedException, IOException {
         configureInitialMockCalls(EMPTY_FILES, SAMPLE_DEVICE_LIST, EMPTY_TEST_RESULTS);
 
         loadDefaultTestUrl();
@@ -120,7 +120,7 @@ public class DevicesModalIT extends GalenTestBase {
     }
 
     @Test
-    public void whenEditingDevice_itShouldInvoke_deviceService_changeDevice() throws InterruptedException {
+    public void when_editing_device_it_should_invoke_deviceService_changeDevice() throws InterruptedException {
         configureInitialMockCalls(EMPTY_FILES, SAMPLE_DEVICE_LIST, EMPTY_TEST_RESULTS);
 
         loadDefaultTestUrl();

@@ -45,7 +45,7 @@ public class DevicesPanelIT extends GalenTestBase {
     );
 
     @Test
-    public void tableWithDevices_shouldLookGood() throws InterruptedException, IOException {
+    public void table_with_devices_should_look_good() throws InterruptedException, IOException {
         configureMocks();
 
         loadDefaultTestUrl();
@@ -53,7 +53,7 @@ public class DevicesPanelIT extends GalenTestBase {
     }
 
     @Test
-    public void itShouldInvoke_deviceService_shutdownDevice_onlyWhenClicking_activeDeleteButton() throws InterruptedException, IOException {
+    public void it_should_invoke_deviceService_shutdownDevice_only_when_clicking_active_delete_button() throws InterruptedException, IOException {
         configureMocks();
         loadDefaultTestUrl();
 
