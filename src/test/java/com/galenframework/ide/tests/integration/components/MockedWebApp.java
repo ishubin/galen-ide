@@ -18,7 +18,7 @@ package com.galenframework.ide.tests.integration.components;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.Main;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.tests.integration.mocks.MockSessionThreadRegistry;
+import com.galenframework.ide.tests.integration.mocks.CurrentMockSession;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
 
 import java.io.IOException;
@@ -46,10 +46,10 @@ public class MockedWebApp extends Main {
 
     private void initMockRequestFilter() {
         before((request, response) -> {
-            MockSessionThreadRegistry.clearCurrentSession();
+            CurrentMockSession.clear();
             String mockUniqueKey = request.cookie(MOCK_KEY_COOKIE_NAME);
             if (mockUniqueKey != null) {
-                MockSessionThreadRegistry.registerCurrentSession(mockUniqueKey);
+                CurrentMockSession.register(mockUniqueKey);
             }
         });
     }

@@ -17,20 +17,20 @@ package com.galenframework.ide.tests.integration.mocks;
 
 import java.util.Optional;
 
-public enum MockSessionThreadRegistry {
+public enum CurrentMockSession {
     INSTANCE;
 
     private ThreadLocal<String> mockSessionIds = new ThreadLocal<>();
 
-    public static void registerCurrentSession(String sessionId) {
+    public static void register(String sessionId) {
         INSTANCE.mockSessionIds.set(sessionId);
     }
 
-    public static Optional<String> getCurrentSession() {
+    public static Optional<String> get() {
         return Optional.ofNullable(INSTANCE.mockSessionIds.get());
     }
 
-    public static void clearCurrentSession() {
+    public static void clear() {
         INSTANCE.mockSessionIds.remove();
     }
 }

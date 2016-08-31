@@ -22,9 +22,7 @@ import com.galenframework.ide.services.profiles.ProfilesService;
 import com.galenframework.ide.services.results.TaskResultService;
 import com.galenframework.ide.services.settings.SettingsService;
 import com.galenframework.ide.services.tester.TesterService;
-import com.galenframework.ide.tests.integration.components.DeviceRunner;
 import com.galenframework.ide.tests.integration.components.MockedWebApp;
-import com.galenframework.ide.tests.integration.components.TestDevice;
 import com.galenframework.ide.tests.integration.mocks.MockRegistry;
 import com.galenframework.ide.tests.integration.mocks.stubs.*;
 import com.galenframework.speclang2.pagespec.SectionFilter;
@@ -41,13 +39,13 @@ import java.util.*;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.reset;
 import static spark.Spark.stop;
 
 public class GalenTestBase extends GalenTestNgTestBase {
+    private static final Dimension DESKTOP_SIZE = new Dimension(1228, 800);
+    private static final long ONE_YEAR = 31556952000L;
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     private String mockUniqueKey = provideMockUniqueKey();
@@ -58,25 +56,12 @@ public class GalenTestBase extends GalenTestNgTestBase {
         return id;
     }
 
-    private static final long ONE_YEAR = 31556952000L;
 
     protected <T> T registerMockitoMock(Class<T> mockClass) {
         return registerMock(Mockito.mock(mockClass), mockClass);
     }
 
     private List<Object> mocks = new LinkedList<>();
-
-    private  TestDevice desktopDevice = new TestDevice("Desktop", new Dimension(1224, 800), singletonList("desktop"));
-    private TestDevice tabletDevice = new TestDevice("Tablet", new Dimension(800, 800), singletonList("tablet"));
-    private List<TestDevice> allTestDevices = asList(desktopDevice, tabletDevice);
-
-    @DataProvider
-    public Object[][] allDevices() {
-        return new Object[][] {
-                {desktopDevice},
-                {tabletDevice}
-        };
-    }
 
     protected <T> T registerMock(T mock, Class<T> mockClass) {
         MockRegistry.registerMock(mockUniqueKey, mock, mockClass.getName());
@@ -100,7 +85,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
         LOG.info(format("Loading url %s", getTestUrl()));
         driver.get(getTestUrl());
 
-        driver.manage().window().setSize(desktopDevice.getSize());
+        driver.manage().window().setSize(DESKTOP_SIZE);
 
         driver.manage().deleteAllCookies();
         LOG.info(format("Setting cookie for mock key %s", mockUniqueKey));
@@ -156,31 +141,4 @@ public class GalenTestBase extends GalenTestNgTestBase {
         checkLayout(specPath, new SectionFilter(tags, emptyList()), new Properties(), specVariables);
     }
 
-    public void onDesktopTestDevice(DeviceRunner deviceRunner) {
-        runOnTestDevice(desktopDevice, deviceRunner);
-    }
-
-    private void runOnTestDevice(TestDevice testDevice, DeviceRunner deviceRunner) {
-        getReport().sectionStart("Testing on device " + testDevice.getName());
-        loadDefaultTestUrl();
-        try {
-            resizeFor(testDevice);
-            Thread.sleep(500);
-            deviceRunner.run(testDevice);
-        } catch (Exception ex) {
-            throw new RuntimeException("Exception in device " + testDevice.getName(), ex);
-        } finally {
-            getReport().sectionEnd();
-        }
-    }
-
-    public void onEveryTestDevice(DeviceRunner deviceRunner) {
-        for (TestDevice testDevice : allTestDevices) {
-            runOnTestDevice(testDevice, deviceRunner);
-        }
-    }
-
-    public void resizeFor(TestDevice testDevice) {
-        resize(testDevice.getSize().width, testDevice.getSize().height);
-    }
 }
