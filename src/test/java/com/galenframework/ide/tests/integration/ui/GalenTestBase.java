@@ -32,12 +32,15 @@ import com.galenframework.testng.GalenTestNgTestBase;
 import org.mockito.Mockito;
 
 import org.openqa.selenium.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -45,8 +48,16 @@ import static org.mockito.Mockito.reset;
 import static spark.Spark.stop;
 
 public class GalenTestBase extends GalenTestNgTestBase {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private String mockUniqueKey = UUID.randomUUID().toString();
+    private String mockUniqueKey = provideMockUniqueKey();
+
+    private String provideMockUniqueKey() {
+        String id = UUID.randomUUID().toString();
+        LOG.info(format("Generating mock unique key %s for test %s", id, getClass().getSimpleName()));
+        return id;
+    }
+
     private static final long ONE_YEAR = 31556952000L;
 
     protected <T> T registerMockitoMock(Class<T> mockClass) {
@@ -86,11 +97,13 @@ public class GalenTestBase extends GalenTestNgTestBase {
     @Override
     public WebDriver createDriver(Object[] args) {
         WebDriver driver = WebDriverSingleInstance.getDriver();
+        LOG.info(format("Loading url %s", getTestUrl()));
         driver.get(getTestUrl());
 
         driver.manage().window().setSize(desktopDevice.getSize());
 
         driver.manage().deleteAllCookies();
+        LOG.info(format("Setting cookie for mock key %s", mockUniqueKey));
         driver.manage().addCookie(new Cookie(MockedWebApp.MOCK_KEY_COOKIE_NAME, mockUniqueKey, "/", new Date(new Date().getTime() + ONE_YEAR)));
         return driver;
     }
@@ -100,6 +113,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
     }
 
     protected void loadDefaultTestUrl() {
+        LOG.info(format("Loading url %s", getTestUrl()));
         load(getTestUrl());
     }
 

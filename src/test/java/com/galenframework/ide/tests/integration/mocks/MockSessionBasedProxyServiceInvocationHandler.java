@@ -32,7 +32,7 @@ class MockSessionBasedProxyServiceInvocationHandler<T extends Service> implement
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        Optional<String> mockSessionId = MockSessionStorage.getMockSession();
+        Optional<String> mockSessionId = MockSessionThreadRegistry.getCurrentSession();
         if (mockSessionId.isPresent()) {
             Optional<T> mock = MockRegistry.pickMock(mockSessionId.get(), serviceName);
             if (mock.isPresent()) {

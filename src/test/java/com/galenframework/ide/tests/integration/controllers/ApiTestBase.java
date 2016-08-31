@@ -31,6 +31,8 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -43,12 +45,20 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.String.format;
 import static org.mockito.Mockito.reset;
 import static spark.Spark.stop;
 
 public abstract class ApiTestBase {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private String mockUniqueKey = UUID.randomUUID().toString();
+    private String mockUniqueKey = provideMockUniqueKey();
+
+    private String provideMockUniqueKey() {
+        String id = UUID.randomUUID().toString();
+        LOG.info(format("Generating mock unique key %s for test %s", id, getClass().getSimpleName()));
+        return id;
+    }
     private List<Object> mocks = new LinkedList<>();
 
     @BeforeMethod
@@ -69,11 +79,6 @@ public abstract class ApiTestBase {
     @BeforeSuite
     public void startupMockedWebApp() throws IOException {
         MockedWebApp.create();
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @AfterSuite

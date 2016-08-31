@@ -16,16 +16,21 @@
 package com.galenframework.ide.tests.integration.mocks;
 
 import com.galenframework.ide.services.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.lang.String.format;
 
 public enum MockRegistry {
     INSTANCE;
 
     private Map<MockKey, Object> mocks = new HashMap<>();
     private Map<Object, Object> sessionLessMocks = new HashMap<>();
+    private static Logger LOG = LoggerFactory.getLogger(MockRegistry.class);
 
     private <T> void register(String sessionId, T mock, String mockName) {
         MockKey mockKey = new MockKey(sessionId, mockName);
@@ -42,6 +47,7 @@ public enum MockRegistry {
     }
 
     public static <T> void registerMock(String sessionId, T mock, String mockName) {
+        LOG.info(format("Registering mock %s for sessionId %s", mockName, sessionId));
         MockRegistry.INSTANCE.register(sessionId, mock, mockName);
     }
 
@@ -62,6 +68,7 @@ public enum MockRegistry {
     }
 
     public static <T> void registerSessionlessMock(T mock, String mockName) {
+        LOG.info(format("Registering sessionless mock %s", mockName));
         INSTANCE.sessionLessMocks.put(mockName, mock);
     }
 }

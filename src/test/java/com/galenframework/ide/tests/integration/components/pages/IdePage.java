@@ -33,6 +33,7 @@ public class IdePage extends GalenPage<IdePage> {
 
     public final Header header = new Header(this, cssSelector("nav.navbar"));
     public final LoadProfilesModal loadProfilesModal = new LoadProfilesModal(this, cssSelector("#global-modal .modal .modal-dialog"));
+    public final FileBrowserPanel fileBrowserPanel = new FileBrowserPanel(this, cssSelector("#file-browser"));
     public final DevicePanel devicesPanel = new DevicePanel(this, cssSelector("#devices-panel"));
 
     public final DeviceModal deviceModal = new DeviceModal(this, cssSelector(".modal-dialog[data-modal='device-modal']"));
@@ -40,6 +41,6 @@ public class IdePage extends GalenPage<IdePage> {
 
     @Override
     public List<WebComponent> availabilityElements() {
-        return asList(header, devicesPanel, testResultPanel);
+        return asList(header, fileBrowserPanel, devicesPanel, testResultPanel);
     }
 }

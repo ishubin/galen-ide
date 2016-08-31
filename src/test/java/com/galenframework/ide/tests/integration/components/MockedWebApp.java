@@ -18,11 +18,12 @@ package com.galenframework.ide.tests.integration.components;
 import com.galenframework.ide.model.settings.IdeArguments;
 import com.galenframework.ide.Main;
 import com.galenframework.ide.services.ServiceProvider;
-import com.galenframework.ide.tests.integration.mocks.MockSessionStorage;
+import com.galenframework.ide.tests.integration.mocks.MockSessionThreadRegistry;
 import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
 
 import java.io.IOException;
 
+import static spark.Spark.awaitInitialization;
 import static spark.Spark.before;
 
 public class MockedWebApp extends Main {
@@ -40,13 +41,15 @@ public class MockedWebApp extends Main {
         ideArguments.setPort(4567);
         initWebServer(serviceProvider, ideArguments);
         initMockRequestFilter();
+        awaitInitialization();
     }
 
     private void initMockRequestFilter() {
         before((request, response) -> {
+            MockSessionThreadRegistry.clearCurrentSession();
             String mockUniqueKey = request.cookie(MOCK_KEY_COOKIE_NAME);
             if (mockUniqueKey != null) {
-                MockSessionStorage.registerMockSession(mockUniqueKey);
+                MockSessionThreadRegistry.registerCurrentSession(mockUniqueKey);
             }
         });
     }
