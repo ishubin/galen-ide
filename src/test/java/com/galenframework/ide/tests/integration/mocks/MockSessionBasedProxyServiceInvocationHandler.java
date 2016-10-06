@@ -34,20 +34,14 @@ class MockSessionBasedProxyServiceInvocationHandler<T extends Service> implement
 
         Optional<String> mockSessionId = CurrentMockSession.get();
         if (mockSessionId.isPresent()) {
-            Optional<T> mock = MockRegistry.pickMock(mockSessionId.get(), serviceName);
-            if (mock.isPresent()) {
-                return method.invoke(mock.get(), args);
+            Object mock = MockRegistry.pickMock(mockSessionId.get(), serviceName);
+            if (mock != null) {
+                return method.invoke(mock, args);
             } else {
                 throw new RuntimeException("Mock " + method.getName() + " in " + serviceName + " service is not defined for session " + mockSessionId.get());
             }
         } else {
-            Optional<T> mock = MockRegistry.pickSessionlessMock(serviceName);
-            if (mock.isPresent()) {
-                return method.invoke(mock.get(), args);
-            } else {
-                throw new RuntimeException("You haven't configured a session-less mock for " + serviceName + " service, method " + method.getName());
-            }
+            throw new RuntimeException("You haven't provided a mock session id");
         }
-
     }
 }

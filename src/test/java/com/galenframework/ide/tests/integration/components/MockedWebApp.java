@@ -23,8 +23,7 @@ import com.galenframework.ide.tests.integration.mocks.MockedServiceProvider;
 
 import java.io.IOException;
 
-import static spark.Spark.awaitInitialization;
-import static spark.Spark.before;
+import static spark.Spark.*;
 
 public class MockedWebApp extends Main {
     private static MockedWebApp _instance = null;
@@ -41,7 +40,12 @@ public class MockedWebApp extends Main {
         ideArguments.setPort(4567);
         initWebServer(serviceProvider, ideArguments);
         initMockRequestFilter();
+        initTestStartPage();
         awaitInitialization();
+    }
+
+    private void initTestStartPage() {
+        get("_test-start_", (req, res) -> "This is a starting point for a test, in order to set the cookie");
     }
 
     private void initMockRequestFilter() {

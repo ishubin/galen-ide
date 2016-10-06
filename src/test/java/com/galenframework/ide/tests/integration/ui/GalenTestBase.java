@@ -69,11 +69,6 @@ public class GalenTestBase extends GalenTestNgTestBase {
         return mock;
     }
 
-    protected <T> T registerSessionlessMock(T mock, Class<T> mockClass) {
-        MockRegistry.registerSessionlessMock(mock, mockClass.getName());
-        return mock;
-    }
-
     @BeforeMethod
     public void resetAllMocks() {
         reset(mocks.toArray(new Object[mocks.size()]));
@@ -82,8 +77,7 @@ public class GalenTestBase extends GalenTestNgTestBase {
     @Override
     public WebDriver createDriver(Object[] args) {
         WebDriver driver = WebDriverSingleInstance.getDriver();
-        LOG.info(format("Loading url %s", getTestUrl()));
-        driver.get(getTestUrl());
+        driver.get(getTestUrl() + "/_test-start_");
 
         driver.manage().window().setSize(DESKTOP_SIZE);
 
@@ -106,13 +100,6 @@ public class GalenTestBase extends GalenTestNgTestBase {
     @BeforeSuite
     public void startupMockedWebApp() throws IOException {
         MockedWebApp.create();
-        registerSessionlessMock(new DefaultDeviceServiceStub(), DeviceService.class);
-        registerSessionlessMock(new DefaultDomSnapshotServiceStub(), DomSnapshotService.class);
-        registerSessionlessMock(new DefaultFileBrowserServiceStub(), FileBrowserService.class);
-        registerSessionlessMock(new DefaultProfilesServiceStub(), ProfilesService.class);
-        registerSessionlessMock(new DefaultSettingsServiceStub(), SettingsService.class);
-        registerSessionlessMock(new DefaultTestResultServiceStub(), TaskResultService.class);
-        registerSessionlessMock(new DefaultTestServiceStub(), TesterService.class);
     }
 
     @AfterMethod

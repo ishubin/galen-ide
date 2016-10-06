@@ -46,6 +46,7 @@ public class ProfilesModalIT extends GalenTestBase {
     @Test
     public void load_profiles_modal_should_look_good() throws InterruptedException, IOException {
         configureDefaultMocks();
+        loadDefaultTestUrl();
 
         IdePage page = new IdePage(getDriver()).waitForIt();
         page.header.loadProfileLink.click();
