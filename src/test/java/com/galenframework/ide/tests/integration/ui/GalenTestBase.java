@@ -15,16 +15,8 @@
 ******************************************************************************/
 package com.galenframework.ide.tests.integration.ui;
 
-import com.galenframework.ide.services.devices.DeviceService;
-import com.galenframework.ide.services.domsnapshot.DomSnapshotService;
-import com.galenframework.ide.services.filebrowser.FileBrowserService;
-import com.galenframework.ide.services.profiles.ProfilesService;
-import com.galenframework.ide.services.results.TaskResultService;
-import com.galenframework.ide.services.settings.SettingsService;
-import com.galenframework.ide.services.tester.TesterService;
 import com.galenframework.ide.tests.integration.components.MockedWebApp;
 import com.galenframework.ide.tests.integration.mocks.MockRegistry;
-import com.galenframework.ide.tests.integration.mocks.stubs.*;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.testng.GalenTestNgTestBase;
 import org.mockito.Mockito;

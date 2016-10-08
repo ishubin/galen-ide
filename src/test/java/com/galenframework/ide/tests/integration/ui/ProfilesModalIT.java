@@ -46,8 +46,13 @@ public class ProfilesModalIT extends GalenTestBase {
     @Test
     public void load_profiles_modal_should_look_good() throws InterruptedException, IOException {
         configureDefaultMocks();
-        loadDefaultTestUrl();
+        when(profilesService.getProfiles(any())).thenReturn(asList(
+            new FileItem(false, "profile-1.gspec", "somepath/profile-1.gspec", false),
+            new FileItem(false, "profile-2.gspec", "somepath/profile-2.gspec", false),
+            new FileItem(false, "profile-3.gspec", "somepath/profile-3.gspec", false)
+        ));
 
+        loadDefaultTestUrl();
         IdePage page = new IdePage(getDriver()).waitForIt();
         page.header.loadProfileLink.click();
         page.loadProfilesModal.waitForIt();
@@ -58,8 +63,13 @@ public class ProfilesModalIT extends GalenTestBase {
     @Test
     public void when_clicking_the_profile_it_should_invoke_profileService_loadProfile() throws InterruptedException {
         configureDefaultMocks();
-        loadDefaultTestUrl();
+        when(profilesService.getProfiles(any())).thenReturn(asList(
+            new FileItem(false, "profile-1.gspec", "somepath/profile-1.gspec", false),
+            new FileItem(false, "profile-2.gspec", "somepath/profile-2.gspec", false),
+            new FileItem(false, "profile-3.gspec", "somepath/profile-3.gspec", false)
+        ));
 
+        loadDefaultTestUrl();
         IdePage page = new IdePage(getDriver()).waitForIt();
         page.header.loadProfileLink.click();
         page.loadProfilesModal.waitForIt();
@@ -77,11 +87,6 @@ public class ProfilesModalIT extends GalenTestBase {
         when(testResultService.getTestResultsOverview()).thenReturn(new TaskResultsOverview(emptyList()));
         when(settingsService.getSettings())
                 .thenReturn(settings);
-        when(profilesService.getProfiles(any())).thenReturn(asList(
-                new FileItem(false, "profile-1.gspec", "somepath/profile-1.gspec", false),
-                new FileItem(false, "profile-2.gspec", "somepath/profile-2.gspec", false),
-                new FileItem(false, "profile-3.gspec", "somepath/profile-3.gspec", false)
-        ));
     }
 
 }
